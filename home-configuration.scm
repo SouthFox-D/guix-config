@@ -14,7 +14,6 @@
 
 (load "packages.scm")
 
-
 (home-environment
  ;; Below is the list of packages that will show up in your
  ;; Home profile, under ~/.guix-home/profile.
@@ -25,11 +24,9 @@
                       "zsh"
                       "zsh-autosuggestions"
                       "zsh-syntax-highlighting"
-                      "fzf"
-                      ))
+                      "fzf"))
                     (list
-                     zellij)
-                    ))
+                     zellij)))
 
  (services
   (list
@@ -37,9 +34,4 @@
    (service home-emacs-service-type)
    (service home-zsh-service-type
             (home-zsh-configuration
-             (zshrc (list (local-file "files/zshrc")))
-             ))
-   )
-  )
- )
-
+             (zshrc (list (local-file "files/zshrc"))))))))

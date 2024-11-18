@@ -51,8 +51,7 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
                     "https://github.com/zellij-org/zellij/releases/download/v"
                     version "/zellij-x86_64-unknown-linux-musl.tar.gz"))
               (sha256
-               (base32 "113c9agbx36hiq6a1kf2jydrv3h3cd8s0albnwxi0qd1c0n1rxyw")
-               )))
+               (base32 "113c9agbx36hiq6a1kf2jydrv3h3cd8s0albnwxi0qd1c0n1rxyw"))))
     (build-system copy-build-system)
     (arguments
      (list
