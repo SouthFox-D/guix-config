@@ -38,7 +38,8 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
                 (extensions
                  (list (service-extension
                         home-files-service-type
-                        (lambda (_) (list `(".oh-my-zsh" ,oh-my-zsh))))))))
+                        (lambda (_) (list `(".oh-my-zsh" ,oh-my-zsh))))))
+                (default-value '())))
 
 (define-public zellij
   (package
