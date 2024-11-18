@@ -34,7 +34,7 @@
  (services
   (list
    (service oh-my-zsh-service-type '())
-
+   (service home-emacs-service-type)
    (service home-zsh-service-type
             (home-zsh-configuration
              (zshrc (list (local-file "files/zshrc")))
@@ -42,3 +42,4 @@
    )
   )
  )
+

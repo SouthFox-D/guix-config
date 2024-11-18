@@ -4,6 +4,8 @@
              (guix git-download)
              (guix utils)
              (gnu packages)
+             (gnu packages emacs)
+             (gnu home services shepherd)
              (guix build-system copy)
              (gnu services))
 
@@ -66,3 +68,25 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
     (description
      "A terminal workspace with batteries included.")
     (license expat)))
+
+(define (home-emacs-shepherd-service config)
+  (list
+   (shepherd-service
+    (documentation "Start Emacs")
+    (provision '(emacs))
+    (auto-start? #t)
+    (start
+     #~(make-forkexec-constructor
+        (list #$(file-append emacs "/bin/emacs")
+              "--fg-daemon")
+        #:log-file (format #f "~a/.local/var/log/emacs.log" (getenv "HOME"))))
+    (stop #~(make-kill-destructor)))))
+
+(define home-emacs-service-type
+  (service-type (name 'emacs-configuration)
+                (extensions
+                 (list (service-extension
+                        home-shepherd-service-type
+                        home-emacs-shepherd-service)))
+                (default-value '())
+                (description "Configures Emacs and installs packages to home-profile.")))
