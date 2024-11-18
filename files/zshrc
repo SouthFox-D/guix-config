@@ -73,6 +73,7 @@ export LC_COLLATE=C
 . $HOME/.guix-home/setup-environment
 
 export GUIX_PROFILE="$HOME/.guix-home/profile"
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 export ZSH_CUSTOM="$GUIX_PROFILE/share/zsh"
 .reload() {
     autoload compinit && compinit
