@@ -77,7 +77,7 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
     (auto-start? #t)
     (start
      #~(make-forkexec-constructor
-        (list #$(file-append emacs "/bin/emacs")
+        (list "/usr/bin/emacs"
               "--fg-daemon")
         #:log-file (format #f "~a/.local/var/log/emacs.log" (getenv "HOME"))))
     (stop #~(make-kill-destructor)))))
