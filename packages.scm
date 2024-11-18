@@ -37,3 +37,32 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
                  (list (service-extension
                         home-files-service-type
                         (lambda (_) (list `(".oh-my-zsh" ,oh-my-zsh))))))))
+
+(define-public zellij
+  (package
+    (name "zellij")
+    (version "0.41.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/zellij-org/zellij/releases/download/v"
+                    version "/zellij-x86_64-unknown-linux-musl.tar.gz"))
+              (sha256
+               (base32 "113c9agbx36hiq6a1kf2jydrv3h3cd8s0albnwxi0qd1c0n1rxyw")
+               )))
+    (build-system copy-build-system)
+    (arguments
+     (list
+      #:substitutable? #f
+      #:install-plan
+      #~'(("zellij" "bin/"))
+      #:phases
+      #~(modify-phases %standard-phases
+          (replace 'unpack
+            (lambda* (#:key source #:allow-other-keys)
+              (invoke "tar" "-xvf" source))))))
+    (home-page "https://github.com/zellij-org/zellij")
+    (synopsis "A terminal workspace with batteries included.")
+    (description
+     "A terminal workspace with batteries included.")
+    (license expat)))

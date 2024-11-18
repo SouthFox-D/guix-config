@@ -18,12 +18,18 @@
 (home-environment
  ;; Below is the list of packages that will show up in your
  ;; Home profile, under ~/.guix-home/profile.
- (packages (specifications->packages (list "guile-hoot"
-                                           "guile-next"
-                                           "zsh"
-                                           "zsh-autosuggestions"
-                                           "zsh-syntax-highlighting"
-                                           "fzf")))
+ (packages (append  (specifications->packages
+                     (list
+                      "guile-hoot"
+                      "guile-next"
+                      "zsh"
+                      "zsh-autosuggestions"
+                      "zsh-syntax-highlighting"
+                      "fzf"
+                      ))
+                    (list
+                     zellij)
+                    ))
 
  (services
   (list
@@ -32,7 +38,7 @@
    (service home-zsh-service-type
             (home-zsh-configuration
              (zshrc (list (local-file "files/zshrc")))
-                          ))
+             ))
    )
   )
  )
