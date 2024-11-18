@@ -24,7 +24,8 @@
                       "zsh"
                       "zsh-autosuggestions"
                       "zsh-syntax-highlighting"
-                      "fzf"))
+                      "fzf"
+                      "emacs"))
                     (list
                      zellij)))
 
