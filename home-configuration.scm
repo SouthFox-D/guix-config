@@ -14,24 +14,42 @@
 
 (load "packages.scm")
 
-(home-environment
- ;; Below is the list of packages that will show up in your
- ;; Home profile, under ~/.guix-home/profile.
- (packages (append  (specifications->packages
-                     (list
-                      "guile-hoot"
-                      "guile-next"
-                      "zsh"
-                      "zsh-autosuggestions"
-                      "zsh-syntax-highlighting"
-                      "fzf"))
-                    (list
-                     zellij)))
+(if (equal? "lighthouse" (getlogin))
+    (home-environment
+     (packages (append (specifications->packages
+                        (list
+                         "zsh"
+                         "zsh-autosuggestions"
+                         "zsh-syntax-highlighting"
+                         "fzf"))
+                       (list
+                        zellij)))
+     (services
+      (list
+       (service oh-my-zsh-service-type)
+       (service home-bash-service-type
+                (home-bash-configuration
+                 (bashrc (list (local-file "files/bashrc")))))
+       (service home-zsh-service-type
+                (home-zsh-configuration
+                 (zshrc (list (local-file "files/zshrc"))))))))
 
- (services
-  (list
-   (service oh-my-zsh-service-type)
-   (service home-emacs-service-type)
-   (service home-zsh-service-type
-            (home-zsh-configuration
-             (zshrc (list (local-file "files/zshrc"))))))))
+    (home-environment
+     (packages (append (specifications->packages
+                        (list
+                         "guile-hoot"
+                         "guile-next"
+                         "zsh"
+                         "zsh-autosuggestions"
+                         "zsh-syntax-highlighting"
+                         "fzf"))
+                       (list
+                        zellij)))
+     (services
+      (list
+       (service oh-my-zsh-service-type)
+       (service home-emacs-service-type)
+       (service home-zsh-service-type
+                (home-zsh-configuration
+                 (zshrc (list (local-file "files/zshrc"))))))))
+    )
