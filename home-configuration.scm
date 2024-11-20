@@ -10,9 +10,8 @@
              (gnu services)
              (guix gexp)
              (gnu home services)
-             (gnu home services shells))
-
-(load "packages.scm")
+             (gnu home services shells)
+             (fox packages))
 
 (if (equal? "lighthouse" (getlogin))
     (home-environment
