@@ -1,5 +1,4 @@
 (append (list (channel
                 (name 'fox-channel)
-                (url (string-append "file://" (getenv "HOME")
-                                    "/.config/guix"))))
+                (url "https://git.southfox.me/southfox/guix-config")))
         %default-channels)
