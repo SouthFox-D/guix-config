@@ -16,11 +16,11 @@
             home-emacs-service-type))
 
 (define-public oh-my-zsh
-  (let ((commit "ca5471fe496f00007727fd26db762d19519c2e8f")
+  (let ((commit "366d25435229bfa725109a147d6cb2fef8011b3c")
         (url "https://github.com/ohmyzsh/ohmyzsh.git"))
     (package
       (name "oh-my-zsh")
-      (version "231115")
+      (version "241125")
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -28,7 +28,7 @@
                       (commit commit)))
                 (sha256
                  (base32
-                  "08a9x04jgli4xqclaqzyvrzb74kngnf2vg4q6wyqanrpskgbp3mc"))))
+                  "1w339zy12mnszdbh9gfpym39bhx5klrfpqaqbgh7vc2gw4m6slrc"))))
       (build-system copy-build-system)
       (synopsis "Oh My Zsh is an open source, community-driven framework for managing your zsh configuration.")
       (description "🙃A delightful community-driven (with 2,400+ contributors) framework for managing
