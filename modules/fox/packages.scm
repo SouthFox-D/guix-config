@@ -50,14 +50,14 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
 (define-public zellij
   (package
     (name "zellij")
-    (version "0.41.1")
+    (version "0.41.2")
     (source (origin
               (method url-fetch)
               (uri (string-append
                     "https://github.com/zellij-org/zellij/releases/download/v"
                     version "/zellij-x86_64-unknown-linux-musl.tar.gz"))
               (sha256
-               (base32 "113c9agbx36hiq6a1kf2jydrv3h3cd8s0albnwxi0qd1c0n1rxyw"))))
+               (base32 "0y3cpy20g984jrz8gnc6sqjskfwmfjngd617bksvm9fq2yl23hxi"))))
     (build-system copy-build-system)
     (arguments
      (list
