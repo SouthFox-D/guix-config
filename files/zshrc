@@ -68,7 +68,7 @@ ZSH_THEME="fox"
 # Add wisely, as too many plugins slow down shell startup.
 
 export LANG=en_US.UTF-8
-export LC_COLLATE=C
+export LC_ALL=C
 
 . $HOME/.guix-home/setup-environment
 
@@ -95,8 +95,8 @@ source $ZSH/oh-my-zsh.sh
 
 eval "$(fzf --zsh)"
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 eval "$(zellij setup --generate-auto-start zsh)"
