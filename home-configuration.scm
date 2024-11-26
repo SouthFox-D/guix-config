@@ -18,6 +18,7 @@
      (packages (append (specifications->packages
                         (list
                          "zsh"
+                         "zsh-completions"
                          "zsh-autosuggestions"
                          "zsh-syntax-highlighting"
                          "fzf"))
@@ -39,6 +40,7 @@
                          "guile-hoot"
                          "guile-next"
                          "zsh"
+                         "zsh-completions"
                          "zsh-autosuggestions"
                          "zsh-syntax-highlighting"
                          "fzf"))
