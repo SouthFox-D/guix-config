@@ -17,6 +17,7 @@
     (home-environment
      (packages (append (specifications->packages
                         (list
+                         "glibc-locales"
                          "zsh"
                          "zsh-completions"
                          "zsh-autosuggestions"
