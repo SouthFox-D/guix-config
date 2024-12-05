@@ -133,13 +133,15 @@ files, and further processed during activation.")))
               (display "Nothing to install...!")))
 
         (define (arch-get-pacman-package-list)
-          (let* ((data (open-input-pipe "pacman -Qqe"))
-                 (result (string-split (read-string data) #\newline)))
+          (let* ((explicitly-packages (string-split (read-string (open-input-pipe "pacman -Qqe")) #\newline))
+                 (all-packages (string-split (read-string (open-input-pipe "pacman -Qq")) #\newline)))
             (display "Hint: Run \n")
-            (display (string-append "pacman -R " (string-join (list-difference result arch-user-packages) " ") "\n"))
-            (display "sync packages.")
+            (display (string-append
+                      "pacman -R "
+                      (string-join (list-difference explicitly-packages arch-user-packages) " ") "\n"))
+            (display "command to sync packages.\n")
 
-            (list-difference arch-user-packages result)))
+            (list-difference arch-user-packages all-packages)))
 
         (arch-package-update)
         (arch-install-packages (arch-get-pacman-package-list))
