@@ -35,6 +35,7 @@
    ;; something something...
    "sudo"
    "hyfetch"
+   "htop"
    "tmux"
    "iftop"
    ))
