@@ -190,7 +190,8 @@ in the arch pacman overlay."
                     %arch-profile (+ 1 number))))
   (pk generation)
   (switch-symlinks generation arch-drv-output)
-  (switch-symlinks %arch-profile generation))
+  (switch-symlinks %arch-profile generation)
+  (primitive-load (string-append arch-drv-output "/sync")))
 
 ;; (with-store
 ;;  %store
