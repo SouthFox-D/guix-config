@@ -7,9 +7,13 @@
   #:use-module (guix utils)
   #:use-module (gnu packages)
   #:use-module (gnu packages emacs)
+  #:use-module (gnu packages check)
+  #:use-module (gnu packages python-build)
+  #:use-module (gnu packages python-xyz)
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (guix build-system copy)
+  #:use-module (guix build-system pyproject)
   #:use-module (gnu services)
   #:export (zellij
             oh-my-zsh-service-type
@@ -96,3 +100,32 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
                         home-emacs-shepherd-service)))
                 (default-value '())
                 (description "Configures Emacs and installs packages to home-profile.")))
+
+(define-public python-hy-1
+  (package
+    (name "python-hy-1")
+    (version "1.0.0")
+    (source
+     (origin
+       (method git-fetch) ;no tests in PyPI release
+       (uri (git-reference
+             (url "https://github.com/hylang/hy")
+             (commit version)))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "1msv3027krv223a4dhx6kzp7r7l4q2qg8kq25j4dcf8k5xs73ax3"))))
+    (build-system pyproject-build-system)
+    (arguments
+     (list
+      ;; This test expects the hy executable to be called 'hy', but in Guix
+      ;; it's .hy-real.
+      #:test-flags #~(list "-k" "not test_sys_executable")))
+    (native-inputs (list python-pytest-next python-wheel))
+    (propagated-inputs (list python-funcparserlib))
+    (home-page "https://docs.hylang.org/en/stable/")
+    (synopsis "Lisp frontend to Python")
+    (description
+     "Hy is a dialect of Lisp that's embedded in Python.  Since Hy transforms
+its Lisp code into the Python Abstract Syntax Tree, you have the whole world of
+Python at your fingertips, in Lisp form.")
+    (license expat)))
