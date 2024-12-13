@@ -37,6 +37,7 @@
    "hyfetch"
    "htop"
    "tmux"
+   "fuse2"
    "iftop"
    ))
 
