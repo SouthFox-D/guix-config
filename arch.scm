@@ -28,6 +28,7 @@
    "hyfetch"
    "htop"
    "tmux"
+   "mosh"
    "fuse2"
    "iftop"
    ))
