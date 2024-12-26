@@ -33,11 +33,32 @@
    "iftop"
    ))
 
+(define %arch-de-things
+  (list
+   "hyprland"
+   "hyprlock"
+   "hyprpaper"
+   "waybar"
+   "dunst"
+   "wofi"
+   "kitty"
+   "cliphist"
+   "grim"
+   "slurp"
+   ))
+
+(define arch-packages
+  (append
+   %arch-base-packages
+   (if (not (equal? "lighthouse" (getlogin)))
+       %arch-de-things
+       '())))
+
 (define arch-services
   (list
    (service arch-files-service-type
             (list
-             `(".arch-packages" ,(plain-file "arch-package" (string-join %arch-base-packages "\n")))))))
+             `(".arch-packages" ,(plain-file "arch-package" (string-join arch-packages "\n")))))))
 
 (build-arch-drv arch-services)
 

@@ -51,6 +51,9 @@
       (list
        (service oh-my-zsh-service-type)
        (service home-emacs-service-type)
+       (service home-files-service-type
+                `((".config/hypr/hyprland.conf" ,(local-file "files/hyprland.conf"))
+                  (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))))
        (service home-zsh-service-type
                 (home-zsh-configuration
                  (zshrc (list (local-file "files/zshrc"))))))))
