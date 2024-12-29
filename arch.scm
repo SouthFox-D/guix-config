@@ -45,6 +45,7 @@
    "cliphist"
    "grim"
    "slurp"
+   "pavucontrol"
    ))
 
 (define arch-packages
