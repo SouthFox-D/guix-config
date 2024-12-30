@@ -54,7 +54,10 @@
        (service home-files-service-type
                 `((".config/hypr/hyprland.conf" ,(local-file "files/hyprland.conf"))
                   (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
-                  (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))))
+                  (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
+                  ;; bin
+                  (".local/bin" ,(local-file "files/bin" #:recursive? #t))
+                  ))
        (service home-zsh-service-type
                 (home-zsh-configuration
                  (zshrc (list (local-file "files/zshrc"))))))))

@@ -48,11 +48,22 @@
    "pavucontrol"
    ))
 
+(define %arch-misc
+  (list
+   "hy"
+   "python-requests"
+
+   "mpv"
+   ))
+
 (define arch-packages
   (append
    %arch-base-packages
    (if (not (equal? "lighthouse" (getlogin)))
-       %arch-de-things
+       (begin
+        %arch-de-things
+        %arch-misc
+        )
        '())))
 
 (define arch-services

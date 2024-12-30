@@ -1,0 +1,10 @@
+#!/usr/bin/env hy
+
+(import json)
+(import requests)
+(import subprocess)
+
+(while True
+  (for [item (.json (requests.get "https://stream.chillhop.com/live/12355"))]
+    (print f"Now playing: {(:title item)} - {(:artists item)} - {(:fileId item)}")
+    (subprocess.run f"mpv https://stream.chillhop.com/mp3/{(:fileId item)}" :shell True :capture_output True)))
