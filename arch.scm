@@ -60,7 +60,7 @@
   (append
    %arch-base-packages
    (if (not (equal? "lighthouse" (getlogin)))
-       (begin
+       (append
         %arch-de-things
         %arch-misc
         )
