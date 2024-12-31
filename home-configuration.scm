@@ -56,7 +56,7 @@
                   (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
                   (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
                   ;; bin
-                  (".local/bin" ,(local-file "files/bin" #:recursive? #t))
+                  (".local/bin/chill-player" ,(local-file "files/bin/chill-player" #:recursive? #t))
                   ))
        (service home-zsh-service-type
                 (home-zsh-configuration
