@@ -7,10 +7,10 @@
 (defn live-play [live-id]
   (while True
     (for [item (.json (requests.get f"https://stream.chillhop.com/live/{live-id}"))]
-         (print f"Now playing: {(:title item)} - {(:artists item)} - {(:fileId item)}")
-         (subprocess.run f"mpv --no-video https://stream.chillhop.com/mp3/{(:fileId item)}"
-                         :shell True
-                         :capture_output True))))
+      (print f"Now playing: {(:title item)} - {(:artists item)} - {(:fileId item)}")
+      (subprocess.run f"mpv --no-video https://stream.chillhop.com/mp3/{(:fileId item)}"
+                      :shell True
+                      :capture_output True))))
 
 (setv parser (argparse.ArgumentParser))
 (parser.add_argument "-s" :action "store" :dest "station" :metavar "station" :required False)
@@ -20,5 +20,5 @@
 (let [presets (:presets (.json (requests.get "https://stream.chillhop.com/presets")))]
   (print "Now streaming...")
   (for [item presets]
-     (print f"Name: {(:name item)} station Id: {(:stationId item)}"))
+    (print f"Name: {(:name item)} station Id: {(:stationId item)}"))
   (live-play (input "Input station ID: ")))
