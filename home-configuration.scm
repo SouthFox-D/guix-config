@@ -55,6 +55,8 @@
                 `((".config/hypr/hyprland.conf" ,(local-file "files/hyprland.conf"))
                   (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
                   (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
+                  (".config/zellij/config.kdl" ,(local-file "files/zellij.kdl"))
+
                   ;; bin
                   (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
                   ))
