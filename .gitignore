@@ -4,3 +4,5 @@
 tmp/
 
 shell-authorized-directories
+current
+__pycache__
