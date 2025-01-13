@@ -11,7 +11,8 @@
              (guix gexp)
              (gnu home services)
              (gnu home services shells)
-             (fox packages))
+             (fox packages)
+             (fox services))
 
 (if (equal? "lighthouse" (getlogin))
     (home-environment
