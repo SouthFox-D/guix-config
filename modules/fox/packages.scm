@@ -92,7 +92,7 @@ your morning, and an auto-update tool that makes it easy to keep up with the lat
         #:log-file (format #f "~a/.local/var/log/emacs.log" (getenv "HOME"))))
     (stop
      #~(make-system-destructor
-        '("/usr/bin/emacsclient" "--eval"  "(kill-emacs)"))))))
+        "/usr/bin/emacsclient --eval '(kill-emacs)'")))))
 
 (define home-emacs-service-type
   (service-type (name 'emacs-configuration)
