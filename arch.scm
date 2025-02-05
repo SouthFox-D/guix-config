@@ -54,6 +54,7 @@
    "python-requests"
 
    "mpv"
+   "sdcv"
    ))
 
 (define arch-packages
