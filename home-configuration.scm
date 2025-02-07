@@ -60,6 +60,7 @@
 
                   ;; bin
                   (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
+                  (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t))
                   ))
        (service home-zsh-service-type
                 (home-zsh-configuration
