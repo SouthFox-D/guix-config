@@ -39,6 +39,7 @@
    "hyprlock"
    "hyprpaper"
    "waybar"
+   "libnotify"
    "dunst"
    "wofi"
    "kitty"
