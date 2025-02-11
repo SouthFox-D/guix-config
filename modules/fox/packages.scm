@@ -6,6 +6,10 @@
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
+  #:use-module (gnu packages bootstrap)
+  #:use-module (gnu packages elf)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages check)
   #:use-module (gnu packages python-build)
   #:use-module (gnu packages python-xyz)
@@ -93,3 +97,44 @@ with the latest updates from the community.")
 its Lisp code into the Python Abstract Syntax Tree, you have the whole world of
 Python at your fingertips, in Lisp form.")
     (license expat)))
+
+(define-public hugo-bin
+  (package
+    (name "hugo-bin")
+    (version "0.143.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/gohugoio/hugo" "/releases/download/v"
+                    version "/hugo_extended_" version "_linux-amd64.tar.gz"))
+              (sha256
+               (base32
+                "0rhhbmn67mkh98wfwzdkchcxj44q22yc69233q7cfd7kqqyvgn18"))))
+    (build-system copy-build-system)
+    (arguments
+     (list #:install-plan #~'(("hugo" "bin/"))
+           #:phases
+           #~(modify-phases %standard-phases
+               (delete 'strip)
+               (add-after 'install 'patch-elf
+                 (lambda _
+                   (let ((hugo (string-append #$output "/bin/hugo")))
+                     (invoke "patchelf" "--set-interpreter"
+                             (string-append #$(this-package-input "glibc")
+                                            #$(glibc-dynamic-linker))
+                             hugo)
+                     (invoke "patchelf" "--set-rpath"
+                             (string-append (ungexp (this-package-input "gcc")
+                                                    "lib")
+                                            "/lib")
+                             hugo)))))))
+    (supported-systems '("x86_64-linux"))
+    (native-inputs (list patchelf-0.16))
+    (inputs (list `(,gcc "lib") glibc))
+    (home-page "https://gohugo.io/")
+    (synopsis "Static site generator")
+    (description
+     "Hugo is a static site generator written in Go, optimized for speed and
+designed for flexibility.")
+    (license asl2.0)
+    (properties '((upstream-name . "hugo")))))
