@@ -69,35 +69,6 @@ with the latest updates from the community.")
     (description "Terminal workspace with batteries included.")
     (license expat)))
 
-(define-public python-hy-1
-  (package
-    (name "python-hy-1")
-    (version "1.0.0")
-    (source
-     (origin
-       (method git-fetch) ;no tests in PyPI release
-       (uri (git-reference
-             (url "https://github.com/hylang/hy")
-             (commit version)))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32 "1msv3027krv223a4dhx6kzp7r7l4q2qg8kq25j4dcf8k5xs73ax3"))))
-    (build-system pyproject-build-system)
-    (arguments
-     (list
-      ;; This test expects the hy executable to be called 'hy', but in Guix
-      ;; it's .hy-real.
-      #:test-flags #~(list "-k" "not test_sys_executable")))
-    (native-inputs (list python-pytest python-wheel))
-    (propagated-inputs (list python-funcparserlib))
-    (home-page "https://docs.hylang.org/en/stable/")
-    (synopsis "Lisp frontend to Python")
-    (description
-     "Hy is a dialect of Lisp that's embedded in Python.  Since Hy transforms
-its Lisp code into the Python Abstract Syntax Tree, you have the whole world of
-Python at your fingertips, in Lisp form.")
-    (license expat)))
-
 (define-public hugo-bin
   (package
     (name "hugo-bin")
@@ -105,7 +76,7 @@ Python at your fingertips, in Lisp form.")
     (source (origin
               (method url-fetch)
               (uri (string-append
-                    "https://github.com/gohugoio/hugo" "/releases/download/v"
+                    "https://mouse.southfox.me/https/github.com/gohugoio/hugo" "/releases/download/v"
                     version "/hugo_extended_" version "_linux-amd64.tar.gz"))
               (sha256
                (base32
