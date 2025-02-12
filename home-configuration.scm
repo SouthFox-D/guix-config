@@ -11,6 +11,7 @@
              (guix gexp)
              (gnu home services)
              (gnu home services shells)
+             (gnu home services mcron)
              (fox packages)
              (fox services))
 
@@ -63,6 +64,9 @@
                   ;; bin
                   (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
                   (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t))
+
+                  ;; mail
+                  (".config/offlineimap/config" ,(local-file "files/mail/offlineimaprc"))
                   ))
        (service home-zsh-service-type
                 (home-zsh-configuration

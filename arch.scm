@@ -56,6 +56,7 @@
 
    "mpv"
    "sdcv"
+   "offlineimap"
    ))
 
 (define arch-packages
