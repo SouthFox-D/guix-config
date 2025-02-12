@@ -45,7 +45,9 @@
                          "zsh-completions"
                          "zsh-autosuggestions"
                          "zsh-syntax-highlighting"
-                         "fzf"))
+                         "fzf"
+                         "mu"
+                         ))
                        (list
                         zellij)))
      (services
