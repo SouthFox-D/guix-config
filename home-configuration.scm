@@ -70,5 +70,12 @@
                   ))
        (service home-zsh-service-type
                 (home-zsh-configuration
-                 (zshrc (list (local-file "files/zshrc"))))))))
-    )
+                 (zshrc (list (local-file "files/zshrc")))))
+       (service home-mcron-service-type
+                (home-mcron-configuration
+                 (jobs (list #~(job '(next-minute
+                                      (range 0 60 20))
+                                    (lambda ()
+                                      (system* "offlineimap")))
+                             ))))
+       ))))
