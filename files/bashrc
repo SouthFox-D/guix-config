@@ -6,4 +6,5 @@
 [[ $- != *i* ]] && return
 [[ $TERM = dumb ]] && return
 
-exec zsh
+# use 'sudo chsh'
+# exec zsh
