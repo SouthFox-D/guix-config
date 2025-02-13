@@ -31,6 +31,7 @@
    "mosh"
    "fuse2"
    "iftop"
+   "zsh"
    ))
 
 (define %arch-de-things
