@@ -30,9 +30,6 @@
      (services
       (list
        (service oh-my-zsh-service-type)
-       (service home-bash-service-type
-                (home-bash-configuration
-                 (bashrc (list (local-file "files/bashrc")))))
        (service home-zsh-service-type
                 (home-zsh-configuration
                  (zshrc (list (local-file "files/zshrc"))))))))
