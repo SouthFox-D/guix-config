@@ -100,4 +100,8 @@ eval "$(fzf --zsh)"
 # [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 # eval "$(pyenv init -)"
 alias ssh="kitten ssh"
-[[ -n "${INSIDE_EMACS}" ]] || eval "$(zellij setup --generate-auto-start zsh)"
+
+if [[ "$TERM" == "xterm-kitty" ]] || [[ "$TERM" == "xterm-256color" && ! -n "$INSIDE_EMACS" ]]; then
+  alias ssh="kitten ssh"
+  eval "$(zellij setup --generate-auto-start zsh)"
+fi
