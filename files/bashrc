@@ -4,5 +4,6 @@
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
+[[ $TERM = dumb ]] && return
 
 exec zsh
