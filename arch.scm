@@ -66,7 +66,8 @@
 (define arch-packages
   (append
    %arch-base-packages
-   (if (not (equal? "lighthouse" (getlogin)))
+   (if (not (or (member (gethostname) '("mastfox"))
+                (equal? "lighthouse" (getlogin))))
        (append
         %arch-de-things
         %arch-misc
