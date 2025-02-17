@@ -58,6 +58,9 @@
    "mpv"
    "sdcv"
    "offlineimap"
+
+   "fcitx5-im"
+   "fcitx5-rime"
    ))
 
 (define arch-packages
