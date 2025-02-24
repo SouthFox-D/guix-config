@@ -58,7 +58,7 @@
    "sdcv"
    "offlineimap"
 
-   "fcitx5-im"
+   "fcitx5"
    "fcitx5-rime"
    ))
 
