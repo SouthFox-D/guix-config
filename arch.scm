@@ -32,6 +32,8 @@
    "fuse2"
    "iftop"
    "zsh"
+   "tar"
+   "unzip"
    ))
 
 (define %arch-de-things
@@ -57,6 +59,13 @@
    "mpv"
    "sdcv"
    "offlineimap"
+   "fd"
+   "ripgrep"
+   "poppler"
+   "ffmpegthumbnailer"
+   "mediainfo"
+   "libvips"
+   "imagemagick"
 
    "fcitx5"
    "fcitx5-rime"
