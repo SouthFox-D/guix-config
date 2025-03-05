@@ -56,6 +56,8 @@
    "hy"
    "python-requests"
 
+   "nyxt"
+
    "mpv"
    "sdcv"
    "offlineimap"
