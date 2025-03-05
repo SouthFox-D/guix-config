@@ -57,6 +57,7 @@
                   (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
                   (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
                   (".config/zellij/config.kdl" ,(local-file "files/zellij.kdl"))
+                  (".config/nyxt/config.lisp" ,(local-file "files/nyxt.lisp"))
 
                   ;; bin
                   (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
