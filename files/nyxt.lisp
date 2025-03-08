@@ -1,14 +1,19 @@
+(define-configuration nyxt/mode/proxy:proxy-mode
+  ((nyxt/mode/proxy:proxy (make-instance 'proxy
+                                         :url (quri:uri "http://localhost:10809")
+                                         :allowlist '("localhost" "127.0.0.1")
+                                         :proxied-downloads-p t))))
+
 (define-configuration web-buffer
     ((default-modes
-      (pushnew 'nyxt/mode/vi:vi-normal-mode %slot-value%))))
+      (append '(nyxt/mode/vi:vi-normal-mode nyxt/mode/proxy:proxy-mode) %slot-value%))))
 
 (define-configuration buffer
     ((override-map
       (let ((map (make-keymap "override-map")))
         (define-key map "M-x" 'execute-command)
         (define-key map "C-d" 'scroll-page-down)
-        (define-key map "C-u" 'scroll-page-up)
-        ))))
+        (define-key map "C-u" 'scroll-page-up)))))
 
 (defvar pinyin-table
   '("阿啊呵腌嗄锕吖爱哀挨碍埃癌艾唉矮哎皑蔼隘暧霭捱嗳瑷嫒锿嗌砹安案按暗岸俺谙黯鞍氨庵桉鹌胺铵揞犴埯昂肮盎奥澳傲熬敖凹袄懊坳嗷拗鏖骜鳌翱岙廒遨獒聱媪螯鏊"
