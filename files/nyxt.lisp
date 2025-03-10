@@ -160,3 +160,12 @@ A higher score means the SUGGESTION-STRING comes first."
     (nyxt/mode/hint::%follow-hint (first results))
     (mapcar (alexandria:rcurry #'nyxt/mode/hint::%follow-hint-new-buffer (current-buffer))
             (rest results))))
+
+(define-command-global py-jump-to-heading (&key (buffer (current-buffer)))
+  "Jump to a particular heading, of type h1, h2, h3, h4, h5, or h6."
+  (prompt :prompt "Jump to heading"
+          :sources (make-instance
+                    'nyxt/mode/document::heading-source
+                    :filter #'my/pyszm-fuzzy-match
+                    :filter-preprocessor #'prompter:delete-inexact-matches
+                    :buffer buffer)))
