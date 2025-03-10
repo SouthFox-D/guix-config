@@ -149,6 +149,7 @@ A higher score means the SUGGESTION-STRING comes first."
                                                (prompter:attributes-default suggestion)
                                                :ignore-case t))
                           #'my/pyszm-fuzzy-match)
+                      :filter-preprocessor nil
                       :constructor
                       (lambda (source)
                         (declare (ignore source))
@@ -167,5 +168,5 @@ A higher score means the SUGGESTION-STRING comes first."
           :sources (make-instance
                     'nyxt/mode/document::heading-source
                     :filter #'my/pyszm-fuzzy-match
-                    :filter-preprocessor #'prompter:delete-inexact-matches
+                    :filter-preprocessor nil
                     :buffer buffer)))
