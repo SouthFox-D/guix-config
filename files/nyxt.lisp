@@ -81,7 +81,7 @@ A higher score means the SUGGESTION-STRING comes first."
                    (when (position x suggestion-string :start i)
                      (setf i (position x suggestion-string))
                      (match-bonus i)
-                     (when (and (and (>= lastchar-diff 0) (< lastchar-diff 24))
+                     (when (and (and (>= lastchar-diff 0) (< lastchar-diff 26))
                                 (member (aref (the (simple-array character) suggestion-string) (1- i))
                                         (nth lastchar-diff pinyin-table)))
                        (incf score continuous-bonus))
@@ -91,7 +91,7 @@ A higher score means the SUGGESTION-STRING comes first."
                (let ((next (position c suggestion-string :start i))
                      (diff (- (char-code c) (char-code #\a))))
                  ;; bonus for continuous match
-                 (if (and (< diff 24) (>= diff 0))
+                 (if (and (< diff 26) (>= diff 0))
                      (pinyin-bound diff)
                      (progn
                        (setf i next)
