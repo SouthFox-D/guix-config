@@ -125,7 +125,7 @@ A higher score means the SUGGESTION-STRING comes first."
         (my/score-suggestion-string input (prompter::ensure-match-data-string suggestion source)))
   suggestion)
 
-(define-command-global pyszm-follow-hint ()
+(define-command-global py-follow-hint ()
   "Experimental prompt for element hints and open them in the current buffer."
   (alexandria:when-let*
    ((buffer (current-buffer))
