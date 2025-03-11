@@ -4,9 +4,20 @@
                                          :allowlist '("localhost" "127.0.0.1")
                                          :proxied-downloads-p t))))
 
+(defvar *my-search-engines*
+  (list
+   '("google" "https://google.com/search?q=~a" "https://google.com")
+   '("python3" "https://docs.python.org/3/search.html?q=~a"
+     "https://docs.python.org/3")
+   '("searx" "https://searx.tiekoetter.com/search?q=~a&category_general=1&language=en-US&time_range=&safesearch=0&theme=simple"
+     "https://searx.tiekoetter.com/"))
+  "List of search engines.")
+
 (define-configuration web-buffer
     ((default-modes
-      (append '(nyxt/mode/vi:vi-normal-mode nyxt/mode/proxy:proxy-mode) %slot-value%))))
+      (append '(nyxt/mode/vi:vi-normal-mode nyxt/mode/proxy:proxy-mode) %slot-value%))
+     (search-engines (mapcar (lambda (engine) (apply 'make-search-engine engine))
+                             *my-search-engines*))))
 
 (define-configuration buffer
     ((override-map
