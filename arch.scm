@@ -49,6 +49,7 @@
    "cliphist"
    "grim"
    "slurp"
+   "brightnessctl"
    ))
 
 (define %arch-misc
