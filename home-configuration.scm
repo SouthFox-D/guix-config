@@ -72,6 +72,9 @@
                   (".config/fcitx5/profile" ,(local-file "files/fcitx5/profile"))
                   (".config/fcitx5/conf/keyboard.conf" ,(local-file "files/fcitx5/conf/keyboard.conf"))
                   (".config/fcitx5/conf/notifications.conf" ,(local-file "files/fcitx5/conf/notifications.conf"))
+
+                  ;; anki
+                  (".local/share/Anki2/addons21/dummp_tts/__init__.py" ,(local-file "files/anki/dummy_tts.py"))
                   ))
        (service home-zsh-service-type
                 (home-zsh-configuration
