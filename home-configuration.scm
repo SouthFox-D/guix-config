@@ -32,7 +32,7 @@
        (service oh-my-zsh-service-type)
        (service home-zsh-service-type
                 (home-zsh-configuration
-                 (zshrc (list (local-file "files/zshrc"))))))))
+                 (zshrc (list (eval-file "files/zshrc"))))))))
 
     (home-environment
      (packages (append (specifications->packages
