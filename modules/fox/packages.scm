@@ -56,7 +56,6 @@ with the latest updates from the community.")
     (build-system copy-build-system)
     (arguments
      (list
-      #:substitutable? #f
       #:install-plan
       #~'(("zellij" "bin/"))
       #:phases
