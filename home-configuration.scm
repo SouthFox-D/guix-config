@@ -78,7 +78,7 @@
                   ))
        (service home-zsh-service-type
                 (home-zsh-configuration
-                 (zshrc (list (local-file "files/zshrc")))))
+                 (zshrc (list (eval-file "files/zshrc")))))
        (service home-mcron-service-type
                 (home-mcron-configuration
                  (jobs (list #~(job '(next-minute
