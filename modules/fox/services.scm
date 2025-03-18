@@ -9,8 +9,14 @@
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (gnu services)
+  #:use-module (ice-9 textual-ports)
+  #:use-module (ice-9 regex)
+  #:use-module (ice-9 eval-string)
   #:export (oh-my-zsh-service-type
-            home-emacs-service-type))
+            home-emacs-service-type
+
+            eval-file
+            ))
 
 (define oh-my-zsh-service-type
   (service-type (name 'oh-my-zsh)
@@ -44,3 +50,25 @@
                         home-emacs-shepherd-service)))
                 (default-value '())
                 (description "Configures Emacs and installs packages to home-profile.")))
+
+(define (eval-template template-string)
+  ;; (display template-string)
+  (regexp-substitute/global #f
+                            "\\$~\\{([^}]*)\\}"
+                            template-string
+                            'pre
+                            (lambda (m)
+                              (eval-string
+                               (substring (match:substring m)
+                                          3
+                                          (- (string-length (match:substring m)) 1))))
+                            'post))
+
+(define (eval-template-file file-path)
+  (call-with-input-file file-path
+    (lambda (port)
+      (eval-template (get-string-all port)))))
+
+(define (eval-file file-path)
+  (plain-file (string-replace-substring file-path "/"  "-")
+              (eval-template-file file-path)))
