@@ -6,6 +6,8 @@
              ;; (guix scripts package)
              )
 
+(load "common.scm")
+
 (define %arch-base-packages
   (list
    ;; vps2arch import
@@ -77,8 +79,7 @@
 (define arch-packages
   (append
    %arch-base-packages
-   (if (not (or (member (gethostname) '("mastfox" "basefox"))
-                (equal? "lighthouse" (getlogin))))
+   (if touchable-machine?
        (append
         %arch-de-things
         %arch-misc
