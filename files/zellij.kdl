@@ -269,7 +269,9 @@ load_plugins {
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
-// theme "dracula"
+theme "$~{(if (not (or (member (gethostname) (list "mastfox" "basefox"))
+                          (equal? "lighthouse" (getlogin))))
+                "nightfox" "iceberg-light")}"
 
 // Choose the base input mode of zellij.
 // Default: normal

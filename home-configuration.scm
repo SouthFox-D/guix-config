@@ -56,7 +56,7 @@
                 `((".config/hypr/hyprland.conf" ,(local-file "files/hyprland.conf"))
                   (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
                   (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
-                  (".config/zellij/config.kdl" ,(local-file "files/zellij.kdl"))
+                  (".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
                   (".config/nyxt/config.lisp" ,(local-file "files/nyxt.lisp"))
 
                   ;; bin
