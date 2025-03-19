@@ -32,7 +32,13 @@
        (service oh-my-zsh-service-type)
        (service home-zsh-service-type
                 (home-zsh-configuration
-                 (zshrc (list (eval-file "files/zshrc"))))))))
+                 (zshrc (list (eval-file "files/zshrc")))))))
+     (service home-files-service-type
+              `((".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
+
+                ;; bin
+                (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t))
+                )))
 
     (home-environment
      (packages (append (specifications->packages
