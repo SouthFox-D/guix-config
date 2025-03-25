@@ -67,12 +67,16 @@
                     (".local/share/Anki2/addons21/dummp_tts/__init__.py" ,(local-file "files/anki/dummy_tts.py")))
                   '()))))
    (if touchable-machine?
-       (list
-        (service home-emacs-service-type)
-        (service home-mcron-service-type
-                 (home-mcron-configuration
-                  (jobs (list #~(job '(next-minute
-                                       (range 0 60 20))
-                                     (lambda ()
-                                       (system* "offlineimap"))))))))
+       (append
+        (list
+         (service home-emacs-service-type))
+         (if work-machine?
+             (list
+              (service home-mcron-service-type
+                       (home-mcron-configuration
+                        (jobs (list #~(job '(next-minute
+                                             (range 0 60 20))
+                                           (lambda ()
+                                             (system* "offlineimap"))))))))
+             '()))
        '()))))
