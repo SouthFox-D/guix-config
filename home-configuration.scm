@@ -46,7 +46,7 @@
                 (".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
                 (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t)))
               (if touchable-machine?
-                  `((".config/hypr/hyprland.conf" ,(local-file "files/hyprland.conf"))
+                  `((".config/hypr/hyprland.conf" ,(eval-file "files/hyprland.conf"))
                     (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
                     (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
                     (".config/nyxt/config.lisp" ,(local-file "files/nyxt.lisp"))
