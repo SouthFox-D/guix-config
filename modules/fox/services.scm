@@ -58,10 +58,13 @@
                             template-string
                             'pre
                             (lambda (m)
-                              (eval-string
-                               (substring (match:substring m)
-                                          3
-                                          (- (string-length (match:substring m)) 1))))
+                              (let ((result (eval-string
+                                             (substring (match:substring m)
+                                                        3
+                                                        (- (string-length (match:substring m)) 1)))))
+                                (if (unspecified? result)
+                                    ""
+                                    result)))
                             'post))
 
 (define (eval-template-file file-path)
