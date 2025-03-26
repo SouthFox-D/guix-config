@@ -68,8 +68,6 @@
                   '()))))
    (if touchable-machine?
        (append
-        (list
-         (service home-emacs-service-type))
          (if work-machine?
              (list
               (service home-mcron-service-type
