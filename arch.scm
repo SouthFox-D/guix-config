@@ -46,7 +46,6 @@
    "waybar"
    "libnotify"
    "dunst"
-   "wofi"
    "kitty"
    "cliphist"
    "grim"
