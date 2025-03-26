@@ -68,7 +68,7 @@
                   '()))))
    (if touchable-machine?
        (append
-         (if work-machine?
+         (if (not work-machine?)
              (list
               (service home-mcron-service-type
                        (home-mcron-configuration
