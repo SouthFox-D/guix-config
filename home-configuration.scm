@@ -27,9 +27,12 @@
                       "zsh-autosuggestions"
                       "zsh-syntax-highlighting"
                       "fzf")
-                     (if touchable-machine? '("mu"
-                                      "guile-hoot"
-                                      "guile-next")
+                     (if touchable-machine?
+                         '("mu"
+                           "guile-next"
+                           "guile-hoot"
+                           "guile-goblins"
+                           )
                          '())))
                    (list
                     zellij)))
