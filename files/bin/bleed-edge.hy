@@ -12,11 +12,16 @@
 
 (defn get-cut []
   (let [sudo-user (os.environ.get "SUDO_USER")
-        guix-workdir f"/home/{sudo-user}/.config/guix"]
+        guix-workdir f"/home/{sudo-user}/.config/guix"
+        guix-substitute "--substitute-urls=\"https://guix.southfox.me\""
+        need-reload-hyprland? (os.path.isfile "/usr/bin/hyprctl")]
     (run-cmd f"git -C {guix-workdir} pull" sudo-user)
     (run-cmd f"guix repl -L {guix-workdir}/modules  {guix-workdir}/arch.scm")
-    (run-cmd "guix pull -v 4 && systemctl restart guix-daemon.service")
-    (run-cmd "guix pull -v 4" sudo-user)
+    (run-cmd f"guix pull {guix-substitute} -v 4 && systemctl restart guix-daemon.service")
+    (run-cmd f"guix pull {guix-substitute} -v 4" sudo-user)
+    (run-cmd f"guix home reconfigure {guix-workdir}/home-configuration.scm -L {guix-workdir}/modules {guix-substitute} -v 4" sudo-user)
+    (when need-reload-hyprland?
+      (run-cmd f"hyprctl reload -i 0" sudo-user))
     (run-cmd f"DOOMGITCONFIG=~/.gitconfig /home/{sudo-user}/.emacs.d/bin/doom upgrade" sudo-user)))
 
 (get-cut)
