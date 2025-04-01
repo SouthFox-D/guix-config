@@ -56,6 +56,7 @@
 
                     (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
                     (".local/bin/update-wallpaper" ,(local-file "files/bin/update-wallpaper.hy" #:recursive? #t))
+                    (".local/bin/bleed-edge" ,(local-file "files/bin/bleed-edge.hy" #:recursive? #t))
 
                     ;; mail
                     (".config/offlineimap/config" ,(local-file "files/mail/offlineimaprc"))
