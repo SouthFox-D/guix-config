@@ -3,12 +3,12 @@
 (import time)
 (import os)
 
-(defn run-cmd [cmd [user "root"]]
+(defn run-cmd [cmd [user "root"] [check True]]
   (print user "--" "Run cmd: " cmd)
   (when (!= user "root")
-    (subprocess.run f"sudo -u {user} sh -c \"{cmd}\"" :shell True :check True)
+    (subprocess.run f"sudo -u {user} sh -c \"{cmd}\"" :shell True :check check)
     (return))
-  (subprocess.run cmd :shell True :check True))
+  (subprocess.run cmd :shell True :check check))
 
 (defn get-cut []
   (let [sudo-user (os.environ.get "SUDO_USER")
@@ -22,6 +22,7 @@
     (run-cmd f"cd {guix-workdir} && guix home reconfigure home-configuration.scm -L modules {guix-substitute} -v 4" sudo-user)
     (when need-reload-hyprland?
       (run-cmd f"hyprctl reload -i 0" sudo-user))
+    (run-cmd f"git -C /home/{sudo-user}/.doom.d pull" sudo-user False)
     (run-cmd f"DOOMGITCONFIG=~/.gitconfig /home/{sudo-user}/.emacs.d/bin/doom upgrade" sudo-user)))
 
 (get-cut)
