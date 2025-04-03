@@ -6,7 +6,7 @@
 (defn run-cmd [cmd [user "root"]]
   (print user "--" "Run cmd: " cmd)
   (when (!= user "root")
-    (subprocess.run (+ "sudo -u " user " " cmd) :shell True :check True)
+    (subprocess.run f"sudo -u {user} sh -c \"{cmd}\"" :shell True :check True)
     (return))
   (subprocess.run cmd :shell True :check True))
 
@@ -19,7 +19,7 @@
     (run-cmd f"guix repl -L {guix-workdir}/modules  {guix-workdir}/arch.scm")
     (run-cmd f"guix pull {guix-substitute} -v 4 && systemctl restart guix-daemon.service")
     (run-cmd f"guix pull {guix-substitute} -v 4" sudo-user)
-    (run-cmd f"guix home reconfigure {guix-workdir}/home-configuration.scm -L {guix-workdir}/modules {guix-substitute} -v 4" sudo-user)
+    (run-cmd f"cd {guix-workdir} && guix home reconfigure home-configuration.scm -L modules {guix-substitute} -v 4" sudo-user)
     (when need-reload-hyprland?
       (run-cmd f"hyprctl reload -i 0" sudo-user))
     (run-cmd f"DOOMGITCONFIG=~/.gitconfig /home/{sudo-user}/.emacs.d/bin/doom upgrade" sudo-user)))
