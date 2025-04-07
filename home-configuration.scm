@@ -26,12 +26,13 @@
                       "zsh-completions"
                       "zsh-autosuggestions"
                       "zsh-syntax-highlighting"
-                      "fzf")
+                      "fzf"
+                      "guile-next"
+                      "guile-hoot"
+                      "guile-goblins"
+                      )
                      (if touchable-machine?
                          '("mu"
-                           "guile-next"
-                           "guile-hoot"
-                           "guile-goblins"
                            )
                          '())))
                    (list
