@@ -54,6 +54,7 @@
                     (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
                     (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
                     (".config/nyxt/config.lisp" ,(local-file "files/nyxt.lisp"))
+                    (".config/kitty/kitty.conf" ,(local-file "files/kitty.conf"))
 
                     (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
                     (".local/bin/update-wallpaper" ,(local-file "files/bin/update-wallpaper.hy" #:recursive? #t))
