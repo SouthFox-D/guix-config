@@ -162,3 +162,30 @@ internet.")
      "A GUI client for Windows, Linux and macOS, support Xray and sing-box
 and others.")
     (license asl2.0)))
+
+(define-public anki-bin
+  (package
+    (name "anki-bin")
+    (version "25.02.4")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/ankitects/anki" "/releases/download/"
+                    version "/anki-" version "-linux-qt6.tar.zst"))
+              (sha256
+               (base32
+                "0hb0088sxngqmkzakid0kq4p3xyzlrlyndq2c43snsgazan2dhdw"))))
+    (build-system copy-build-system)
+    (arguments
+     (list #:install-plan #~'(("anki-25.02.4-linux-qt6/" "opt/anki-bin"))
+           #:phases
+           #~(modify-phases %standard-phases
+               (replace 'unpack
+            (lambda* (#:key source #:allow-other-keys)
+              (invoke "tar" "-xvf" source))))))
+    (supported-systems '("x86_64-linux"))
+    (home-page "https://github.com/2dust/v2rayN")
+    (synopsis "Spaced repetition program")
+    (description
+     "Anki's shared backend and web components, and the Qt frontend.")
+    (license asl2.0)))

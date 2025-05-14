@@ -33,6 +33,7 @@
                       )
                      (if touchable-machine?
                          '("mu"
+                           "anki-bin"
                            "v2rayn-bin"
                            )
                          '())))
