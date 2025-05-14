@@ -8,6 +8,7 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bootstrap)
+  #:use-module (gnu packages compression)
   #:use-module (gnu packages elf)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages check)
@@ -131,4 +132,33 @@ designed for flexibility.")
     (description
      "A fast reverse proxy to help you expose a local server behind a NAT or firewall to the
 internet.")
+    (license asl2.0)))
+
+(define-public v2rayn-bin
+  (package
+    (name "v2rayn-bin")
+    (version "7.12.3")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/2dust/v2rayN" "/releases/download/"
+                    version "/v2rayN-linux-64.zip"))
+              (sha256
+               (base32
+                "03nh7xyqdyfmkgvkw276q6w9ykm161qyr01w16vva4hdkphd7x67"))))
+    (build-system copy-build-system)
+    (arguments
+     (list #:install-plan #~'(("v2rayN-linux-64" "opt/v2rayn-bin"))
+           #:phases
+           #~(modify-phases %standard-phases
+               (replace 'unpack
+            (lambda* (#:key source #:allow-other-keys)
+              (invoke "unzip" source))))))
+    (supported-systems '("x86_64-linux"))
+    (native-inputs (list unzip))
+    (home-page "https://github.com/2dust/v2rayN")
+    (synopsis "V2ray GUI client")
+    (description
+     "A GUI client for Windows, Linux and macOS, support Xray and sing-box
+and others.")
     (license asl2.0)))

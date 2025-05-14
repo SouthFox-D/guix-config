@@ -33,6 +33,7 @@
                       )
                      (if touchable-machine?
                          '("mu"
+                           "v2rayn-bin"
                            )
                          '())))
                    (list
