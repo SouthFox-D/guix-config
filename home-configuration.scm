@@ -48,9 +48,9 @@
               (zshrc (list (eval-file "files/zshrc")))))
     (service home-files-service-type
              (append
-              `(
-                (".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
-                (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t)))
+              `((".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
+                (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t))
+                (".local/bin/bleed-edge" ,(local-file "files/bin/bleed-edge.hy" #:recursive? #t)))
               (if touchable-machine?
                   `((".config/hypr/hyprland.conf" ,(eval-file "files/hyprland.conf"))
                     (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
@@ -60,7 +60,6 @@
 
                     (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
                     (".local/bin/update-wallpaper" ,(local-file "files/bin/update-wallpaper.hy" #:recursive? #t))
-                    (".local/bin/bleed-edge" ,(local-file "files/bin/bleed-edge.hy" #:recursive? #t))
 
                     ;; mail
                     (".config/offlineimap/config" ,(local-file "files/mail/offlineimaprc"))

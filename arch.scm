@@ -36,6 +36,8 @@
    "zsh"
    "tar"
    "unzip"
+   "hy"
+   "ripgrep"
    ))
 
 (define %arch-de-things
@@ -55,7 +57,6 @@
 
 (define %arch-misc
   (list
-   "hy"
    "python-requests"
 
    "nyxt"
@@ -64,7 +65,6 @@
    "sdcv"
    "offlineimap"
    "fd"
-   "ripgrep"
    "poppler"
    "ffmpegthumbnailer"
    "mediainfo"
