@@ -20,11 +20,11 @@
   #:use-module (gnu services))
 
 (define-public oh-my-zsh
-  (let ((commit "f97e871c33da57d20e1b0411da6b1674126192a9")
+  (let ((commit "c95509ebfdbcc3c497f12697cfd2717bcb0a528b")
         (url "https://github.com/ohmyzsh/ohmyzsh.git"))
     (package
       (name "oh-my-zsh")
-      (version "250319")
+      (version "250515")
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -32,7 +32,7 @@
                       (commit commit)))
                 (sha256
                  (base32
-                  "14wcch5swvq2xqs3zs5hszrbi0rp8zvlj4wcz0rz45b61s9kss1g"))))
+                  "0x631vjnmfmjgpygcqf29qnp3kkw8zrp1vmnkjxcwbzvdw55zf39"))))
       (build-system copy-build-system)
       (synopsis "framework for managing your zsh configuration")
       (description "🙃A delightful community-driven (with 2,400+ contributors)
