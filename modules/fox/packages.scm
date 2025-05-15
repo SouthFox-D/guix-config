@@ -161,7 +161,7 @@ internet.")
     (description
      "A GUI client for Windows, Linux and macOS, support Xray and sing-box
 and others.")
-    (license asl2.0)))
+    (license gpl3)))
 
 (define-public anki-bin
   (package
@@ -188,4 +188,4 @@ and others.")
     (synopsis "Spaced repetition program")
     (description
      "Anki's shared backend and web components, and the Qt frontend.")
-    (license asl2.0)))
+    (license agpl3+)))
