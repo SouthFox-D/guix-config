@@ -38,7 +38,7 @@
                            )
                          '())))
                    (list
-                    zellij)))
+                    zellij-bin)))
  (services
   (append
    (list

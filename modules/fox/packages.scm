@@ -43,9 +43,9 @@ with the latest updates from the community.")
       (home-page "https://ohmyz.sh/")
       (license expat))))
 
-(define-public zellij
+(define-public zellij-bin
   (package
-    (name "zellij")
+    (name "zellij-bin")
     (version "0.42.0")
     (source (origin
               (method url-fetch)
