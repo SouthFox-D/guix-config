@@ -184,7 +184,7 @@ and others.")
             (lambda* (#:key source #:allow-other-keys)
               (invoke "tar" "-xvf" source))))))
     (supported-systems '("x86_64-linux"))
-    (home-page "https://github.com/2dust/v2rayN")
+    (home-page "https://apps.ankiweb.net")
     (synopsis "Spaced repetition program")
     (description
      "Anki's shared backend and web components, and the Qt frontend.")
