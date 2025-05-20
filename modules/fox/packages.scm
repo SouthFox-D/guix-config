@@ -166,7 +166,7 @@ and others.")
 (define-public anki-bin
   (package
     (name "anki-bin")
-    (version "25.02.4")
+    (version "25.02.5")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -174,10 +174,10 @@ and others.")
                     version "/anki-" version "-linux-qt6.tar.zst"))
               (sha256
                (base32
-                "0hb0088sxngqmkzakid0kq4p3xyzlrlyndq2c43snsgazan2dhdw"))))
+                "0l0jilmm12bsf1jcvn2kjzjdk4i0csz0bzhy74mdmbiyb17nm0f1"))))
     (build-system copy-build-system)
     (arguments
-     (list #:install-plan #~'(("anki-25.02.4-linux-qt6/" "opt/anki-bin"))
+     (list #:install-plan #~'(("anki-25.02.5-linux-qt6/" "opt/anki-bin"))
            #:phases
            #~(modify-phases %standard-phases
                (replace 'unpack
