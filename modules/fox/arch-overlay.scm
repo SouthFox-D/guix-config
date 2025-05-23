@@ -16,9 +16,14 @@
   #:use-module (srfi srfi-1)
   #:export (arch-service-type
             arch-files-service-type
+            arch-profile-service-type
             arch-run-on-pacman-sync-service-type
+            arch-activation-service-type
             build-arch-drv
-            ))
+            )
+  #:re-export (service
+               service-type
+               service-extension))
 
 
 (define (arch-derivation entries mextensions)
@@ -142,6 +147,30 @@ in the arch pacman overlay."
   (with-monad %store-monad
               (return `(("sync" ,sync)))))
 
+
+(define guix-arch-daemon-flie
+  (plain-file "guix-arch.service" "\
+[Unit]
+Description=Guix Arch activate
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c \"/var/guix/profiles/per-user/root/arch-profile/activate\"
+Environment='GUIX_LOCPATH=/var/guix/profiles/per-user/root/guix-profile/lib/locale' LC_ALL=en_US.utf8
+
+[Install]
+WantedBy=multi-user.target guix-daemon.service"))
+
+(define arch-guix-oneshot-service-type
+  (service-type (name 'arch-oneshot)
+                (extensions
+                 (list (service-extension
+                        arch-files-service-type
+                        (lambda (_)
+                          (list `("guix-arch.service" ,guix-arch-daemon-flie))))))
+                (default-value '())
+                (description "Build guix systemd oneshot service file.")))
+
 (define arch-run-on-pacman-sync-service-type
   (service-type (name 'arch-run-on-pacman-sync)
                 (extensions
@@ -153,13 +182,68 @@ in the arch pacman overlay."
                 (default-value #f)
                 (description "Run gexps on pacman sync")))
 
-(define %arch-profile
-  (string-append %profile-directory "/arch-profile"))
+(define (compute-activation-script init-gexp gexps)
+  (gexp->script
+   "activate"
+   #~(begin
+       #$@gexps)))
+
+(define (activation-script-entry m-activation)
+  "Return, as a monadic value, an entry for the activation script
+in the home environment directory."
+  (mlet %store-monad ((activation m-activation))
+    (return `(("activate" ,activation)))))
+
+(define arch-activation-service-type
+  (service-type (name 'arch-activation)
+                (extensions
+                 (list (service-extension
+                        arch-service-type
+                        activation-script-entry)))
+                (compose identity)
+                (extend compute-activation-script)
+                (default-value #f)
+                (description "Run gexps to activate the current
+generation of home environment and update the state of the home
+directory.  @command{activate} script automatically called during
+reconfiguration or generation switching.  This service can be extended
+with one gexp, but many times, and all gexps must be idempotent.")))
+
+(define (packages->profile-entry packages)
+  "Return a system entry for the profile containing PACKAGES."
+  ;; XXX: 'mlet' is needed here for one reason: to get the proper
+  ;; '%current-target' and '%current-target-system' bindings when
+  ;; 'packages->manifest' is called, and thus when the 'package-inputs'
+  ;; etc. procedures are called on PACKAGES.  That way, conditionals in those
+  ;; inputs see the "correct" value of these two parameters.  See
+  ;; <https://issues.guix.gnu.org/44952>.
+  (mlet %store-monad ((_ (current-target-system)))
+    (return `(("profile" ,(profile
+                           (content (packages->manifest
+                                     (map identity
+                                     ;;(options->transformation transformations)
+                                     (delete-duplicates packages eq?))))))))))
+
+(define arch-profile-service-type
+  (service-type (name 'arch-profile)
+                (extensions
+                 (list (service-extension arch-service-type
+                                          packages->profile-entry)))
+                (compose concatenate)
+                (extend append)
+                (description
+                 "It contains packages and configuration files.")))
 
 (define %base-arch-services
   (list
-   (service arch-service-type)
-   (service arch-run-on-pacman-sync-service-type)))
+   (service arch-activation-service-type)
+   (service arch-run-on-pacman-sync-service-type)
+   (service arch-guix-oneshot-service-type)
+   (service arch-profile-service-type '())
+   (service arch-service-type)))
+
+(define %arch-profile
+  (string-append %profile-directory "/arch-profile"))
 
 (define (build-arch-drv arch-services)
   (let* ((arch-drv-raw
@@ -181,5 +265,15 @@ in the arch pacman overlay."
     (setenv "GUIX_ARCH_DRV" arch-drv-output)
     (switch-symlinks generation arch-drv-output)
     (switch-symlinks %arch-profile generation)
+    (copy-file (string-append arch-drv-output "/files/guix-arch.service")
+               "/etc/systemd/system/guix-arch.service")
+    (unless (file-exists? "/etc/systemd/system/multi-user.target.wants/guix-arch.service")
+      (symlink "/etc/systemd/system/guix-arch.service"
+               "/etc/systemd/system/multi-user.target.wants/guix-arch.service"))
+    (unless (file-exists? "/etc/systemd/system/guix-daemon.service.wants/guix-arch.service")
+      (symlink "/etc/systemd/system/guix-arch.service"
+               "/etc/systemd/system/guix-daemon.service.wants/guix-arch.service"))
+    (system* "systemctl" "daemon-reload")
     (primitive-load (string-append arch-drv-output "/sync"))
+    (primitive-load (string-append arch-drv-output "/activate"))
     (setenv "GUIX_ARCH_DRV" #f)))
