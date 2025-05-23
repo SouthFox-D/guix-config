@@ -169,7 +169,8 @@ in the arch pacman overlay."
             %store
             (service-value
              (fold-services
-              (append %base-arch-services arch-services)
+              (instantiate-missing-services
+               (append %base-arch-services arch-services))
               #:target-type arch-service-type)))))
          (arch-drv (with-store %store (build-derivations %store (list arch-drv-raw))))
          (arch-drv-output (derivation->output-path arch-drv-raw))
