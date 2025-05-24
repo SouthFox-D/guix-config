@@ -154,7 +154,7 @@ ExecStart=/bin/bash -c \"/var/guix/profiles/per-user/root/arch-profile/activate\
 Environment='GUIX_LOCPATH=/var/guix/profiles/per-user/root/guix-profile/lib/locale' LC_ALL=en_US.utf8
 
 [Install]
-WantedBy=multi-user.target guix-daemon.service"))
+WantedBy=guix-daemon.service"))
 
 (define arch-guix-oneshot-service-type
   (service-type (name 'arch-oneshot)
@@ -250,9 +250,6 @@ with one gexp, but many times, and all gexps must be idempotent.")))
     (switch-symlinks %arch-profile generation)
     (copy-file (string-append arch-drv-output "/files/guix-arch.service")
                "/etc/systemd/system/guix-arch.service")
-    (unless (file-exists? "/etc/systemd/system/multi-user.target.wants/guix-arch.service")
-      (symlink "/etc/systemd/system/guix-arch.service"
-               "/etc/systemd/system/multi-user.target.wants/guix-arch.service"))
     (unless (file-exists? "/etc/systemd/system/guix-daemon.service.wants/guix-arch.service")
       (symlink "/etc/systemd/system/guix-arch.service"
                "/etc/systemd/system/guix-daemon.service.wants/guix-arch.service"))
