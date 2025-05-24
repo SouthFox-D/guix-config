@@ -266,3 +266,25 @@ similar to VXLAN (termed VL2).  Our VL2 Ethernet virtualization layer includes
 advanced enterprise SDN features like fine grained access control rules for
 network micro-segmentation and security monitoring.")
     (license (nonfree "https://mariadb.com/bsl11/"))))
+
+(define-public sing-box-bin
+  (package
+    (name "sing-box-bin")
+    (version "1.11.11")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/SagerNet/sing-box/releases/download/v"
+                    version "/sing-box-" version "-linux-amd64.tar.gz"))
+              (sha256
+               (base32
+                "1vq2rasc4zh5qi3wjhvxid1zhc6dg01912i97mdfsj8mws1799qc"))))
+    (build-system copy-build-system)
+    (arguments (list #:install-plan #~'(("sing-box" "bin/"))))
+    (supported-systems '("x86_64-linux"))
+    (home-page "https://sing-box.sagernet.org/")
+    (synopsis "Universal proxy platform")
+    (description
+     "Sing-box is a customizable and univsersal proxy platform that can be used to
+create network proxy servers, clients and transparent proxies.")
+    (license gpl3+)))
