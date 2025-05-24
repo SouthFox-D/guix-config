@@ -87,9 +87,8 @@
 
 (define arch-services
   (list
-   (service arch-files-service-type
-            (list
-             `(".arch-packages" ,(plain-file "arch-package" (string-join arch-packages "\n")))))))
+   (service arch-pacman-sync-service-type
+            (list arch-packages))))
 
 (build-arch-drv arch-services)
 

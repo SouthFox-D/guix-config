@@ -17,7 +17,7 @@
   #:export (arch-service-type
             arch-files-service-type
             arch-profile-service-type
-            arch-run-on-pacman-sync-service-type
+            arch-pacman-sync-service-type
             arch-activation-service-type
             build-arch-drv
             )
@@ -87,66 +87,67 @@ directory containing FILES."
                 (description "Files that will be put in
 files, and further processed during activation.")))
 
-(define (compute-pacman-sync-script _ gexps)
-  (program-file
-   "sync"
-   (with-imported-modules
-    (source-module-closure '((ice-9 popen)
-                             (ice-9 rdelim)
-                             (ice-9 textual-ports)))
-    #~(begin
-        (use-modules (ice-9 popen)
-                     (ice-9 rdelim)
-                     (ice-9 textual-ports))
-
-        (define (list-difference l1 l2)
-          (cond ((null? l1)
-                 '())
-                ((not (member (car l1) l2))
-                 (cons (car l1) (list-difference (cdr l1) l2)))
-                (else
-                 (list-difference (cdr l1) l2))))
-
-        (define arch-user-packages (string-split (call-with-input-file
-                                                     (string-append (getenv "GUIX_ARCH_DRV") "/files/.arch-packages")
-                                                   get-string-all) #\newline))
-        (define (arch-package-update)
-          (let ((port (open-output-pipe "pacman -Syu --noconfirm")))
-            (if (not (eqv? 0 (status:exit-val (close-pipe port))))
-                (error "Something wrong"))))
-
-        (define (arch-install-packages packages-list)
-          (if (not (nil? packages-list))
-              (let ((port (open-output-pipe (string-append "pacman -S --noconfirm "
-                                                           (string-join packages-list " ")))))
-                (display port)
-                (if (not (eqv? 0 (status:exit-val (close-pipe port))))
-                    (error "Something wrong")))
-              (display "Nothing to install...!")))
-
-        (define (arch-get-pacman-package-list)
-          (let* ((explicitly-packages (string-split (read-string (open-input-pipe "pacman -Qqe")) #\newline))
-                 (all-packages (string-split (read-string (open-input-pipe "pacman -Qq")) #\newline)))
-            (display "Hint: Run \n")
-            (display (string-append
-                      "pacman -R "
-                      (string-join (list-difference explicitly-packages arch-user-packages) " ") "\n"))
-            (display "command to sync packages.\n")
-
-            (list-difference arch-user-packages all-packages)))
-
-        (arch-package-update)
-        (arch-install-packages (arch-get-pacman-package-list))
-
-        #$@gexps
-        ))))
-
-(define (pacman-sync-script-entry sync)
-  "Return, as a monadic value, an entry for the sync script
-in the arch pacman overlay."
+(define (compute-pacman-sync-script packages)
   (with-monad %store-monad
-              (return `(("sync" ,sync)))))
+   (return
+    `(("sync" ,(program-file
+                "sync"
+                (with-imported-modules
+                 (source-module-closure '((ice-9 popen)
+                                          (ice-9 rdelim)
+                                          (ice-9 textual-ports)))
+                 #~(begin
+                     (use-modules (ice-9 popen)
+                                  (ice-9 rdelim)
+                                  (ice-9 textual-ports))
 
+                     (define (list-difference l1 l2)
+                       (cond ((null? l1)
+                              '())
+                             ((not (member (car l1) l2))
+                              (cons (car l1) (list-difference (cdr l1) l2)))
+                             (else
+                              (list-difference (cdr l1) l2))))
+
+                     (define arch-user-packages '#$@packages)
+                     (define (arch-package-update)
+                       (let ((port (open-output-pipe "pacman -Syu --noconfirm")))
+                         (if (not (eqv? 0 (status:exit-val (close-pipe port))))
+                             (error "Something wrong"))))
+
+                     (define (arch-install-packages packages-list)
+                       (if (not (nil? packages-list))
+                           (let ((port (open-output-pipe (string-append "pacman -S --noconfirm "
+                                                                        (string-join packages-list " ")))))
+                             (display port)
+                             (if (not (eqv? 0 (status:exit-val (close-pipe port))))
+                                 (error "Something wrong")))
+                           (display "Nothing to install...!")))
+
+                     (define (arch-get-pacman-package-list)
+                       (let* ((explicitly-packages (string-split (read-string (open-input-pipe "pacman -Qqe")) #\newline))
+                              (all-packages (string-split (read-string (open-input-pipe "pacman -Qq")) #\newline)))
+                         (display "Hint: Run \n")
+                         (display (string-append
+                                   "pacman -R "
+                                   (string-join (list-difference explicitly-packages arch-user-packages) " ") "\n"))
+                         (display "command to sync packages.\n")
+
+                         (list-difference arch-user-packages all-packages)))
+
+                     (arch-package-update)
+                     (arch-install-packages (arch-get-pacman-package-list))))))))))
+
+(define arch-pacman-sync-service-type
+  (service-type (name 'arch-run-on-pacman-sync)
+                (extensions
+                 (list (service-extension
+                        arch-service-type
+                        compute-pacman-sync-script)))
+                (compose concatenate)
+                (extend append)
+                (default-value '())
+                (description "Run gexps on pacman sync")))
 
 (define guix-arch-daemon-flie
   (plain-file "guix-arch.service" "\
@@ -170,17 +171,6 @@ WantedBy=multi-user.target guix-daemon.service"))
                           (list `("guix-arch.service" ,guix-arch-daemon-flie))))))
                 (default-value '())
                 (description "Build guix systemd oneshot service file.")))
-
-(define arch-run-on-pacman-sync-service-type
-  (service-type (name 'arch-run-on-pacman-sync)
-                (extensions
-                 (list (service-extension
-                        arch-service-type
-                        pacman-sync-script-entry)))
-                (compose identity)
-                (extend compute-pacman-sync-script)
-                (default-value #f)
-                (description "Run gexps on pacman sync")))
 
 (define (compute-activation-script init-gexp gexps)
   (gexp->script
@@ -237,7 +227,6 @@ with one gexp, but many times, and all gexps must be idempotent.")))
 (define %base-arch-services
   (list
    (service arch-activation-service-type)
-   (service arch-run-on-pacman-sync-service-type)
    (service arch-guix-oneshot-service-type)
    (service arch-profile-service-type '())
    (service arch-service-type)))
