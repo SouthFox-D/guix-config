@@ -254,6 +254,7 @@ with one gexp, but many times, and all gexps must be idempotent.")))
       (symlink "/etc/systemd/system/guix-arch.service"
                "/etc/systemd/system/guix-daemon.service.wants/guix-arch.service"))
     (system* "systemctl" "daemon-reload")
-    (primitive-load (string-append arch-drv-output "/sync"))
+    (when (file-exists? (string-append arch-drv-output "/sync"))
+      (primitive-load (string-append arch-drv-output "/sync")))
     (primitive-load (string-append arch-drv-output "/activate"))
     (setenv "GUIX_ARCH_DRV" #f)))
