@@ -110,10 +110,6 @@ files, and further processed during activation.")))
                               (list-difference (cdr l1) l2))))
 
                      (define arch-user-packages '#$@packages)
-                     (define (arch-package-update)
-                       (let ((port (open-output-pipe "pacman -Syu --noconfirm")))
-                         (if (not (eqv? 0 (status:exit-val (close-pipe port))))
-                             (error "Something wrong"))))
 
                      (define (arch-install-packages packages-list)
                        (if (not (nil? packages-list))
@@ -134,8 +130,6 @@ files, and further processed during activation.")))
                          (display "command to sync packages.\n")
 
                          (list-difference arch-user-packages all-packages)))
-
-                     (arch-package-update)
                      (arch-install-packages (arch-get-pacman-package-list))))))))))
 
 (define arch-pacman-sync-service-type
