@@ -150,8 +150,9 @@ Description=Guix Arch activate
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c \"/var/guix/profiles/per-user/root/arch-profile/activate\"
+ExecStart=/var/guix/profiles/per-user/root/arch-profile/activate
 Environment='GUIX_LOCPATH=/var/guix/profiles/per-user/root/guix-profile/lib/locale' LC_ALL=en_US.utf8
+RemainAfterExit=yes
 
 [Install]
 WantedBy=guix-daemon.service"))
