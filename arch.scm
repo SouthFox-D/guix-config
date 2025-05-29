@@ -1,8 +1,13 @@
 (use-modules (fox arch-overlay)
              (fox arch-shepherd)
+             (fox services)
              (fox packages)
              (gnu services)
              (guix gexp)
+             (ice-9 format)
+             (ice-9 popen)
+             (ice-9 rdelim)
+             (ice-9 textual-ports)
              ;; (guix store)
              ;; (guix profiles)
              ;; (guix scripts package)
@@ -85,7 +90,8 @@
         %arch-de-things
         %arch-misc
         )
-       '())))
+       (list "rclone")
+       )))
 
 (define arch-services
   (if (equal? "deck" (getenv "SUDO_USER"))
@@ -120,6 +126,26 @@
                 (list arch-packages)))))
 
 (build-arch-drv arch-services)
+
+(define (get-env env-key)
+  (let* ((port (open-input-pipe
+                (string-append "utils/cf-kv.hy get " env-key)))
+         (str (read-line port)))
+    (close-pipe port)
+    (when (eof-object? str)
+      (error "Failed to get env" env-key))
+    (format #t "Get ~a done\n" env-key)
+    str))
+
+(define (template-put template-file store-path)
+  (let ((result-string (eval-template-file template-file)))
+    (unless (file-exists? (dirname "/root/.config/rclone/rclone.conf"))
+      (mkdir (dirname "/root/.config/rclone/rclone.conf")))
+    (if (file-exists? store-path)
+        (rename-file store-path (string-append store-path ".bak")))
+    (call-with-output-file store-path
+      (lambda (port)
+        (put-string port result-string)))))
 
 ;; (define %arch-profile
 ;;   (string-append %profile-directory "/arch-profile"))

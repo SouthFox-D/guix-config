@@ -15,6 +15,7 @@
   #:export (oh-my-zsh-service-type
             home-emacs-service-type
 
+            eval-template-file
             eval-file
             ))
 
