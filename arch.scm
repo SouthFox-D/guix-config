@@ -137,7 +137,7 @@
            (list (shepherd-timer
                   '(backup)
                   #~(calendar-event #:hours '(5) #:minutes '(0))
-                  #~((string-append %arch-profile "/files/backup.hy")
+                  #~((string-append #$%arch-profile "/files/backup.hy")
                      #$(gethostname)))))))))
 
 (build-arch-drv arch-services)
