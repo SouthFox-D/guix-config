@@ -94,9 +94,9 @@
        )))
 
 (define arch-services
-  (if (equal? "deck" (getenv "SUDO_USER"))
-      (list
-       (simple-service 'deck-shepherd-type arch-shepherd-service-type
+  (cond ((equal? "deck" (getenv "SUDO_USER"))
+         (list
+          (simple-service 'deck-shepherd-type arch-shepherd-service-type
                                 (list
                                  (shepherd-service
                                   (documentation "Start SSH daemon")
@@ -119,11 +119,26 @@
                                             (list #$(file-append sing-box-bin "/bin/sing-box")
                                                   "run" "-C" "/etc/sing-box/conf")))
                                   (stop #~(make-kill-destructor))
-                                  (auto-start? #t))
-                                 )))
-      (list
-       (service arch-pacman-sync-service-type
-                (list arch-packages)))))
+                                  (auto-start? #t))))))
+        (touchable-machine?
+         (list
+          (service arch-pacman-sync-service-type
+                   (list arch-packages))))
+        ((not touchable-machine?)
+         (list
+          (service arch-files-service-type
+                   (list
+                    `("backup.hy" ,(local-file "utils/backup.hy" #:recursive? #t))))
+          (service arch-pacman-sync-service-type
+                   (list arch-packages))
+          (simple-service
+           'server-timer
+           arch-shepherd-service-type
+           (list (shepherd-timer
+                  '(backup)
+                  #~(calendar-event #:hours '(5) #:minutes '(0))
+                  #~((string-append %arch-profile "/files/backup.hy")
+                     #$(gethostname)))))))))
 
 (build-arch-drv arch-services)
 
@@ -146,6 +161,9 @@
     (call-with-output-file store-path
       (lambda (port)
         (put-string port result-string)))))
+
+(when (not touchable-machine?)
+  (template-put "files/infra/rclone.conf" "/root/.config/rclone/rclone.conf"))
 
 ;; (define %arch-profile
 ;;   (string-append %profile-directory "/arch-profile"))

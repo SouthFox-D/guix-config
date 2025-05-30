@@ -19,6 +19,8 @@
             arch-profile-service-type
             arch-pacman-sync-service-type
             arch-activation-service-type
+
+            %arch-profile
             build-arch-drv
             )
   #:re-export (service
