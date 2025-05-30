@@ -11,7 +11,7 @@
              (guix gexp)
              (gnu home services)
              (gnu home services shells)
-             (gnu home services mcron)
+             (gnu home services shepherd)
              (fox packages)
              (fox services))
 
@@ -77,11 +77,12 @@
        (append
          (if (not work-machine?)
              (list
-              (service home-mcron-service-type
-                       (home-mcron-configuration
-                        (jobs (list #~(job '(next-minute
-                                             (range 0 60 20))
-                                           (lambda ()
-                                             (system* "offlineimap"))))))))
+              (simple-service
+               'my-timer
+               home-shepherd-service-type
+               (list (shepherd-timer
+                      '(update-mail)
+                      #~(calendar-event #:minutes '(20))
+                      #~("offlineimap")))))
              '()))
        '()))))
