@@ -117,7 +117,7 @@
                                   (provision '(sing-box))
                                   (start #~(make-forkexec-constructor
                                             (list #$(file-append sing-box-bin "/bin/sing-box")
-                                                  "run" "-C" "/etc/sing-box/conf")))
+                                                  "run" "-C" "/home/drift-bottle/sing-box/conf")))
                                   (stop #~(make-kill-destructor))
                                   (auto-start? #t))))))
         (touchable-machine?
