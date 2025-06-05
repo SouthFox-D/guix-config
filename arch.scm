@@ -44,6 +44,7 @@
    "tar"
    "unzip"
    "hy"
+   "python-requests"
    "ripgrep"
    ))
 
@@ -64,8 +65,6 @@
 
 (define %arch-misc
   (list
-   "python-requests"
-
    "nyxt"
 
    "mpv"
