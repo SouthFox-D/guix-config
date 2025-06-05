@@ -102,7 +102,7 @@
     str))
 
 (define (secret-put env-key-list)
-  (let ((secret-path "secret.ini"))
+  (let ((secret-path "/root/.config/secret.ini"))
     (when (file-exists? secret-path)
       (delete-file secret-path))
     (call-with-output-file secret-path
