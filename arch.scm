@@ -185,8 +185,8 @@
            arch-shepherd-service-type
            (list (shepherd-timer
                   '(sync-anki)
-                  #~(calendar-event #:minutes '(15))
                   #~(#$(string-append %arch-profile "/files/backup.hy") "sync-anki"))))))
+                  #~(calendar-event #:minutes (iota 4 0 15))
         ))
 
 (build-arch-drv arch-services)

@@ -82,7 +82,7 @@
                home-shepherd-service-type
                (list (shepherd-timer
                       '(update-mail)
-                      #~(calendar-event #:minutes '(20))
+                      #~(calendar-event #:minutes (iota 3 0 20))
                       #~("offlineimap")))))
              '()))
        '()))))
