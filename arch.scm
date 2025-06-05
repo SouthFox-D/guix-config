@@ -124,7 +124,7 @@
          (list
           (service arch-pacman-sync-service-type
                    (list arch-packages))))
-        ((not touchable-machine?)
+        ((equal? "mastfox" (gethostname))
          (list
           (service arch-files-service-type
                    (list
@@ -162,7 +162,7 @@
       (lambda (port)
         (put-string port result-string)))))
 
-(when (not touchable-machine?)
+(when (equal? "mastfox" (gethostname))
   (template-put "files/infra/rclone.conf" "/root/.config/rclone/rclone.conf"))
 
 ;; (define %arch-profile
