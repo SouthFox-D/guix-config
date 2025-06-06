@@ -17,6 +17,7 @@
   #:export (arch-service-type
             arch-files-service-type
             arch-profile-service-type
+            arch-sync-service-type
             arch-pacman-sync-service-type
             arch-activation-service-type
 
@@ -89,56 +90,77 @@ directory containing FILES."
                 (description "Files that will be put in
 files, and further processed during activation.")))
 
+(define (compute-sync-script init-gexp gexps)
+  (gexp->script
+   "sync"
+   #~(begin
+       #$@gexps
+       #$init-gexp
+       )))
+
+(define (sync-script-entry m-activation)
+  "Return, as a monadic value, an entry for the sync script
+in the arch environment directory."
+  (mlet %store-monad ((sync m-activation))
+    (return `(("sync" ,sync)))))
+
+(define arch-sync-service-type
+  (service-type (name 'arch-sync)
+                (extensions
+                 (list (service-extension
+                        arch-service-type
+                        sync-script-entry)))
+                (compose identity)
+                (extend compute-sync-script)
+                (default-value #f)
+                (description "Run gexps on sync")))
+
 (define (compute-pacman-sync-script packages)
-  (with-monad %store-monad
-   (return
-    `(("sync" ,(program-file
-                "sync"
-                (with-imported-modules
-                 (source-module-closure '((ice-9 popen)
-                                          (ice-9 rdelim)
-                                          (ice-9 textual-ports)))
-                 #~(begin
-                     (use-modules (ice-9 popen)
-                                  (ice-9 rdelim)
-                                  (ice-9 textual-ports))
+  (with-imported-modules
+   (source-module-closure '((ice-9 popen)
+                            (ice-9 rdelim)
+                            (ice-9 textual-ports)))
+   #~(begin
+       (use-modules (ice-9 popen)
+                    (ice-9 rdelim)
+                    (ice-9 textual-ports))
 
-                     (define (list-difference l1 l2)
-                       (cond ((null? l1)
-                              '())
-                             ((not (member (car l1) l2))
-                              (cons (car l1) (list-difference (cdr l1) l2)))
-                             (else
-                              (list-difference (cdr l1) l2))))
+       (define (list-difference l1 l2)
+         (cond ((null? l1)
+                '())
+               ((not (member (car l1) l2))
+                (cons (car l1) (list-difference (cdr l1) l2)))
+               (else
+                (list-difference (cdr l1) l2))))
 
-                     (define arch-user-packages '#$@packages)
+       (define arch-user-packages '#$@packages)
 
-                     (define (arch-install-packages packages-list)
-                       (if (not (nil? packages-list))
-                           (let ((port (open-output-pipe (string-append "pacman -S --noconfirm "
-                                                                        (string-join packages-list " ")))))
-                             (display port)
-                             (if (not (eqv? 0 (status:exit-val (close-pipe port))))
-                                 (error "Something wrong")))
-                           (display "Nothing to install...!")))
+       (define (arch-install-packages packages-list)
+         (if (not (nil? packages-list))
+             (let ((port (open-output-pipe (string-append "pacman -S --noconfirm "
+                                                          (string-join packages-list " ")))))
+               (display port)
+               (if (not (eqv? 0 (status:exit-val (close-pipe port))))
+                   (error "Something wrong")))
+             (display "Nothing to install...!")))
 
-                     (define (arch-get-pacman-package-list)
-                       (let* ((explicitly-packages (string-split (read-string (open-input-pipe "pacman -Qqe")) #\newline))
-                              (all-packages (string-split (read-string (open-input-pipe "pacman -Qq")) #\newline)))
-                         (display "Hint: Run \n")
-                         (display (string-append
-                                   "pacman -R "
-                                   (string-join (list-difference explicitly-packages arch-user-packages) " ") "\n"))
-                         (display "command to sync packages.\n")
+       (define (arch-get-pacman-package-list)
+         (let* ((explicitly-packages (string-split (read-string (open-input-pipe "pacman -Qqe")) #\newline))
+                (all-packages (string-split (read-string (open-input-pipe "pacman -Qq")) #\newline)))
+           (display "Hint: Run \n")
+           (display (string-append
+                     "pacman -R "
+                     (string-join (list-difference explicitly-packages arch-user-packages) " ") "\n"))
+           (display "command to sync packages.\n")
 
-                         (list-difference arch-user-packages all-packages)))
-                     (arch-install-packages (arch-get-pacman-package-list))))))))))
+           (list-difference arch-user-packages all-packages)))
+       (arch-install-packages (arch-get-pacman-package-list)))))
 
 (define arch-pacman-sync-service-type
   (service-type (name 'arch-run-on-pacman-sync)
                 (extensions
                  (list (service-extension
-                        arch-service-type
+                        arch-sync-service-type
                         compute-pacman-sync-script)))
                 (compose concatenate)
                 (extend append)
