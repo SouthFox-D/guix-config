@@ -60,18 +60,19 @@
 
                     (".local/bin/chill-player" ,(local-file "files/bin/chill-player.hy" #:recursive? #t))
                     (".local/bin/update-wallpaper" ,(local-file "files/bin/update-wallpaper.hy" #:recursive? #t))
-
                     ;; mail
                     (".config/offlineimap/config" ,(local-file "files/mail/offlineimaprc"))
-
                     ;; fcitx5
                     (".config/fcitx5/config" ,(local-file "files/fcitx5/config"))
                     (".config/fcitx5/profile" ,(local-file "files/fcitx5/profile"))
                     (".config/fcitx5/conf/keyboard.conf" ,(local-file "files/fcitx5/conf/keyboard.conf"))
                     (".config/fcitx5/conf/notifications.conf" ,(local-file "files/fcitx5/conf/notifications.conf"))
-
                     ;; anki
-                    (".local/share/Anki2/addons21/dummp_tts/__init__.py" ,(local-file "files/anki/dummy_tts.py")))
+                    (".local/share/Anki2/addons21/dummp_tts/__init__.py" ,(local-file "files/anki/dummy_tts.py"))
+                    ;; waybar
+                    (".config/waybar/config.jsonc" ,(local-file "files/waybar/config.jsonc"))
+                    (".config/waybar/style.css" ,(local-file "files/waybar/style.css"))
+                    )
                   '()))))
    (if touchable-machine?
        (append
