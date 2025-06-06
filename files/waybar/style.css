@@ -195,7 +195,7 @@ label:focus {
 }
 
 #memory {
-    background-color: #9b59b6;
+    background-color: @yellow;
 }
 
 #disk {
@@ -240,7 +240,7 @@ label:focus {
 }
 
 #temperature {
-    background-color: #f0932b;
+    background-color: @blue;
 }
 
 #temperature.critical {
