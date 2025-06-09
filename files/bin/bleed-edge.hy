@@ -18,9 +18,9 @@
         need-upgrade-doomemacs? (os.path.isfile (+ "/home/" sudo-user "/.doom.d/config.el"))]
     (run-cmd f"git -C {guix-workdir} pull" sudo-user)
     (run-cmd "pacman -Syu --noconfirm")
-    (run-cmd f"guix repl -L {guix-workdir}/modules  {guix-workdir}/arch.scm")
     (run-cmd f"guix pull {guix-substitute} -v 4 && systemctl restart guix-daemon.service")
     (run-cmd f"guix pull {guix-substitute} -v 4" sudo-user)
+    (run-cmd f"guix repl -L {guix-workdir}/modules  {guix-workdir}/arch.scm")
     (run-cmd f"cd {guix-workdir} && guix home reconfigure home-configuration.scm -L modules {guix-substitute} -v 4" sudo-user)
     (when need-reload-hyprland?
       (run-cmd f"hyprctl reload -i 0" sudo-user))
