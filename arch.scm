@@ -1,4 +1,5 @@
 (use-modules (arch overlay)
+             (arch services)
              (arch shepherd)
              (fox services)
              (fox packages)

@@ -1,5 +1,5 @@
 (define-module (arch shepherd)
-  #:use-module (arch overlay)
+  #:use-module (arch services)
   #:use-module (gnu packages admin)
   #:use-module (gnu services shepherd)
   #:use-module (guix sets)
@@ -35,6 +35,8 @@
                shepherd-configuration-action
                shepherd-trigger-action
                shepherd-timer))
+
+
 
 (define-record-type* <arch-shepherd-configuration>
   arch-shepherd-configuration make-arch-shepherd-configuration
