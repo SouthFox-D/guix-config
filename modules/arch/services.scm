@@ -90,26 +90,27 @@ files, and further processed during activation.")))
 (define (compute-sync-script init-gexp gexps)
   (gexp->script
    "sync"
-   #~(let* ((arch-path (string-append (getenv "HOME") "/.guix-arch"))
-           (new-arch-env (getenv "GUIX_NEW_ARCH"))
-           (new-arch (or new-arch-env
-                         ;; Absolute path of the directory of the activation
-                         ;; file if called interactively.
-                         (canonicalize-path (dirname (car (command-line))))))
-           (old-arch-env (getenv "GUIX_OLD_ARCH"))
-           (old-arch (or old-arch-env
-                         (if (file-exists? arch-path)
-                             (readlink arch-path)
-                             #f))))
+   #~(begin
+       (let* ((amodule (current-module))
+              (arch-path (string-append (getenv "HOME") "/.guix-arch"))
+              (new-arch-env (getenv "GUIX_NEW_ARCH"))
+              (new-arch (or new-arch-env
+                            ;; Absolute path of the directory of the activation
+                            ;; file if called interactively.
+                            (canonicalize-path (dirname (car (command-line))))))
+              (old-arch-env (getenv "GUIX_OLD_ARCH"))
+              (old-arch (or old-arch-env
+                            (if (file-exists? arch-path)
+                                (readlink arch-path)
+                                #f))))
+         (setenv "GUIX_NEW_ARCH" new-arch)
+         (setenv "GUIX_OLD_ARCH" old-arch))
 
-       (setenv "GUIX_NEW_ARCH" new-arch)
-       (setenv "GUIX_OLD_ARCH" old-arch)
+         #$@gexps
+         #$init-gexp
 
-       #$@gexps
-       #$init-gexp
-
-       (unless new-arch-env (setenv "GUIX_NEW_HOME" #f))
-       (unless old-arch-env (setenv "GUIX_OLD_HOME" #f)))))
+         (setenv "GUIX_NEW_HOME" #f)
+         (setenv "GUIX_OLD_HOME" #f))))
 
 (define (sync-script-entry m-activation)
   "Return, as a monadic value, an entry for the sync script
