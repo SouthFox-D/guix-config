@@ -1,5 +1,5 @@
-(use-modules (fox arch-overlay)
-             (fox arch-shepherd)
+(use-modules (arch overlay)
+             (arch shepherd)
              (fox services)
              (fox packages)
              (gnu services)

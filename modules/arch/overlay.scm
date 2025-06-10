@@ -1,4 +1,4 @@
-(define-module (fox arch-overlay)
+(define-module (arch overlay)
   #:use-module (gnu services)
   #:use-module (guix gexp)
   #:use-module (guix store)

@@ -1,5 +1,5 @@
-(define-module (fox arch-shepherd)
-  #:use-module (fox arch-overlay)
+(define-module (arch shepherd)
+  #:use-module (arch overlay)
   #:use-module (gnu packages admin)
   #:use-module (gnu services shepherd)
   #:use-module (guix sets)
