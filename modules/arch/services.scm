@@ -91,8 +91,7 @@ files, and further processed during activation.")))
   (gexp->script
    "sync"
    #~(begin
-       (let* ((amodule (current-module))
-              (arch-path (string-append (getenv "HOME") "/.guix-arch"))
+       (let* ((arch-path (string-append (getenv "HOME") "/.guix-arch"))
               (new-arch-env (getenv "GUIX_NEW_ARCH"))
               (new-arch (or new-arch-env
                             ;; Absolute path of the directory of the activation
