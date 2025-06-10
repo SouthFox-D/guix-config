@@ -25,7 +25,6 @@
 (define %base-arch-services
   (list
    (service arch-activation-service-type)
-   (service arch-guix-oneshot-service-type)
    (service arch-profile-service-type '())
    (service arch-sync-service-type)
    (service arch-symlink-manager-service-type)
@@ -54,12 +53,6 @@
     (setenv "GUIX_NEW_ARCH" arch-drv-output)
     (switch-symlinks generation arch-drv-output)
     (switch-symlinks %arch-profile generation)
-    (copy-file (string-append arch-drv-output "/files/guix-arch.service")
-               "/etc/systemd/system/guix-arch.service")
-    (unless (file-exists? "/etc/systemd/system/guix-daemon.service.wants/guix-arch.service")
-      (symlink "/etc/systemd/system/guix-arch.service"
-               "/etc/systemd/system/guix-daemon.service.wants/guix-arch.service"))
-    (system* "systemctl" "daemon-reload")
     (when (file-exists? (string-append arch-drv-output "/sync"))
       (primitive-load (string-append arch-drv-output "/sync")))
     (primitive-load (string-append arch-drv-output "/activate"))

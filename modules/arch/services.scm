@@ -19,7 +19,6 @@
             arch-sync-service-type
             arch-pacman-sync-service-type
             arch-activation-service-type
-            arch-guix-oneshot-service-type
             )
   #:re-export (service
                service-type
@@ -180,30 +179,6 @@ in the arch environment directory."
                 (extend append)
                 (default-value '())
                 (description "Run gexps on pacman sync")))
-
-(define guix-arch-daemon-flie
-  (plain-file "guix-arch.service" "\
-[Unit]
-Description=Guix Arch activate
-
-[Service]
-Type=oneshot
-ExecStart=/var/guix/profiles/per-user/root/arch-profile/activate
-Environment='GUIX_LOCPATH=/var/guix/profiles/per-user/root/guix-profile/lib/locale' LC_ALL=en_US.utf8
-RemainAfterExit=yes
-
-[Install]
-WantedBy=guix-daemon.service"))
-
-(define arch-guix-oneshot-service-type
-  (service-type (name 'arch-oneshot)
-                (extensions
-                 (list (service-extension
-                        arch-files-service-type
-                        (lambda (_)
-                          (list `("guix-arch.service" ,guix-arch-daemon-flie))))))
-                (default-value '())
-                (description "Build guix systemd oneshot service file.")))
 
 (define (compute-activation-script init-gexp gexps)
   (gexp->script

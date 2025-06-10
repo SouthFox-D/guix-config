@@ -118,6 +118,20 @@ as shepherd package."
 (define (shepherd-xdg-configuration-files config)
   `(("shepherd/init.scm" ,(arch-shepherd-configuration-file config))))
 
+(define guix-arch-daemon-flie
+  (plain-file "guix-arch.service" "\
+[Unit]
+Description=Guix Arch activate
+
+[Service]
+Type=oneshot
+ExecStart=/var/guix/profiles/per-user/root/arch-profile/activate
+Environment='GUIX_LOCPATH=/var/guix/profiles/per-user/root/guix-profile/lib/locale' LC_ALL=en_US.utf8
+RemainAfterExit=yes
+
+[Install]
+WantedBy=guix-daemon.service"))
+
 (define arch-shepherd-service-type
   (service-type (name 'arch-shepherd)
                 (extensions
@@ -128,7 +142,16 @@ as shepherd package."
                   (service-extension
                    arch-profile-service-type
                    (lambda (config)
-                     `(,(arch-shepherd-configuration-shepherd config))))))
+                     `(,(arch-shepherd-configuration-shepherd config))))
+                  (service-extension
+                   arch-files-service-type
+                   (lambda (_)
+                     (list `("etc/systemd/system/guix-arch.service" ,guix-arch-daemon-flie)
+                           `("etc/systemd/system/guix-daemon.service.wants/guix-arch.service" ,guix-arch-daemon-flie))))
+                  (service-extension
+                   arch-sync-service-type
+                   (lambda  (_)
+                     #~(system* "systemctl" "daemon-reload")))))
                 (compose concatenate)
                 (extend
                  (lambda (config extra-services)
