@@ -1,5 +1,6 @@
 (define-module (arch overlay)
   #:use-module (arch services)
+  #:use-module (arch symlink-manager)
   #:use-module (gnu services)
   #:use-module (guix gexp)
   #:use-module (guix store)
@@ -26,6 +27,8 @@
    (service arch-activation-service-type)
    (service arch-guix-oneshot-service-type)
    (service arch-profile-service-type '())
+   (service arch-sync-service-type)
+   (service arch-symlink-manager-service-type)
    (service arch-service-type)))
 
 (define %arch-profile
@@ -48,7 +51,7 @@
          (generation (generation-file-name
                       %arch-profile (+ 1 number))))
     (pk generation)
-    (setenv "GUIX_ARCH_DRV" arch-drv-output)
+    (setenv "GUIX_NEW_ARCH" arch-drv-output)
     (switch-symlinks generation arch-drv-output)
     (switch-symlinks %arch-profile generation)
     (copy-file (string-append arch-drv-output "/files/guix-arch.service")
@@ -60,4 +63,4 @@
     (when (file-exists? (string-append arch-drv-output "/sync"))
       (primitive-load (string-append arch-drv-output "/sync")))
     (primitive-load (string-append arch-drv-output "/activate"))
-    (setenv "GUIX_ARCH_DRV" #f)))
+    (setenv "GUIX_NEW_ARCH" #f)))

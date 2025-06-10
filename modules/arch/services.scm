@@ -91,10 +91,26 @@ files, and further processed during activation.")))
 (define (compute-sync-script init-gexp gexps)
   (gexp->script
    "sync"
-   #~(begin
+   #~(let* ((arch-path (string-append (getenv "HOME") "/.guix-arch"))
+           (new-arch-env (getenv "GUIX_NEW_ARCH"))
+           (new-arch (or new-arch-env
+                         ;; Absolute path of the directory of the activation
+                         ;; file if called interactively.
+                         (canonicalize-path (dirname (car (command-line))))))
+           (old-arch-env (getenv "GUIX_OLD_ARCH"))
+           (old-arch (or old-arch-env
+                         (if (file-exists? arch-path)
+                             (readlink arch-path)
+                             #f))))
+
+       (setenv "GUIX_NEW_ARCH" new-arch)
+       (setenv "GUIX_OLD_ARCH" old-arch)
+
        #$@gexps
        #$init-gexp
-       )))
+
+       (unless new-arch-env (setenv "GUIX_NEW_HOME" #f))
+       (unless old-arch-env (setenv "GUIX_OLD_HOME" #f)))))
 
 (define (sync-script-entry m-activation)
   "Return, as a monadic value, an entry for the sync script

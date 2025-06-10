@@ -221,7 +221,7 @@
                               "/root/.config/rclone/rclone.ini")))))
           (service arch-files-service-type
                    (list
-                    `("backup.hy" ,(local-file "utils/backup.hy" #:recursive? #t))))
+                    `("usr/bin/infra-backup" ,(local-file "utils/backup.hy" #:recursive? #t))))
           (service arch-pacman-sync-service-type
                    (list arch-packages))
           (simple-service
@@ -230,7 +230,7 @@
            (list (shepherd-timer
                   '(backup)
                   #~(calendar-event #:hours '(5) #:minutes '(0))
-                  #~(#$(string-append %arch-profile "/files/backup.hy")
+                  #~(#$(string-append %arch-profile "/files/usr/bin/infra-backup")
                        #$(gethostname)))))))
         ((equal? "alifox" (gethostname))
          (list
@@ -240,7 +240,7 @@
                   (secret '("ANKI_CONNECT_ENDPOINT" "ANKI_CONNECT_KEY")))))
           (service arch-files-service-type
                    (list
-                    `("cron_task.hy" ,(local-file "utils/cron_task.hy" #:recursive? #t))))
+                    `("usr/bin/cron-task" ,(local-file "utils/cron_task.hy" #:recursive? #t))))
           (service arch-pacman-sync-service-type
                    (list arch-packages))
           (simple-service
@@ -249,7 +249,7 @@
            (list (shepherd-timer
                   '(sync-anki)
                   #~(calendar-event #:minutes (iota 4 0 15))
-                  #~(#$(string-append %arch-profile "/files/cron_task.hy") "sync-anki"))))))
+                  #~(#$(string-append %arch-profile "/files/usr/bin/cron-task") "sync-anki"))))))
         ))
 
 (build-arch-drv arch-services)
