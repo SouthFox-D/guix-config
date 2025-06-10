@@ -140,8 +140,8 @@
 
        (define (template-put template-file store-path)
          (let ((result-string (eval-template-file template-file)))
-           (unless (file-exists? (dirname template-file))
-             (mkdir (dirname template-file)))
+           (unless (file-exists? (dirname store-path))
+             (mkdir (dirname store-path)))
            (if (file-exists? store-path)
                (rename-file store-path (string-append store-path ".bak")))
            (call-with-output-file store-path
