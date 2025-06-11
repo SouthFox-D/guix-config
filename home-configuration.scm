@@ -49,8 +49,7 @@
     (service home-files-service-type
              (append
               `((".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
-                (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t))
-                (".local/bin/bleed-edge" ,(local-file "files/bin/bleed-edge.hy" #:recursive? #t)))
+                (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t)))
               (if touchable-machine?
                   `((".config/hypr/hyprland.conf" ,(eval-file "files/hyprland.conf"))
                     (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))

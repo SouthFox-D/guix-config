@@ -180,6 +180,13 @@
                 (extend append)
                 (description "Run gexps on sync")))
 
+(define %arch-base-services
+  (list
+   (service arch-files-service-type
+            (list
+             `("usr/bin/bleed-edge" ,(local-file "files/bin/bleed-edge.hy" #:recursive? #t))))))
+
+
 (define arch-services
   (cond ((equal? "deck" (getenv "SUDO_USER"))
          (list
@@ -252,7 +259,7 @@
                   #~(#$(string-append %arch-profile "/files/usr/bin/cron-task") "sync-anki"))))))
         ))
 
-(build-arch-drv arch-services)
+(build-arch-drv (append arch-services %arch-base-services))
 
 ;; (define %arch-profile
 ;;   (string-append %profile-directory "/arch-profile"))
