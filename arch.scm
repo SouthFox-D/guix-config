@@ -182,9 +182,13 @@
 
 (define %arch-base-services
   (list
-   (service arch-files-service-type
-            (list
-             `("usr/bin/bleed-edge" ,(local-file "files/bin/bleed-edge.hy" #:recursive? #t))))))
+   (simple-service 'base-arch-file
+                   arch-files-service-type
+                   (list
+                    `("usr/bin/bleed-edge" ,(local-file "files/bin/bleed-edge.hy" #:recursive? #t))))
+   (simple-service 'base-arch-package
+                   arch-pacman-sync-service-type
+                   arch-packages)))
 
 
 (define arch-services
@@ -215,11 +219,8 @@
                             (stop #~(make-kill-destructor))
                             (auto-start? #t))))))
         (touchable-machine?
-         (list
-          (service arch-pacman-sync-service-type
-                   (list arch-packages))))
+         '())
         ((equal? "mastfox" (gethostname))
-         ;; TODO make sure template deploy after pacman sync not rely on append order
          (list
           (service
            arch-template-deploy-service-type
@@ -229,8 +230,6 @@
           (service arch-files-service-type
                    (list
                     `("usr/bin/infra-backup" ,(local-file "utils/backup.hy" #:recursive? #t))))
-          (service arch-pacman-sync-service-type
-                   (list arch-packages))
           (simple-service
            'server-timer
            arch-shepherd-service-type
@@ -248,17 +247,15 @@
           (service arch-files-service-type
                    (list
                     `("usr/bin/cron-task" ,(local-file "utils/cron_task.hy" #:recursive? #t))))
-          (service arch-pacman-sync-service-type
-                   (list arch-packages))
           (simple-service
            'server-timer
            arch-shepherd-service-type
            (list (shepherd-timer
                   '(sync-anki)
                   #~(calendar-event #:minutes (iota 4 0 15))
-                  #~(#$(string-append %arch-profile "/files/usr/bin/cron-task") "sync-anki"))))))
-        ))
+                  #~(#$(string-append %arch-profile "/files/usr/bin/cron-task") "sync-anki"))))))))
 
+;; TODO make sure template deploy after pacman sync not rely on append order
 (build-arch-drv (append arch-services %arch-base-services))
 
 ;; (define %arch-profile

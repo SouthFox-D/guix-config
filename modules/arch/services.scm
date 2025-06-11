@@ -146,7 +146,7 @@ in the arch environment directory."
                (else
                 (list-difference (cdr l1) l2))))
 
-       (define arch-user-packages '#$@packages)
+       (define arch-user-packages '#$packages)
 
        (define (arch-install-packages packages-list)
          (if (not (nil? packages-list))
