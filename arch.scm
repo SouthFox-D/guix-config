@@ -1,4 +1,5 @@
 (use-modules (arch overlay)
+             (arch accounts)
              (arch services)
              (arch shepherd)
              (fox services)
@@ -43,7 +44,6 @@
    "mosh"
    "fuse2"
    "iftop"
-   "zsh"
    "tar"
    "unzip"
    "hy"
@@ -219,7 +219,12 @@
                             (stop #~(make-kill-destructor))
                             (auto-start? #t))))))
         (touchable-machine?
-         '())
+         (list
+          (service
+           arch-account-deploy-service-type
+           (list (arch-account-configuration
+                  (name (getenv "SUDO_USER") )
+                  (shell "zsh"))))))
         ((equal? "mastfox" (gethostname))
          (list
           (service
