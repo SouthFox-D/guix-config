@@ -4,10 +4,9 @@
              (arch shepherd)
              (fox services)
              (fox packages)
+             (fox template)
              (gnu services)
              (guix gexp)
-             (guix records)
-             (guix modules)
              (ice-9 format)
              (ice-9 popen)
              (ice-9 rdelim)
@@ -95,90 +94,6 @@
        (list "rclone")
        )))
 
-(define-record-type* <arch-template-configuration>
-  arch-template-configuration make-arch-template-configuration
-  arch-template-configuration?
-  (secret arch-template-configuration-secret
-          (default '()))
-  (template arch-template-configuration-template
-            (default '())))
-
-(define (compute-template-entry config)
-  (with-imported-modules
-   (source-module-closure '((ice-9 popen)
-                            (ice-9 rdelim)
-                            (ice-9 textual-ports)
-                            (fox services)))
-   #~(begin
-       (use-modules (ice-9 popen)
-                    (ice-9 rdelim)
-                    (ice-9 textual-ports)
-                    (fox services))
-
-       (define (get-env env-key)
-         (let* ((port (open-input-pipe
-                       (string-append (getenv "GUIX_NEW_ARCH") "/files/usr/bin/cf-ky" " get " env-key)))
-                (str (read-line port)))
-           (when (not (eqv? 0 (status:exit-val (close-pipe port))))
-             (error (string-append "error get env " env-key)))
-           (format #t "Get ~a done\n" env-key)
-           str))
-
-       (define (secret-put env-key-list)
-         (let ((secret-path "/root/.config/secret.ini"))
-           (when (file-exists? secret-path)
-             (delete-file secret-path))
-           (call-with-output-file secret-path
-             (lambda (port)
-               (format port "[SECRET]")
-               (newline port)
-               (for-each (lambda (env-key)
-                           (format port "~a=~a" env-key
-                                   (get-env env-key))
-                           (newline port))
-                         env-key-list)))))
-
-       (define (template-put template-file store-path)
-         (let ((result-string (eval-template-file template-file)))
-           (unless (file-exists? (dirname store-path))
-             (mkdir (dirname store-path)))
-           (if (file-exists? store-path)
-               (rename-file store-path (string-append store-path ".bak")))
-           (call-with-output-file store-path
-             (lambda (port)
-               (put-string port result-string)))))
-
-       (define secret-list '#$(filter (lambda (s) (string? s))
-                                      (apply append (map (lambda (c)
-                                                           (arch-template-configuration-secret c)) config))))
-       (define file-list '#$(filter (lambda (f) (pair? f))
-                                     (map (lambda (c)
-                                            (if (pair? (arch-template-configuration-template c))
-                                                (cons (car (arch-template-configuration-template c))
-                                                      (cdr (arch-template-configuration-template c)))
-                                                '()))
-                                          config)))
-
-       (secret-put secret-list)
-       (for-each
-        (lambda (f)
-          (template-put (car f) (cadr f)))
-        file-list))))
-
-(define arch-template-deploy-service-type
-  (service-type (name 'arch-template-deploy)
-                (extensions
-                 (list (service-extension
-                        arch-sync-service-type
-                        compute-template-entry)
-                       (service-extension
-                        arch-files-service-type
-                        (lambda (_)
-                          (list `("usr/bin/cf-ky"
-                                  ,(local-file "utils/cf-kv.hy" #:recursive? #t)))))))
-                (compose identity)
-                (extend append)
-                (description "Run gexps on sync")))
 
 (define %arch-base-services
   (list
@@ -189,7 +104,6 @@
    (simple-service 'base-arch-package
                    arch-pacman-sync-service-type
                    arch-packages)))
-
 
 (define arch-services
   (cond ((equal? "deck" (getenv "SUDO_USER"))
@@ -228,8 +142,8 @@
         ((equal? "mastfox" (gethostname))
          (list
           (service
-           arch-template-deploy-service-type
-           (list (arch-template-configuration
+           fox-template-deploy-service-type
+           (list (fox-template-configuration
                   (template `(,(local-file "files/infra/rclone.conf")
                               "/root/.config/rclone/rclone.ini")))))
           (service arch-files-service-type
@@ -246,8 +160,8 @@
         ((equal? "alifox" (gethostname))
          (list
           (service
-           arch-template-deploy-service-type
-           (list (arch-template-configuration
+           fox-template-deploy-service-type
+           (list (fox-template-configuration
                   (secret '("ANKI_CONNECT_ENDPOINT" "ANKI_CONNECT_KEY")))))
           (service arch-files-service-type
                    (list
