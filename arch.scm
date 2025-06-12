@@ -117,7 +117,7 @@
 
        (define (get-env env-key)
          (let* ((port (open-input-pipe
-                       (string-append (getenv "GUIX_NEW_ARCH") "/files/cf-ky.hy" " get " env-key)))
+                       (string-append (getenv "GUIX_NEW_ARCH") "/files/usr/bin/cf-ky" " get " env-key)))
                 (str (read-line port)))
            (when (not (eqv? 0 (status:exit-val (close-pipe port))))
              (error (string-append "error get env " env-key)))
@@ -174,7 +174,7 @@
                        (service-extension
                         arch-files-service-type
                         (lambda (_)
-                          (list `("cf-ky.hy"
+                          (list `("usr/bin/cf-ky"
                                   ,(local-file "utils/cf-kv.hy" #:recursive? #t)))))))
                 (compose identity)
                 (extend append)
