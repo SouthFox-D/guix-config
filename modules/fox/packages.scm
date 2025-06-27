@@ -21,28 +21,26 @@
   #:use-module (gnu services))
 
 (define-public oh-my-zsh
-  (let ((commit "c95509ebfdbcc3c497f12697cfd2717bcb0a528b")
-        (url "https://github.com/ohmyzsh/ohmyzsh.git"))
-    (package
-      (name "oh-my-zsh")
-      (version "250515")
-      (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url url)
-                      (commit commit)))
-                (sha256
-                 (base32
-                  "0x631vjnmfmjgpygcqf29qnp3kkw8zrp1vmnkjxcwbzvdw55zf39"))))
-      (build-system copy-build-system)
-      (synopsis "framework for managing your zsh configuration")
-      (description "🙃A delightful community-driven (with 2,400+ contributors)
+  (package
+   (name "oh-my-zsh")
+   (version "250627")
+   (source (origin
+            (method git-fetch)
+            (uri (git-reference
+                  (url "https://github.com/ohmyzsh/ohmyzsh.git")
+                  (commit "01433503c2a474c049fa56d792ebfd9274e683cc")))
+            (sha256
+             (base32
+              "07grb0lgpj5n3kin72fikxx2rwvn1rgjs9wvjni39lf3kr1gabiz"))))
+   (build-system copy-build-system)
+   (synopsis "framework for managing your zsh configuration")
+   (description "🙃A delightful community-driven (with 2,400+ contributors)
 framework for managing your zsh configuration. Includes 300+ optional plugins
 (rails, git, macOS, hub, docker, homebrew, node, php, python, etc), 140+ themes
 to spice up your morning, and an auto-update tool that makes it easy to keep up
 with the latest updates from the community.")
-      (home-page "https://ohmyz.sh/")
-      (license expat))))
+   (home-page "https://ohmyz.sh/")
+   (license expat)))
 
 (define-public zellij-bin
   (package
