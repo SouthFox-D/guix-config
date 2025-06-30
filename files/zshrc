@@ -84,8 +84,8 @@ export ZSH_CUSTOM="$GUIX_PROFILE/share/zsh"
 }
 .reload
 
+plugins=(git docker)
 source $ZSH/oh-my-zsh.sh
-plugins=(git)
 
 # User configuration
 
