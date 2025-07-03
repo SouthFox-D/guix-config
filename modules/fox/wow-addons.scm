@@ -42,6 +42,28 @@ the game on a controller - without inconvenience.")
     (home-page "https://github.com/seblindfors/ConsolePort")
     (license gpl2)))
 
+(define-public immersion
+  (package
+    (name "Immersion")
+    (version "1.4.45")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/seblindfors/Immersion.git")
+                    (commit version)))
+              (sha256
+               (base32
+                "1y81v0k5m07cgfm91q3b5zs29nzw1xv1js7z3f6izdcvf6m5knqc"))))
+    (build-system copy-build-system)
+    (arguments
+     (list
+      #:install-plan
+      #~'(("." "Immersion"))))
+    (synopsis "Immersive questing addon for World of Warcraft.")
+    (description "Immersive questing addon for World of Warcraft.")
+    (home-page "https://github.com/seblindfors/Immersion")
+    (license artistic2.0)))
+
 (define-public elvui
   (package
     (name "ElvUI")
