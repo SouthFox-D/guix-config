@@ -90,7 +90,7 @@ the game on a controller - without inconvenience.")
 (define-public weakauras
   (package
     (name "WeakAuras")
-    (version "5.19.2")
+    (version "5.19.12")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -98,7 +98,7 @@ the game on a controller - without inconvenience.")
                     (commit version)))
               (sha256
                (base32
-                "0jkq9c5713dgjr9v3bggqm20ws4hyml2c3rwyp14wr2dg65jrvxq"))))
+                "0jzqkbw5dk1gdh46ahy58zhhxa7i2g5kjkjyvi0vnijdqxmlz97n"))))
     (build-system copy-build-system)
     (arguments
      (list
