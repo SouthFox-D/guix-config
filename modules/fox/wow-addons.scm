@@ -86,3 +86,28 @@ the game on a controller - without inconvenience.")
     (description "User Interface replacement AddOn for World of Warcraft.")
     (home-page "https://tukui.org")
     (license (custom "https://github.com/tukui-org/ElvUI/blob/main/LICENSE.md"))))
+
+(define-public weakauras
+  (package
+    (name "WeakAuras")
+    (version "5.19.2")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/WeakAuras/WeakAuras2.git")
+                    (commit version)))
+              (sha256
+               (base32
+                "0jkq9c5713dgjr9v3bggqm20ws4hyml2c3rwyp14wr2dg65jrvxq"))))
+    (build-system copy-build-system)
+    (arguments
+     (list
+      #:install-plan
+      #~'(("." "."
+           #:include-regexp ("WeakAuras*")))))
+    (synopsis " Provides a powerful framework to display customizable
+graphics on your screen.")
+    (description "World of Warcraft addon that provides a powerful
+framework to display customizable graphics on your screen.")
+    (home-page "https://weakauras.wtf")
+    (license gpl2)))
