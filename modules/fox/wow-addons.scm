@@ -5,6 +5,18 @@
   #:use-module (guix gexp)
   #:use-module (guix build-system copy))
 
+
+(define license (@@ (guix licenses) license))
+
+(define* (custom uri #:optional (comment ""))
+  "Return a custom license, whose full text can be found
+at URI, which may be a file:// URI pointing the package's tree."
+  (license "Custom"
+           uri
+           (string-append
+            "This a Custom license.  Check the URI for details."
+            comment)))
+
 (define-public consoleport
   (package
     (name "ConsolePort")
@@ -29,3 +41,26 @@ that will give you a handful of nifty features in order to let you play
 the game on a controller - without inconvenience.")
     (home-page "https://github.com/seblindfors/ConsolePort")
     (license gpl2)))
+
+(define-public elvui
+  (package
+    (name "ElvUI")
+    (version "v13.93")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/tukui-org/ElvUI.git")
+                    (commit version)))
+              (sha256
+               (base32
+                "10xivwdcnzjk91xsza5f0y2s54ylgzandkh4g5a2m9g1n5fdz7k4"))))
+    (build-system copy-build-system)
+    (arguments
+     (list
+      #:install-plan
+      #~'(("." "."
+           #:include-regexp ("ElvUI*" )))))
+    (synopsis "User Interface replacement AddOn for World of Warcraft")
+    (description "User Interface replacement AddOn for World of Warcraft.")
+    (home-page "https://tukui.org")
+    (license (custom "https://github.com/tukui-org/ElvUI/blob/main/LICENSE.md"))))
