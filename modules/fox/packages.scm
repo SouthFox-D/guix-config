@@ -111,27 +111,28 @@ designed for flexibility.")
 
 (define-public frp-bin
   (package
-    (name "frp-bin")
-    (version "0.61.2")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/fatedier/frp" "/releases/download/v"
-                    version "/frp_" version "_linux_amd64.tar.gz"))
-              (sha256
-               (base32
-                "1sh5ib9ffzq1glqwgc2hrk4rid537pb4dsff1kzbb3gq9fyysf27"))))
-    (build-system copy-build-system)
-    (arguments
-     (list #:install-plan #~'(("frps" "bin/")
-                              ("frpc" "bin/"))))
-    (supported-systems '("x86_64-linux"))
-    (home-page "https://github.com/fatedier/frp")
-    (synopsis "Fast reverse proxy")
-    (description
-     "A fast reverse proxy to help you expose a local server behind a NAT or firewall to the
+   (name "frp-bin")
+   (version "0.63.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/fatedier/frp" "/releases/download/v"
+                  version "/frp_" version "_linux_amd64.tar.gz"))
+            (sha256
+             (base32
+              "138pfqlkhrq041qh1lksczxvbl9imvhaz6hwgxw7f764cl8xglnh"))))
+   (build-system copy-build-system)
+   (arguments
+    (list #:install-plan #~'(("frps" "bin/")
+                             ("frpc" "bin/"))))
+   (supported-systems '("x86_64-linux"))
+   (home-page "https://github.com/fatedier/frp")
+   (synopsis "Fast reverse proxy")
+   (description
+    "A fast reverse proxy to help you expose a local server behind a NAT or firewall to the
 internet.")
-    (license asl2.0)))
+   (license asl2.0)
+   (properties '((upstream-name . "frp")))))
 
 (define-public v2rayn-bin
   (package
