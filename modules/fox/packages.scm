@@ -44,70 +44,70 @@ with the latest updates from the community.")
 
 (define-public zellij-bin
   (package
-    (name "zellij-bin")
-    (version "0.42.2")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/zellij-org/zellij/releases/download/v"
-                    version "/zellij-x86_64-unknown-linux-musl.tar.gz"))
-              (sha256
-               (base32 "0ln6qw8r2lp20fnr4zlbgnvw6z1zsjbw5dfsvnzmb52k28sq7m62"))))
-    (build-system copy-build-system)
-    (arguments
-     (list
-      #:install-plan
-      #~'(("zellij" "bin/"))
-      #:phases
-      #~(modify-phases %standard-phases
-          (replace 'unpack
-            (lambda* (#:key source #:allow-other-keys)
-              (invoke "tar" "-xvf" source))))))
-    (home-page "https://github.com/zellij-org/zellij")
-    (synopsis "terminal workspace with batteries included")
-    (description "Terminal workspace with batteries included.")
-    (license expat)))
+   (name "zellij-bin")
+   (version "0.42.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/zellij-org/zellij/releases/download/v"
+                  version "/zellij-x86_64-unknown-linux-musl.tar.gz"))
+            (sha256
+             (base32 "0ln6qw8r2lp20fnr4zlbgnvw6z1zsjbw5dfsvnzmb52k28sq7m62"))))
+   (build-system copy-build-system)
+   (arguments
+    (list
+     #:install-plan
+     #~'(("zellij" "bin/"))
+     #:phases
+     #~(modify-phases %standard-phases
+                      (replace 'unpack
+                               (lambda* (#:key source #:allow-other-keys)
+                                 (invoke "tar" "-xvf" source))))))
+   (home-page "https://github.com/zellij-org/zellij")
+   (synopsis "terminal workspace with batteries included")
+   (description "Terminal workspace with batteries included.")
+   (license expat)))
 
 (define-public hugo-bin
   (package
-    (name "hugo-bin")
-    (version "0.147.9")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/gohugoio/hugo" "/releases/download/v"
-                    version "/hugo_extended_" version "_linux-amd64.tar.gz"))
-              (sha256
-               (base32
-                "1z4qiiqz23qi7k4z2kdbn4013i0nf3n2rakba36n74lca4jpq1yb"))))
-    (build-system copy-build-system)
-    (arguments
-     (list #:install-plan #~'(("hugo" "bin/"))
-           #:phases
-           #~(modify-phases %standard-phases
-               (delete 'strip)
-               (add-after 'install 'patch-elf
-                 (lambda _
-                   (let ((hugo (string-append #$output "/bin/hugo")))
-                     (invoke "patchelf" "--set-interpreter"
-                             (string-append #$(this-package-input "glibc")
-                                            #$(glibc-dynamic-linker))
-                             hugo)
-                     (invoke "patchelf" "--set-rpath"
-                             (string-append (ungexp (this-package-input "gcc")
-                                                    "lib")
-                                            "/lib")
-                             hugo)))))))
-    (supported-systems '("x86_64-linux"))
-    (native-inputs (list patchelf-0.16))
-    (inputs (list `(,gcc "lib") glibc))
-    (home-page "https://gohugo.io/")
-    (synopsis "Static site generator")
-    (description
-     "Hugo is a static site generator written in Go, optimized for speed and
+   (name "hugo-bin")
+   (version "0.147.9")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/gohugoio/hugo" "/releases/download/v"
+                  version "/hugo_extended_" version "_linux-amd64.tar.gz"))
+            (sha256
+             (base32
+              "1z4qiiqz23qi7k4z2kdbn4013i0nf3n2rakba36n74lca4jpq1yb"))))
+   (build-system copy-build-system)
+   (arguments
+    (list #:install-plan #~'(("hugo" "bin/"))
+          #:phases
+          #~(modify-phases %standard-phases
+                           (delete 'strip)
+                           (add-after 'install 'patch-elf
+                                      (lambda _
+                                        (let ((hugo (string-append #$output "/bin/hugo")))
+                                          (invoke "patchelf" "--set-interpreter"
+                                                  (string-append #$(this-package-input "glibc")
+                                                                 #$(glibc-dynamic-linker))
+                                                  hugo)
+                                          (invoke "patchelf" "--set-rpath"
+                                                  (string-append (ungexp (this-package-input "gcc")
+                                                                         "lib")
+                                                                 "/lib")
+                                                  hugo)))))))
+   (supported-systems '("x86_64-linux"))
+   (native-inputs (list patchelf-0.16))
+   (inputs (list `(,gcc "lib") glibc))
+   (home-page "https://gohugo.io/")
+   (synopsis "Static site generator")
+   (description
+    "Hugo is a static site generator written in Go, optimized for speed and
 designed for flexibility.")
-    (license asl2.0)
-    (properties '((upstream-name . "hugo")))))
+   (license asl2.0)
+   (properties '((upstream-name . "hugo")))))
 
 (define-public frp-bin
   (package
@@ -136,59 +136,59 @@ internet.")
 
 (define-public v2rayn-bin
   (package
-    (name "v2rayn-bin")
-    (version "7.12.3")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/2dust/v2rayN" "/releases/download/"
-                    version "/v2rayN-linux-64.zip"))
-              (sha256
-               (base32
-                "03nh7xyqdyfmkgvkw276q6w9ykm161qyr01w16vva4hdkphd7x67"))))
-    (build-system copy-build-system)
-    (arguments
-     (list #:install-plan #~'(("v2rayN-linux-64" "opt/v2rayn-bin"))
-           #:phases
-           #~(modify-phases %standard-phases
-               (replace 'unpack
-            (lambda* (#:key source #:allow-other-keys)
-              (invoke "unzip" source))))))
-    (supported-systems '("x86_64-linux"))
-    (native-inputs (list unzip))
-    (home-page "https://github.com/2dust/v2rayN")
-    (synopsis "V2ray GUI client")
-    (description
-     "A GUI client for Windows, Linux and macOS, support Xray and sing-box
+   (name "v2rayn-bin")
+   (version "7.12.3")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/2dust/v2rayN" "/releases/download/"
+                  version "/v2rayN-linux-64.zip"))
+            (sha256
+             (base32
+              "03nh7xyqdyfmkgvkw276q6w9ykm161qyr01w16vva4hdkphd7x67"))))
+   (build-system copy-build-system)
+   (arguments
+    (list #:install-plan #~'(("v2rayN-linux-64" "opt/v2rayn-bin"))
+          #:phases
+          #~(modify-phases %standard-phases
+                           (replace 'unpack
+                                    (lambda* (#:key source #:allow-other-keys)
+                                      (invoke "unzip" source))))))
+   (supported-systems '("x86_64-linux"))
+   (native-inputs (list unzip))
+   (home-page "https://github.com/2dust/v2rayN")
+   (synopsis "V2ray GUI client")
+   (description
+    "A GUI client for Windows, Linux and macOS, support Xray and sing-box
 and others.")
-    (license gpl3)))
+   (license gpl3)))
 
 (define-public anki-bin
   (package
-    (name "anki-bin")
-    (version "25.02.5")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/ankitects/anki" "/releases/download/"
-                    version "/anki-" version "-linux-qt6.tar.zst"))
-              (sha256
-               (base32
-                "0l0jilmm12bsf1jcvn2kjzjdk4i0csz0bzhy74mdmbiyb17nm0f1"))))
-    (build-system copy-build-system)
-    (arguments
-     (list #:install-plan #~'(("anki-25.02.5-linux-qt6/" "opt/anki-bin"))
-           #:phases
-           #~(modify-phases %standard-phases
-               (replace 'unpack
-            (lambda* (#:key source #:allow-other-keys)
-              (invoke "tar" "-xvf" source))))))
-    (supported-systems '("x86_64-linux"))
-    (home-page "https://apps.ankiweb.net")
-    (synopsis "Spaced repetition program")
-    (description
-     "Anki's shared backend and web components, and the Qt frontend.")
-    (license agpl3+)))
+   (name "anki-bin")
+   (version "25.02.5")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/ankitects/anki" "/releases/download/"
+                  version "/anki-" version "-linux-qt6.tar.zst"))
+            (sha256
+             (base32
+              "0l0jilmm12bsf1jcvn2kjzjdk4i0csz0bzhy74mdmbiyb17nm0f1"))))
+   (build-system copy-build-system)
+   (arguments
+    (list #:install-plan #~'(("anki-25.02.5-linux-qt6/" "opt/anki-bin"))
+          #:phases
+          #~(modify-phases %standard-phases
+                           (replace 'unpack
+                                    (lambda* (#:key source #:allow-other-keys)
+                                      (invoke "tar" "-xvf" source))))))
+   (supported-systems '("x86_64-linux"))
+   (home-page "https://apps.ankiweb.net")
+   (synopsis "Spaced repetition program")
+   (description
+    "Anki's shared backend and web components, and the Qt frontend.")
+   (license agpl3+)))
 
 (define license (@@ (guix licenses) license))
 
@@ -203,59 +203,59 @@ at URI, which may be a file:// URI pointing the package's tree."
 
 (define-public zerotier
   (package
-    (name "zerotier")
-    (version "1.14.2")
-    (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/zerotier/ZeroTierOne")
-                    (commit version)))
-              (file-name (git-file-name name version))
-              (sha256
-               (base32
-                "0dxm67c06hg538z8adxgj5zqxmgrwhnlwznpi3sk2qvfms6zzvhg"))))
-    (build-system gnu-build-system)
-    (arguments
-     `(#:make-flags (list "ZT_SSO_SUPPORTED=0") ; We don't need SSO/OIDC
-       #:phases
-       (modify-phases %standard-phases
-         ;; There is no ./configure
-         (delete 'configure)
-         (replace 'check
-           (lambda* (#:key make-flags #:allow-other-keys)
-             (apply invoke "make" "selftest" make-flags)
-             (invoke "./zerotier-selftest")))
-         (replace 'install
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let* ((out (assoc-ref outputs "out"))
-                    (sbin (string-append out "/sbin"))
-                    (lib (string-append out "/lib"))
-                    (man (string-append out "/share/man"))
-                    (zerotier-one-lib (string-append lib "/zerotier-one")))
-               (mkdir-p sbin)
-               (install-file "zerotier-one" sbin)
-               (with-directory-excursion sbin
-                 (symlink (string-append sbin "/zerotier-one") "zerotier-cli")
-                 (symlink (string-append sbin "/zerotier-one") "zerotier-idtool"))
+   (name "zerotier")
+   (version "1.14.2")
+   (source (origin
+            (method git-fetch)
+            (uri (git-reference
+                  (url "https://github.com/zerotier/ZeroTierOne")
+                  (commit version)))
+            (file-name (git-file-name name version))
+            (sha256
+             (base32
+              "0dxm67c06hg538z8adxgj5zqxmgrwhnlwznpi3sk2qvfms6zzvhg"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:make-flags (list "ZT_SSO_SUPPORTED=0") ; We don't need SSO/OIDC
+      #:phases
+      (modify-phases %standard-phases
+                     ;; There is no ./configure
+                     (delete 'configure)
+                     (replace 'check
+                              (lambda* (#:key make-flags #:allow-other-keys)
+                                (apply invoke "make" "selftest" make-flags)
+                                (invoke "./zerotier-selftest")))
+                     (replace 'install
+                              (lambda* (#:key outputs #:allow-other-keys)
+                                (let* ((out (assoc-ref outputs "out"))
+                                       (sbin (string-append out "/sbin"))
+                                       (lib (string-append out "/lib"))
+                                       (man (string-append out "/share/man"))
+                                       (zerotier-one-lib (string-append lib "/zerotier-one")))
+                                  (mkdir-p sbin)
+                                  (install-file "zerotier-one" sbin)
+                                  (with-directory-excursion sbin
+                                                            (symlink (string-append sbin "/zerotier-one") "zerotier-cli")
+                                                            (symlink (string-append sbin "/zerotier-one") "zerotier-idtool"))
 
-               (mkdir-p zerotier-one-lib)
-               (with-directory-excursion zerotier-one-lib
-                 (symlink (string-append sbin "/zerotier-one") "zerotier-one")
-                 (symlink (string-append sbin "/zerotier-one") "zerotier-cli")
-                 (symlink (string-append sbin "/zerotier-one") "zerotier-idtool"))
+                                  (mkdir-p zerotier-one-lib)
+                                  (with-directory-excursion zerotier-one-lib
+                                                            (symlink (string-append sbin "/zerotier-one") "zerotier-one")
+                                                            (symlink (string-append sbin "/zerotier-one") "zerotier-cli")
+                                                            (symlink (string-append sbin "/zerotier-one") "zerotier-idtool"))
 
-               (mkdir-p (string-append man "/man8"))
-               (install-file "doc/zerotier-one.8" (string-append man "/man8"))
+                                  (mkdir-p (string-append man "/man8"))
+                                  (install-file "doc/zerotier-one.8" (string-append man "/man8"))
 
-               (mkdir-p (string-append man "/man1"))
-               (for-each (lambda (man-page)
-                           (install-file man-page (string-append man "/man1")))
-                         (list "doc/zerotier-cli.1"
-                               "doc/zerotier-idtool.1"))
-               #t))))))
-    (home-page "https://github.com/zerotier/ZeroTierOne")
-    (synopsis "Smart programmable Ethernet switch for planet Earth")
-    (description "It allows all networked devices, virtual machines,
+                                  (mkdir-p (string-append man "/man1"))
+                                  (for-each (lambda (man-page)
+                                              (install-file man-page (string-append man "/man1")))
+                                            (list "doc/zerotier-cli.1"
+                                                  "doc/zerotier-idtool.1"))
+                                  #t))))))
+   (home-page "https://github.com/zerotier/ZeroTierOne")
+   (synopsis "Smart programmable Ethernet switch for planet Earth")
+   (description "It allows all networked devices, virtual machines,
 containers, and applications to communicate as if they all reside in the same
 physical data center or cloud region.
 
@@ -264,7 +264,7 @@ peer to peer network (termed VL1) with an Ethernet emulation layer somewhat
 similar to VXLAN (termed VL2).  Our VL2 Ethernet virtualization layer includes
 advanced enterprise SDN features like fine grained access control rules for
 network micro-segmentation and security monitoring.")
-    (license (nonfree "https://mariadb.com/bsl11/"))))
+   (license (nonfree "https://mariadb.com/bsl11/"))))
 
 (define-public sing-box-bin
   (package
