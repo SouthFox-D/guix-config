@@ -4,3 +4,7 @@
 
 (define work-machine?
   (equal? "n100" (gethostname)))
+
+(define deck-machine?
+  (or (equal? "deck" (getenv "SUDO_USER"))
+      (equal? "deck" (getlogin))))

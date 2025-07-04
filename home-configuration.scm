@@ -13,6 +13,7 @@
              (gnu home services shells)
              (gnu home services shepherd)
              (fox packages)
+             (fox wow-addons)
              (fox services))
 
 (load "common.scm")
@@ -31,7 +32,8 @@
                       "guile-hoot"
                       "guile-goblins"
                       )
-                     (if touchable-machine?
+                     (if (and touchable-machine?
+                              (not deck-machine?))
                          '("mu"
                            "anki-bin"
                            "v2rayn-bin"
@@ -50,7 +52,8 @@
              (append
               `((".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
                 (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t)))
-              (if touchable-machine?
+              (if (and touchable-machine?
+                       (not deck-machine?))
                   `((".config/hypr/hyprland.conf" ,(eval-file "files/hyprland.conf"))
                     (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
                     (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
@@ -72,10 +75,20 @@
                     (".config/waybar/config.jsonc" ,(local-file "files/waybar/config.jsonc"))
                     (".config/waybar/style.css" ,(local-file "files/waybar/style.css"))
                     )
-                  '()))))
+                  (if deck-machine?
+                      `(("BN/World of Warcraft/_retail_/Interface/AddOns"
+                         ,(directory-union "AddOns" (list
+                                                     cell
+                                                     consoleport
+                                                     deadly-boss-mods
+                                                     immersion
+                                                     weakauras))))
+                      '())
+                  ))))
    (if touchable-machine?
        (append
-         (if (not work-machine?)
+        (if (and (not work-machine?)
+                 (not deck-machine?))
              (list
               (simple-service
                'my-timer
