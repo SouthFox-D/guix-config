@@ -128,3 +128,32 @@ human-friendly interface, Cell can provide a better user experience, better
 than ever.")
    (home-page "https://github.com/enderneko/Cell")
    (license (custom "https://github.com/enderneko/Cell/blob/master/LICENSE.txt"))))
+
+(define-public deadly-boss-mods
+  (package
+   (name "DeadlyBossMods")
+   (version "11.2.1")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/DeadlyBossMods/DeadlyBossMods/releases/download/"
+                  version "/DBM-Core-" version ".zip"))
+            (sha256
+             (base32
+              "1pa1cjkxbc4h7yyb913dsw5947lxpl4761yn1xx9v2n219rvx7dk"))))
+   (build-system copy-build-system)
+   (arguments
+    (list
+     #:phases
+     #~(modify-phases
+        %standard-phases
+        (replace 'unpack
+                 (lambda* (#:key source #:allow-other-keys)
+                   (invoke "unzip" source))))))
+   (native-inputs (list unzip))
+   (synopsis "The ultimate encounter helper to give you fight info that's easy
+to process at a glance.")
+   (description "DBM aims to focus on what's happening to you, and what YOU
+need to do about it.")
+   (home-page "https://www.curseforge.com/wow/addons/deadly-boss-mods")
+   (license (custom "https://github.com/DeadlyBossMods/DeadlyBossMods/blob/master/LICENSE"))))
