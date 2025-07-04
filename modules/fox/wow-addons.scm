@@ -98,3 +98,33 @@ graphics on your screen.")
 framework to display customizable graphics on your screen.")
    (home-page "https://weakauras.wtf")
    (license gpl2)))
+
+(define-public cell
+  (package
+   (name "Cell")
+   (version "r253-release")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/enderneko/Cell/releases/download/"
+                  version "/Cell-" version ".zip"))
+            (sha256
+             (base32
+              "0rl74linnlspyzsld49d3qm7sf1ibiyzbca9ih802nar3rl7wnr5"))))
+   (build-system copy-build-system)
+   (arguments
+    (list
+     #:phases
+     #~(modify-phases
+        %standard-phases
+        (replace 'unpack
+                 (lambda* (#:key source #:allow-other-keys)
+                   (invoke "unzip" source))))))
+   (native-inputs (list unzip))
+   (synopsis "A World of Warcraft raid frame addon")
+   (description "Cell is a nice raid frame addon inspired by several great
+addons, such as CompactRaid, Grid2, Aptechka and VuhDo. With a more
+human-friendly interface, Cell can provide a better user experience, better
+than ever.")
+   (home-page "https://github.com/enderneko/Cell")
+   (license (custom "https://github.com/enderneko/Cell/blob/master/LICENSE.txt"))))
