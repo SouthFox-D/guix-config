@@ -1,6 +1,8 @@
 (define-module (fox wow-addons)
   #:use-module (guix licenses)
   #:use-module (guix packages)
+  #:use-module (gnu packages compression)
+  #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix gexp)
   #:use-module (guix build-system copy))
@@ -22,19 +24,23 @@ at URI, which may be a file:// URI pointing the package's tree."
    (name "ConsolePort")
    (version "2.9.68")
    (source (origin
-            (method git-fetch)
-            (uri (git-reference
-                  (url "https://github.com/seblindfors/ConsolePort.git")
-                  (commit version)))
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/seblindfors/ConsolePort/releases/download/"
+                  version "/ConsolePort-" version ".zip"))
             (sha256
              (base32
-              "0xcaibb2hfz18ac7qkpf8yg1dpsamn2qxcy7rl896r26yq7g64bh"))))
+              "0pda9wr40b0rk66s2vxynf60pmgwab3jrwyy13nzhxv27irxi47l"))))
    (build-system copy-build-system)
    (arguments
     (list
-     #:install-plan
-     #~'(("." "."
-          #:include-regexp ("ConsolePort*" )))))
+     #:phases
+     #~(modify-phases
+        %standard-phases
+        (replace 'unpack
+                 (lambda* (#:key source #:allow-other-keys)
+                   (invoke "unzip" source))))))
+   (native-inputs (list unzip))
    (synopsis "Game Controller Addon for World of Warcraft")
    (description "ConsolePort is an interface add-on for World of Warcraft
 that will give you a handful of nifty features in order to let you play
@@ -69,19 +75,23 @@ the game on a controller - without inconvenience.")
    (name "WeakAuras")
    (version "5.19.12")
    (source (origin
-            (method git-fetch)
-            (uri (git-reference
-                  (url "https://github.com/WeakAuras/WeakAuras2.git")
-                  (commit version)))
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/WeakAuras/WeakAuras2/releases/download/"
+                  version "/WeakAuras-" version ".zip"))
             (sha256
              (base32
-              "0jzqkbw5dk1gdh46ahy58zhhxa7i2g5kjkjyvi0vnijdqxmlz97n"))))
+              "05dd9gc7w2mz7ksgy1wjbfyx5y4kxjrzz98whmmk2k6yzm1vpc5s"))))
    (build-system copy-build-system)
    (arguments
     (list
-     #:install-plan
-     #~'(("." "."
-          #:include-regexp ("WeakAuras*")))))
+     #:phases
+     #~(modify-phases
+        %standard-phases
+        (replace 'unpack
+                 (lambda* (#:key source #:allow-other-keys)
+                   (invoke "unzip" source))))))
+   (native-inputs (list unzip))
    (synopsis " Provides a powerful framework to display customizable
 graphics on your screen.")
    (description "World of Warcraft addon that provides a powerful
