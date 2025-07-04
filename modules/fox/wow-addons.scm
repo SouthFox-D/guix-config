@@ -64,29 +64,6 @@ the game on a controller - without inconvenience.")
    (home-page "https://github.com/seblindfors/Immersion")
    (license artistic2.0)))
 
-(define-public elvui
-  (package
-   (name "ElvUI")
-   (version "v13.93")
-   (source (origin
-            (method git-fetch)
-            (uri (git-reference
-                  (url "https://github.com/tukui-org/ElvUI.git")
-                  (commit version)))
-            (sha256
-             (base32
-              "10xivwdcnzjk91xsza5f0y2s54ylgzandkh4g5a2m9g1n5fdz7k4"))))
-   (build-system copy-build-system)
-   (arguments
-    (list
-     #:install-plan
-     #~'(("." "."
-          #:include-regexp ("ElvUI*" )))))
-   (synopsis "User Interface replacement AddOn for World of Warcraft")
-   (description "User Interface replacement AddOn for World of Warcraft.")
-   (home-page "https://tukui.org")
-   (license (custom "https://github.com/tukui-org/ElvUI/blob/main/LICENSE.md"))))
-
 (define-public weakauras
   (package
    (name "WeakAuras")
