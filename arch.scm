@@ -172,7 +172,8 @@
            (list (shepherd-timer
                   '(sync-anki)
                   #~(calendar-event #:minutes (iota 4 0 15))
-                  #~(#$(string-append %arch-profile "/files/usr/bin/cron-task") "sync-anki"))))))))
+                  #~(#$(string-append %arch-profile "/files/usr/bin/cron-task") "sync-anki"))))))
+        (else '())))
 
 ;; TODO make sure template deploy after pacman sync not rely on append order
 (build-arch-drv (append arch-services %arch-base-services))
