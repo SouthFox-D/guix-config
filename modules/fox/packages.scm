@@ -493,13 +493,15 @@ create network proxy servers, clients and transparent proxies.")
                   (lambda _
                     (substitute* '("tools/helpers/run.py"
                                    "tools/helpers/lxc.py")
-                      (("\"sh\"") (string-append "\"" #$bash-minimal "/bin/sh" "\""))
-                      (("\"lxc-info\"") (string-append "\"" #$lxc "/bin/lxc-info" "\""))
-                      (("\"lxc-start\"") (string-append "\"" #$lxc "/bin/lxc-start" "\""))
-                      (("\"lxc-stop\"") (string-append "\"" #$lxc "/bin/lxc-stop" "\""))
-                      (("\"lxc-freeze\"") (string-append "\"" #$lxc "/bin/lxc-freeze" "\""))
-                      (("\"lxc-unfreeze\"") (string-append "\"" #$lxc "/bin/lxc-unfreeze" "\""))
-                      (("\"lxc-attach\"") (string-append "\"" #$lxc "/bin/lxc-attach" "\"")))))
+                                 (("\"sh\"") (string-append "\"" #$bash-minimal "/bin/sh" "\""))
+                                 (("\"lxc-info\"") (string-append "\"" #$lxc "/bin/lxc-info" "\""))
+                                 (("\"lxc-start\"") (string-append "\"" #$lxc "/bin/lxc-start" "\""))
+                                 (("\"lxc-stop\"") (string-append "\"" #$lxc "/bin/lxc-stop" "\""))
+                                 (("\"lxc-freeze\"") (string-append "\"" #$lxc "/bin/lxc-freeze" "\""))
+                                 (("\"lxc-unfreeze\"") (string-append "\"" #$lxc "/bin/lxc-unfreeze" "\""))
+                                 (("\"lxc-attach\"") (string-append "\"" #$lxc "/bin/lxc-attach" "\"")))
+                    (substitute* '("dbus/id.waydro.Container.service")
+                                 (("/usr/bin/waydroid") (string-append #$output "/bin/waydroid" )))))
                 (add-after 'install 'install-fixes
                   (lambda _
                     (let* ((paths (list (string-append #$iptables "/bin")
