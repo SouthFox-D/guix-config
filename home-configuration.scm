@@ -37,6 +37,7 @@
                          '("mu"
                            "anki-bin"
                            "v2rayn-bin"
+                           "rimerc-zrm"
                            )
                          '())))
                    (list
@@ -83,19 +84,31 @@
                                                      deadly-boss-mods
                                                      immersion
                                                      weakauras))))
-                      '())
-                  ))))
+                      '())))))
+   (if (and touchable-machine?
+            (not deck-machine?))
+       (append
+        (list (simple-service
+               'rime-config-deploy
+               home-activation-service-type
+               #~(begin
+                   (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.local/share/fcitx5"))
+                   (system* "cp" "-r"
+                            #$(string-append (getenv "HOME") "/.guix-home/profile/share/fctix5/rime")
+                            #$(string-append (getenv "HOME") "/.local/share/fcitx5/"))))))
+       '())
    (if touchable-machine?
        (append
         (if (and (not work-machine?)
                  (not deck-machine?))
-             (list
-              (simple-service
-               'my-timer
-               home-shepherd-service-type
-               (list (shepherd-timer
-                      '(update-mail)
-                      #~(calendar-event #:minutes (iota 3 0 20))
-                      #~("offlineimap")))))
-             '()))
-       '()))))
+            (list
+             (simple-service
+              'my-timer
+              home-shepherd-service-type
+              (list (shepherd-timer
+                     '(update-mail)
+                     #~(calendar-event #:minutes (iota 3 0 20))
+                     #~("offlineimap")))))
+            '()))
+       '())
+   )))

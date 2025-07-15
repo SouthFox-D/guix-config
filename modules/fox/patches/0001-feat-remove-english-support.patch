@@ -1,0 +1,51 @@
+From 0068081cb0513331f97f9589df100278608e23e4 Mon Sep 17 00:00:00 2001
+From: SouthFox <master@southfox.me>
+Date: Tue, 15 Jul 2025 11:28:23 +0800
+Subject: [PATCH] [feat] remove english support
+
+---
+ double_pinyin_plus.schema.yaml | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/double_pinyin_plus.schema.yaml b/double_pinyin_plus.schema.yaml
+index 1b3007a..172114a 100644
+--- a/double_pinyin_plus.schema.yaml
++++ b/double_pinyin_plus.schema.yaml
+@@ -11,13 +11,11 @@ schema:
+   description: |
+     基于朙月拼音＋自然碼雙拼原方案。
+     - 增加自定义词库(custom phrase)。
+-    - 增加英文输入支持，支持大写字母
+     - 增加自然码辅码支持(自然码2000)
+     - 增加 Emoji 支持
+   dependencies:
+     - stroke
+     - zrm2000
+-    - english
+ 
+ switches:
+   - name: ascii_mode
+@@ -53,7 +51,6 @@ engine:
+   translators:
+     - punct_translator
+     - reverse_lookup_translator
+-    - table_translator@english
+     - table_translator@custom_phrase
+     - table_translator@zrm2000
+     - script_translator
+@@ -70,12 +67,6 @@ custom_phrase:
+   initial_quality: 1
+   user_dict: custom_phrase
+ 
+-english:
+-  dictionary: english
+-  enable_completion: true
+-  enable_sentence: false
+-  initial_quality: 0
+-
+ zrm2000:
+   dictionary: zrm2000
+   enable_sentence: false
+-- 
+2.50.1
+

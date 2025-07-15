@@ -1,4 +1,5 @@
 (define-module (fox packages)
+  #:use-module (guix build utils)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix download)
@@ -288,3 +289,35 @@ network micro-segmentation and security monitoring.")
 create network proxy servers, clients and transparent proxies.")
    (license gpl3+)
    (properties '((upstream-name . "sing-box")))))
+
+(define-public rimerc-zrm
+  (package
+   (name "rimerc-zrm")
+   (version "01cf4a8f58c00b4b3837be65a997e8274723ecda")
+   (source (origin
+            (method git-fetch)
+            (uri (git-reference
+                  (url "https://github.com/mutoe/rime.git")
+                  (commit "01cf4a8f58c00b4b3837be65a997e8274723ecda")))
+            (sha256
+             (base32
+              "03l8qkn67k97gbf5940vm72li54xkh41sz65mfjns0rz2h1xx0wj"))
+            (patches (list (local-file "patches/0001-feat-remove-english-support.patch")))))
+   (build-system copy-build-system)
+   (arguments
+    (list
+     #:install-plan #~'(("." "share/fctix5/rime"))
+     #:phases
+     #~(modify-phases
+        %standard-phases
+        (add-after 'unpack 'patch
+                   (lambda _
+                     (delete-file-recursively ".vscode")
+                     (delete-file-recursively "example_images")
+                     (delete-file "english.dict.yaml")
+                     (delete-file "english.schema.yaml"))))))
+   (home-page "https://github.com/mutoe/rime")
+   (synopsis "Rime arm config")
+   (description
+    "Rime zrm config.")
+   (license expat)))
