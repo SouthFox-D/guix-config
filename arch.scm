@@ -69,6 +69,7 @@
 
 (define %arch-misc
   (list
+   "firefox"
    "nyxt"
 
    "mpv"
