@@ -63,6 +63,8 @@
    "grim"
    "slurp"
    "brightnessctl"
+
+   "ttf-nerd-fonts-symbols"
    ))
 
 (define %arch-misc
