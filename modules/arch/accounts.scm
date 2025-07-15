@@ -38,6 +38,13 @@
                              (call-with-input-file
                                  "/etc/shells"
                                get-string-all) #\newline))
+      (define arch-accounts
+        '#$(map (lambda (c)
+                  (list (arch-account-configuration-name c)
+                        (file-append (specification->package
+                                      (arch-account-configuration-shell c))
+                                     "/bin/" (arch-account-configuration-shell c)))) config))
+      (define account-shell (delete-duplicates (map cadr arch-accounts) equal?))
 
       (define (set-account name shell)
         (map (lambda (ac)
@@ -47,21 +54,23 @@
              current-passwd))
 
       (define (set-shell shell)
-        (map (lambda (as)
-               (if (equal?
-                    (last-pair (string-split as #\/))
-                    (last-pair (string-split shell #\/)))
-                   shell
-                   as))
-             current-shell))
-
-      (define arch-accounts
-        '#$(map (lambda (c)
-                  (list (arch-account-configuration-name c)
-                        (file-append (specification->package
-                                      (arch-account-configuration-shell c))
-                                     "/bin/" (arch-account-configuration-shell c)))) config))
-      (define account-shell (delete-duplicates (map cadr arch-accounts) equal?))
+        (let ((temp-result (map
+                            (lambda (as)
+                              (if (and (equal?
+                                        (last-pair (string-split as #\/))
+                                        (last-pair (string-split shell #\/)))
+                                       (string-contains as "/gnu/store"))
+                                  shell
+                                  as))
+                            current-shell)))
+          (if (or-map
+               (lambda (as)
+                 (equal?
+                  (last-pair (string-split as #\/))
+                  (last-pair (string-split shell #\/))))
+               temp-result)
+              temp-result
+              (append temp-result (list shell)))))
 
       (map (lambda (account) (set! current-passwd (apply set-account account))) arch-accounts)
       (map (lambda (shell) (set! current-shell (set-shell shell))) account-shell)
