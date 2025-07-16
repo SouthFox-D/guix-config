@@ -55,14 +55,15 @@
 (define (eval-template template-string)
   ;; (display template-string)
   (regexp-substitute/global #f
-                            "\\$~\\{([^}]*)\\}"
+                            ;; FIXME contain %  string will fail
+                            "\\{%([^%]*?)%\\}"
                             template-string
                             'pre
                             (lambda (m)
                               (let ((result (eval-string
                                              (substring (match:substring m)
-                                                        3
-                                                        (- (string-length (match:substring m)) 1)))))
+                                                        2
+                                                        (- (string-length (match:substring m)) 2)))))
                                 (if (unspecified? result)
                                     ""
                                     result)))
