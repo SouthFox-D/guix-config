@@ -145,6 +145,12 @@
          (if den-machine?
           (append
            (list
+            (simple-service 'den-waydroid
+                            arch-profile-service-type
+                            (list
+                             waydroid
+                             waydroid-script
+                             ))
             (simple-service 'den-arch-file
                             arch-files-service-type
                             (list
