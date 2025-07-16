@@ -70,6 +70,7 @@ ZSH_THEME=$~{(if touchable-machine? "fox" "lambda")}
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:/var/guix/profiles/per-user/root/arch-profile/profile/bin"
 
 . $HOME/.guix-home/setup-environment
 
