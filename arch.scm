@@ -51,21 +51,22 @@
    ))
 
 (define %arch-de-things
-  (list
-   "hyprland"
-   "hyprlock"
-   "hyprpaper"
-   "waybar"
-   "libnotify"
-   "dunst"
-   "kitty"
-   "cliphist"
-   "grim"
-   "slurp"
-   "brightnessctl"
+  (append
+   (list
+    "hyprland"
+    "hyprlock"
+    "hyprpaper"
+    "waybar"
+    "libnotify"
+    "dunst"
+    "kitty"
+    "cliphist"
+    "grim"
+    "slurp"
+    "brightnessctl"
 
-   "ttf-nerd-fonts-symbols"
-   ))
+    "ttf-nerd-fonts-symbols"
+    )))
 
 (define %arch-misc
   (list
@@ -92,10 +93,13 @@
    (if touchable-machine?
        (append
         %arch-de-things
-        %arch-misc
-        )
-       (list "rclone")
-       )))
+        %arch-misc)
+       (list "rclone"))
+   (append
+    (if den-machine?
+        (list "fprintd")
+        '()))
+   ))
 
 
 (define %arch-base-services
@@ -154,6 +158,12 @@
             (simple-service 'den-arch-file
                             arch-files-service-type
                             (list
+                             `("usr/lib64/libfprint-2.so.2.0.0"
+                               ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2.0.0"))
+                             `("usr/lib64/libfprint-2.so.2"
+                               ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
+                             `("usr/lib64/libfprint-2.so"
+                               ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so"))
                              `("etc/dbus-1/system.d/id.waydro.Container.conf"
                                ,(file-append  waydroid "/share/dbus-1/system.d/id.waydro.Container.conf"))
                              `("etc/dbus-1/system-services/id.waydro.Container.service"
