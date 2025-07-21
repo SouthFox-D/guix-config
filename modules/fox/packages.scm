@@ -681,12 +681,12 @@ libndk translation library to waydroid !")
             (method url-fetch)
             (uri (string-append
                   "https://raw.githubusercontent.com/ftfpteams/focaltech-linux-fingerprint-driver"
-                  "/3d47a5aef6535736495fcc0f98645a98f14b9af9/"
-                  "libfprint-2-2_1.94.4+tod1-0ubuntu1~22.04.2_amd64_20240329.deb"))
+                  "/3d47a5aef6535736495fcc0f98645a98f14b9af9/Fedora_Redhat/"
+                  "libfprint-2-2_1.94.4+tod1_suse_all_x64_20250219.install"))
             (file-name (string-append name ".tar.gz"))
             (sha256
              (base32
-              "04bk24p9my5aqc5ynwbirjabpk37r5cj5jg1s5xm5pgxwy95jddw"))))
+              "1hxgj6qsdxn3i5hxqm9m8awwn1y3ldy70c91xp1nps1x0vrpryx3"))))
    (build-system copy-build-system)
    (arguments
     (list
@@ -694,18 +694,23 @@ libndk translation library to waydroid !")
      #~(modify-phases %standard-phases
                       (replace 'unpack
                                (lambda* (#:key source #:allow-other-keys)
-                                 (invoke "ar" "x"  source)
-                                 (invoke "tar" "-xvf" "data.tar.zst")
+                                 (with-output-to-file "data.tar.gz"
+                                   (lambda ()
+                                     (invoke "sed" "1,/^main \\$@/d" source)))
+                                 (display (invoke "ls" "-lah"))
+                                 (invoke "tar" "-zxf" "data.tar.gz")
                                  (mkdir-p (string-append #$output "/usr/lib64"))
                                  (copy-file
-                                  "usr/lib/x86_64-linux-gnu/libfprint-2.so.2.0.0"
-                                  (string-append #$output "/usr/lib64/libfprint-2.so.2.0.0"))
+                                  "usr/lib64/libfprint-2.so.2.0.0"
+                                  (string-append #$output "/usr/lib64/libfprint-2.so.2.0.0"))))
+                      (replace 'install
+                               (lambda _
                                  (symlink (string-append #$output "/usr/lib64/libfprint-2.so.2.0.0")
                                           (string-append #$output "/usr/lib64/libfprint-2.so.2"))
                                  (symlink (string-append #$output "/usr/lib64/libfprint-2.so.2.0.0")
                                           (string-append #$output "/usr/lib64/libfprint-2.so")))))))
    (supported-systems '("x86_64-linux"))
-   (native-inputs (list tar binutils))
+   (native-inputs (list tar coreutils))
    (home-page "https://github.com/ftfpteams/focaltech-linux-fingerprint-driver")
    (synopsis "Focaltech moh fingerprint driver")
    (description
