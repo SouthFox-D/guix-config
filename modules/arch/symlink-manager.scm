@@ -183,7 +183,7 @@
            (display (G_" done\nFinished updating symlinks.\n\n")))))))
 
 (define (update-symlinks-gexp _)
-  #~(primitive-load #$(update-symlinks-script)))
+  `(100 . ,#~(primitive-load #$(update-symlinks-script))))
 
 (define arch-symlink-manager-service-type
   (service-type (name 'arch-symlink-manager)

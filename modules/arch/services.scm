@@ -123,7 +123,23 @@ in the arch environment directory."
                  (list (service-extension
                         arch-service-type
                         sync-script-entry)))
-                (compose identity)
+                (compose (lambda (gexp-entries)
+                           (define (get-priority-and-script entry)
+                             (if (and (pair? entry) (number? (car entry)))
+                                 (values (car entry) (cdr entry))
+                                 (values 0 entry)))
+
+                           (let* ((parsed-entries (map (lambda (entry)
+                                                         (call-with-values
+                                                             (lambda () (get-priority-and-script entry))
+                                                           (lambda (priority script)
+                                                             (list priority script))))
+                                                       gexp-entries))
+                                  (sorted-parsed-entries (sort parsed-entries
+                                                               (lambda (a b)
+                                                                 (< (car a) (car b)))))
+                                  (sorted-scripts (map cdr sorted-parsed-entries)))
+                             (map (compose identity cadr) sorted-parsed-entries))))
                 (extend compute-sync-script)
                 (default-value #f)
                 (description "Run gexps on sync")))
