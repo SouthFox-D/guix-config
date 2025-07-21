@@ -672,3 +672,43 @@ interfaces).")
     "Python Script to add OpenGapps, Magisk, libhoudini translation library and
 libndk translation library to waydroid !")
    (license gpl3)))
+
+(define-public libfprint-focaltech
+  (package
+   (name "libfprint-focaltech")
+   (version "main")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://raw.githubusercontent.com/ftfpteams/focaltech-linux-fingerprint-driver"
+                  "/3d47a5aef6535736495fcc0f98645a98f14b9af9/"
+                  "libfprint-2-2_1.94.4+tod1-0ubuntu1~22.04.2_amd64_20240329.deb"))
+            (file-name (string-append name ".tar.gz"))
+            (sha256
+             (base32
+              "04bk24p9my5aqc5ynwbirjabpk37r5cj5jg1s5xm5pgxwy95jddw"))))
+   (build-system copy-build-system)
+   (arguments
+    (list
+     #:phases
+     #~(modify-phases %standard-phases
+                      (replace 'unpack
+                               (lambda* (#:key source #:allow-other-keys)
+                                 (invoke "ar" "x"  source)
+                                 (invoke "tar" "-xvf" "data.tar.zst")
+                                 (mkdir-p (string-append #$output "/usr/lib64"))
+                                 (copy-file
+                                  "usr/lib/x86_64-linux-gnu/libfprint-2.so.2.0.0"
+                                  (string-append #$output "/usr/lib64/libfprint-2.so.2.0.0"))
+                                 (symlink (string-append #$output "/usr/lib64/libfprint-2.so.2.0.0")
+                                          (string-append #$output "/usr/lib64/libfprint-2.so.2"))
+                                 (symlink (string-append #$output "/usr/lib64/libfprint-2.so.2.0.0")
+                                          (string-append #$output "/usr/lib64/libfprint-2.so")))))))
+   (supported-systems '("x86_64-linux"))
+   (native-inputs (list tar binutils))
+   (home-page "https://github.com/ftfpteams/focaltech-linux-fingerprint-driver")
+   (synopsis "Focaltech moh fingerprint driver")
+   (description
+    "focaltech moh fingerprint driver for ubuntu, support with vid:0x2808,
+pid: 0x9338, 0xd979, 0xc652, 0xa959, 0x0579 ")
+   (license expat)))
