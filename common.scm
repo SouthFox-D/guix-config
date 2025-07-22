@@ -6,7 +6,7 @@
   (equal? "den" (gethostname)))
 
 (define work-machine?
-  (equal? "n100" (gethostname)))
+  (equal? "hive" (gethostname)))
 
 (define deck-machine?
   (or (equal? "deck" (getenv "SUDO_USER"))
