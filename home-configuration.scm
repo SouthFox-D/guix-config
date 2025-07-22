@@ -56,7 +56,7 @@
               (if (and touchable-machine?
                        (not deck-machine?))
                   `((".config/hypr/hyprland.conf" ,(eval-file "files/hyprland.conf"))
-                    (".config/hypr/hyprlock.conf" ,(local-file "files/hyprlock.conf"))
+                    (".config/hypr/hyprlock.conf" ,(eval-file "files/hyprlock.conf"))
                     (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
                     (".config/nyxt/config.lisp" ,(local-file "files/nyxt.lisp"))
                     (".config/kitty/kitty.conf" ,(local-file "files/kitty.conf"))
