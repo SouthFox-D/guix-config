@@ -39,15 +39,15 @@
 (define-public oh-my-zsh
   (package
    (name "oh-my-zsh")
-   (version "250627")
+   (version "250722")
    (source (origin
             (method git-fetch)
             (uri (git-reference
                   (url "https://github.com/ohmyzsh/ohmyzsh.git")
-                  (commit "01433503c2a474c049fa56d792ebfd9274e683cc")))
+                  (commit "537807c863a90c51a4ec6fbb6b818c3668472425")))
             (sha256
              (base32
-              "07grb0lgpj5n3kin72fikxx2rwvn1rgjs9wvjni39lf3kr1gabiz"))))
+              "0rzygckwq5yq7dk4dirvl16al1h2k7zbixrnlvhwc16ys7a3f9rg"))))
    (build-system copy-build-system)
    (synopsis "framework for managing your zsh configuration")
    (description "🙃A delightful community-driven (with 2,400+ contributors)
