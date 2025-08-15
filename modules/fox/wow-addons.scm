@@ -102,7 +102,7 @@ framework to display customizable graphics on your screen.")
 (define-public cell
   (package
    (name "Cell")
-   (version "r253-release")
+   (version "r259-release")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -110,7 +110,7 @@ framework to display customizable graphics on your screen.")
                   version "/Cell-" version ".zip"))
             (sha256
              (base32
-              "0rl74linnlspyzsld49d3qm7sf1ibiyzbca9ih802nar3rl7wnr5"))))
+              "0j3z7h2dd9b80vam51y723lsqawvx58gji95mvs9i7w5lcv3pnqp"))))
    (build-system copy-build-system)
    (arguments
     (list
