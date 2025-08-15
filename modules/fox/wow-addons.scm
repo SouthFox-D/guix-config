@@ -51,7 +51,7 @@ the game on a controller - without inconvenience.")
 (define-public immersion
   (package
    (name "Immersion")
-   (version "1.4.45")
+   (version "1.4.46")
    (source (origin
             (method git-fetch)
             (uri (git-reference
@@ -59,7 +59,7 @@ the game on a controller - without inconvenience.")
                   (commit version)))
             (sha256
              (base32
-              "1y81v0k5m07cgfm91q3b5zs29nzw1xv1js7z3f6izdcvf6m5knqc"))))
+              "1z6a0acjs7gpn28jbk8mlbl3pwbmkpw9zfa9f102i9njfndbskjs"))))
    (build-system copy-build-system)
    (arguments
     (list
