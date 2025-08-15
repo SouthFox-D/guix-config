@@ -61,14 +61,14 @@ with the latest updates from the community.")
 (define-public zellij-bin
   (package
    (name "zellij-bin")
-   (version "0.42.2")
+   (version "0.43.1")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "https://github.com/zellij-org/zellij/releases/download/v"
                   version "/zellij-x86_64-unknown-linux-musl.tar.gz"))
             (sha256
-             (base32 "0ln6qw8r2lp20fnr4zlbgnvw6z1zsjbw5dfsvnzmb52k28sq7m62"))))
+             (base32 "0nnp41q21n2mfbkvj4qmi1p0p4jdkv9arnasz0z2jn2mxzprh7al"))))
    (build-system copy-build-system)
    (arguments
     (list
