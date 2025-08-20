@@ -66,6 +66,7 @@
     "brightnessctl"
 
     "ttf-nerd-fonts-symbols"
+    "ttf-nerd-fonts-symbols-mono"
     )))
 
 (define %arch-misc
