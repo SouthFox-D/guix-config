@@ -1,9 +1,3 @@
-(define-configuration nyxt/mode/proxy:proxy-mode
-  ((nyxt/mode/proxy:proxy (make-instance 'proxy
-                                         :url (quri:uri "http://localhost:10809")
-                                         :allowlist '("localhost" "127.0.0.1")
-                                         :proxied-downloads-p t))))
-
 (defvar *my-search-engines*
   (list
    '("google" "https://google.com/search?q=~a" "https://google.com")
@@ -13,23 +7,31 @@
      "https://searx.stream/"))
   "List of search engines.")
 
+(define-configuration base-mode
+    ((keyscheme-map
+      (define-keyscheme-map "my-base" (list :import %slot-value%)
+        nyxt/keyscheme:default
+        (list
+         "M-x" 'execute-command
+         "C-d" 'scroll-page-down
+         "C-u" 'scroll-page-up)))))
+
+(define-configuration prompt-buffer-mode
+    ((keyscheme-map
+      (define-keyscheme-map "prompt-buffer" (list :import %slot-value%)
+        nyxt/keyscheme:default
+        (list
+         "CapsLock" 'quit-prompt-buffer
+         "C-j" 'next-suggestion
+         "C-k" 'previous-suggestion
+         "C-J" 'next-source
+         "C-K" 'previous-source)))))
+
 (define-configuration web-buffer
     ((default-modes
-      (append '(nyxt/mode/vi:vi-normal-mode nyxt/mode/proxy:proxy-mode) %slot-value%))
+      (append '(nyxt/mode/vi:vi-normal-mode) %slot-value%))
      (search-engines (mapcar (lambda (engine) (apply 'make-search-engine engine))
                              *my-search-engines*))))
-
-(define-configuration buffer
-    ((override-map
-      (let ((map (make-keymap "override-map")))
-        (define-key map "M-x" 'execute-command)
-        (define-key map "C-d" 'scroll-page-down)
-        (define-key map "C-u" 'scroll-page-up)
-        (define-key map "C-j" 'next-suggestion)
-        (define-key map "C-k" 'previous-suggestion)
-        (define-key map "C-J" 'next-source)
-        (define-key map "C-K" 'previous-source)
-        ))))
 
 (defvar pinyin-table
   '("阿啊呵腌嗄锕吖爱哀挨碍埃癌艾唉矮哎皑蔼隘暧霭捱嗳瑷嫒锿嗌砹安案按暗岸俺谙黯鞍氨庵桉鹌胺铵揞犴埯昂肮盎奥澳傲熬敖凹袄懊坳嗷拗鏖骜鳌翱岙廒遨獒聱媪螯鏊"
