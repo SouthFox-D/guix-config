@@ -206,6 +206,34 @@ and others.")
     "Anki's shared backend and web components, and the Qt frontend.")
    (license agpl3+)))
 
+(define-public nyxt-bin
+  (package
+   (name "nyxt-bin")
+   (version "4.0.0-pre-release-13")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/atlas-engineer/nyxt" "/releases/download/"
+                  version "/Linux-Nyxt-x86_64.tar.gz"))
+            (sha256
+             (base32
+              "1hsz8xrs3pn00rb5z07dcm5xnbwplf6pa8zz5xkp5ag7bcnj0k7n"))))
+   (build-system copy-build-system)
+   (arguments
+    (list #:install-plan #~'(("Nyxt-x86_64.AppImage" "opt/nyxt-bin/nyxt"))
+          #:phases
+          #~(modify-phases %standard-phases
+                           (delete 'validate-runpath)
+                           (delete 'make-dynamic-linker-cache))))
+   (supported-systems '("x86_64-linux"))
+   (home-page "https://nyxt-browser.com/")
+   (synopsis "Extensible web-browser in Common Lisp")
+   (description
+    "Nyxt is a keyboard-oriented, extensible web-browser designed for power users.
+The application has familiar Emacs and VI key-bindings and is fully configurable
+and extensible in Common Lisp.")
+   (license bsd-3)))
+
 (define license (@@ (guix licenses) license))
 
 (define* (nonfree uri #:optional (comment ""))
