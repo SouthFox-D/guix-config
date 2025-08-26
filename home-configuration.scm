@@ -36,6 +36,7 @@
                               (not deck-machine?))
                          '("mu"
                            "anki-bin"
+                           "nyxt-bin"
                            "v2rayn-bin"
                            "rimerc-zrm"
                            )
