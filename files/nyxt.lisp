@@ -9,8 +9,8 @@
    '("google" "https://google.com/search?q=~a" "https://google.com")
    '("python3" "https://docs.python.org/3/search.html?q=~a"
      "https://docs.python.org/3")
-   '("searx" "https://searx.tiekoetter.com/search?q=~a&category_general=1&language=en-US&time_range=&safesearch=0&theme=simple"
-     "https://searx.tiekoetter.com/"))
+   '("searx" "https://searx.stream/search?q=~a"
+     "https://searx.stream/"))
   "List of search engines.")
 
 (define-configuration web-buffer
