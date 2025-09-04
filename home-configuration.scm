@@ -38,6 +38,7 @@
                            "anki-bin"
                            "nyxt-bin"
                            "v2rayn-bin"
+                           "yay-bin"
                            "rimerc-zrm"
                            )
                          '())))
