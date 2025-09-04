@@ -365,6 +365,35 @@ create network proxy servers, clients and transparent proxies.")
     "Rime zrm config.")
    (license expat)))
 
+(define-public yay-bin
+  (package
+   (name "yay-bin")
+   (version "12.5.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/Jguer/yay" "/releases/download/v"
+                  version "/yay_" version "_x86_64.tar.gz"))
+            (sha256
+             (base32
+              "1pysficjq375iad2b89ck94b1pnl2d2fdazdxy4xcm4h2qyfkf6h"))))
+   (build-system copy-build-system)
+   (arguments
+    (list #:install-plan #~'(("yay" "bin/"))
+          #:phases
+          #~(modify-phases %standard-phases
+                           (delete 'strip)
+                           ;; depends host pacman
+                           (delete 'validate-runpath))))
+   (supported-systems '("x86_64-linux"))
+   (home-page "https://github.com/Jguer/yay")
+   (synopsis "Pacman wrapper and AUR helper written in go")
+   (description
+    "Yet another yogurt. Pacman wrapper and AUR helper written in go.
+Pre-compiled.")
+   (license gpl3+)
+   (properties '((upstream-name . "yay")))))
+
 (define-public libglibutil
   (package
    (name "libglibutil")
