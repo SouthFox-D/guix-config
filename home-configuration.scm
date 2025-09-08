@@ -40,6 +40,7 @@
                            "v2rayn-bin"
                            "yay-bin"
                            "rimerc-zrm"
+                           "haunt"
                            )
                          '())))
                    (list
