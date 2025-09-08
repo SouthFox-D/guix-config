@@ -48,6 +48,7 @@
    "hy"
    "python-requests"
    "ripgrep"
+   "dust"
    ))
 
 (define %arch-de-things
