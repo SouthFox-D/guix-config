@@ -774,3 +774,34 @@ libndk translation library to waydroid !")
     "focaltech moh fingerprint driver for ubuntu, support with vid:0x2808,
 pid: 0x9338, 0xd979, 0xc652, 0xa959, 0x0579 ")
    (license expat)))
+
+(define %minimal-glibc-locales
+  (make-glibc-utf8-locales
+   glibc
+   #:locales (list "en_US")
+   #:name "glibc-utf8-locales"))
+
+(define-public minimal-glibc-locales
+  (package
+   (name "minimal-glibc-locales")
+   (version "master")
+   (source (plain-file "hello" "Hello World!"))
+   (build-system copy-build-system)
+   (arguments (list
+               #:install-plan #~'(("hello" "share/"))
+               #:phases
+               #~(modify-phases
+                  %standard-phases
+                  (add-after 'unpack 'move-locales
+                             (lambda _
+                               (mkdir-p (string-append #$output "/share"))
+                               (invoke
+                                "cp" "-r"
+                                (string-append #$(this-package-input "glibc-utf8-locales")
+                                               "/lib")
+                                (string-append #$output "/")))))))
+   (inputs (list %minimal-glibc-locales))
+   (synopsis "x")
+   (description "x")
+   (home-page "x")
+   (license expat)))
