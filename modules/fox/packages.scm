@@ -518,7 +518,7 @@ Pre-compiled.")
                                              (lambda* _
                                                (invoke "python" "setup.py" "build_ext"
                                                        "--inplace" "--cython"))))))
-   (native-inputs (list python-cython pkg-config))
+   (native-inputs (list python-cython-0 pkg-config))
    (inputs (list glib libgbinder libglibutil))
    (home-page "https://github.com/erfanoabdi/gbinder-python")
    (synopsis "Python bindings for libgbinder")
