@@ -77,6 +77,9 @@ export PATH="$PATH:/var/guix/profiles/per-user/root/arch-profile/profile/bin"
 export GUIX_PROFILE="$HOME/.guix-home/profile"
 export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 export ZSH_CUSTOM="$GUIX_PROFILE/share/zsh"
+
+. $GUIX_PROFILE/etc/profile
+
 .reload() {
     autoload compinit && compinit
     source $GUIX_PROFILE/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
