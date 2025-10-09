@@ -115,6 +115,12 @@
                    arch-pacman-sync-service-type
                    arch-packages)))
 
+(define renew-cert-job
+  (shepherd-timer
+   '(renew-cert)
+   #~(calendar-event #:days-of-month '(1))
+   (list "certbot" "renew" "--nginx")))
+
 (define arch-services
   (cond ((equal? "deck" (getenv "SUDO_USER"))
          (list
@@ -150,40 +156,46 @@
                   (name (getenv "SUDO_USER") )
                   (shell "zsh")))))
          (if den-machine?
-          (append
-           (list
-            (simple-service 'den-waydroid
-                            arch-profile-service-type
-                            (list
-                             waydroid
-                             waydroid-script
-                             ))
-            (simple-service 'den-arch-file
-                            arch-files-service-type
-                            (list
-                             `("usr/lib64/libfprint-2.so.2.0.0"
-                               ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2.0.0"))
-                             `("usr/lib64/libfprint-2.so.2"
-                               ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
-                             `("usr/lib64/libfprint-2.so"
-                               ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so"))
-                             `("etc/dbus-1/system.d/id.waydro.Container.conf"
-                               ,(file-append  waydroid "/share/dbus-1/system.d/id.waydro.Container.conf"))
-                             `("etc/dbus-1/system-services/id.waydro.Container.service"
-                               ,(file-append  waydroid "/share/dbus-1/system-services/id.waydro.Container.service"))
-                             `("etc/polkit-1/actions/id.waydro.Container.policy"
-                               ,(file-append  waydroid "/share/polkit-1/actions/id.waydro.Container.policy"))))
-            (simple-service 'den-shepherd arch-shepherd-service-type
-                            (list
-                             (shepherd-service
-                              (documentation "Start waydroid")
-                              (provision '(waydroid))
-                              (start #~(make-forkexec-constructor
-                                        (list #$(file-append waydroid "/bin/waydroid")
-                                              "-w" "container" "start")))
-                              (stop #~(make-kill-destructor))
-                              (auto-start? #t))))))
-          '()))
+             (append
+              (list
+               (simple-service 'den-waydroid
+                               arch-profile-service-type
+                               (list
+                                waydroid
+                                waydroid-script
+                                ))
+               (simple-service 'den-arch-file
+                               arch-files-service-type
+                               (list
+                                `("usr/lib64/libfprint-2.so.2.0.0"
+                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2.0.0"))
+                                `("usr/lib64/libfprint-2.so.2"
+                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
+                                `("usr/lib64/libfprint-2.so"
+                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so"))
+                                `("etc/dbus-1/system.d/id.waydro.Container.conf"
+                                  ,(file-append  waydroid "/share/dbus-1/system.d/id.waydro.Container.conf"))
+                                `("etc/dbus-1/system-services/id.waydro.Container.service"
+                                  ,(file-append  waydroid "/share/dbus-1/system-services/id.waydro.Container.service"))
+                                `("etc/polkit-1/actions/id.waydro.Container.policy"
+                                  ,(file-append  waydroid "/share/polkit-1/actions/id.waydro.Container.policy"))))
+               (simple-service 'den-shepherd arch-shepherd-service-type
+                               (list
+                                (shepherd-service
+                                 (documentation "Start waydroid")
+                                 (provision '(waydroid))
+                                 (start #~(make-forkexec-constructor
+                                           (list #$(file-append waydroid "/bin/waydroid")
+                                                 "-w" "container" "start")))
+                                 (stop #~(make-kill-destructor))
+                                 (auto-start? #t))))))
+             '()))
+        ((equal? "basefox" (gethostname))
+         (list
+          (simple-service
+           'server-timer
+           arch-shepherd-service-type
+           (list renew-cert-job))))
         ((equal? "mastfox" (gethostname))
          (list
           (service
@@ -201,7 +213,8 @@
                   '(backup)
                   #~(calendar-event #:hours '(5) #:minutes '(0))
                   #~(#$(string-append %arch-profile "/files/usr/bin/infra-backup")
-                       #$(gethostname)))))))
+                       #$(gethostname)))
+                 renew-cert-job))))
         ((equal? "alifox" (gethostname))
          (list
           (service
