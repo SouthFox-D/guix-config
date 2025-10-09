@@ -118,7 +118,7 @@
 (define renew-cert-job
   (shepherd-timer
    '(renew-cert)
-   #~(calendar-event #:days-of-month '(1))
+   #~(calendar-event #:days-of-month '(1) #:hours '(1) #:minutes '(0))
    (list "certbot" "renew" "--nginx")))
 
 (define arch-services
