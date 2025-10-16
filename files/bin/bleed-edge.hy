@@ -13,7 +13,7 @@
 (defn get-cut []
   (let [sudo-user (os.environ.get "SUDO_USER")
         guix-workdir f"/home/{sudo-user}/.config/guix"
-        guix-substitute "--substitute-urls=\"https://guix.southfox.me\""
+        guix-substitute "--substitute-urls=\"https://mirror.sjtu.edu.cn/guix/ https://guix.southfox.me\""
         need-reload-hyprland? (os.path.isfile "/usr/bin/hyprctl")
         need-upgrade-doomemacs? (os.path.isfile (+ "/home/" sudo-user "/.doom.d/config.el"))]
     (run-cmd f"git -C {guix-workdir} pull" sudo-user)
