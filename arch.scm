@@ -183,8 +183,7 @@
                                  `("usr/lib64/libfprint-2.so.2"
                                    ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
                                  `("usr/lib64/libfprint-2.so"
-                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so"))))
-                otd-files-service)
+                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so")))))
                '())))
         ((equal? "basefox" (gethostname))
          (list
