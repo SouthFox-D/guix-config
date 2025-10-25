@@ -44,7 +44,12 @@
                            )
                          '())))
                    (list
-                    zellij-bin)))
+                    zellij-bin)
+                   (if (and (not work-machine?)
+                              (not deck-machine?))
+                         (list opentabletdriver-bin)
+                         '())
+                   ))
  (services
   (append
    (list
@@ -112,7 +117,17 @@
               (list (shepherd-timer
                      '(update-mail)
                      #~(calendar-event #:minutes (iota 3 0 20))
-                     #~("offlineimap")))))
+                     #~("offlineimap"))))
+             (simple-service 'otd-shepherd home-shepherd-service-type
+                               (list
+                                (shepherd-service
+                                 (documentation "Start otd")
+                                 (provision '(otd))
+                                 (start #~(make-forkexec-constructor
+                                           (list #$(file-append opentabletdriver-bin "/bin/otd-daemon"))))
+                                 (stop #~(make-kill-destructor))
+                                 (auto-start? #f))))
+             )
             '()))
        '())
    )))

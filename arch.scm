@@ -121,6 +121,20 @@
    #~(calendar-event #:days-of-month '(1) #:hours '(1) #:minutes '(0))
    (list "certbot" "renew" "--nginx")))
 
+(define otd-files-service
+  (simple-service
+   'otd-arch-file
+   arch-files-service-type
+   (list
+    `("usr/lib/modprobe.d/99-opentabletdriver.conf"
+      ,(file-append opentabletdriver-bin "/usr/lib/modprobe.d/99-opentabletdriver.conf"))
+    `("usr/lib/modules-load.d/opentabletdriver.conf"
+      ,(file-append opentabletdriver-bin "/usr/lib/modules-load.d/opentabletdriver.conf"))
+    `("usr/lib/udev/rules.d/70-opentabletdriver.rules"
+      ,(file-append opentabletdriver-bin "/usr/lib/udev/rules.d/70-opentabletdriver.rules"))
+    `("usr/share/libinput/30-vendor-opentabletdriver.quirks"
+      ,(file-append opentabletdriver-bin "/usr/share/libinput/30-vendor-opentabletdriver.quirks")))))
+
 (define arch-services
   (cond ((equal? "deck" (getenv "SUDO_USER"))
          (list
@@ -149,27 +163,29 @@
                             (stop #~(make-kill-destructor))
                             (auto-start? #t))))))
         (touchable-machine?
-         (list
-          (service
-           arch-account-deploy-service-type
-           (list (arch-account-configuration
-                  (name (getenv "SUDO_USER") )
-                  (shell "zsh")))))
-         (if den-machine?
-             (append
-              (list
-               (simple-service 'den-arch-file
-                               arch-files-service-type
-                               (list
-                                `("usr/lib64/libfprint-2.so.2.0.0"
-                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2.0.0"))
-                                `("usr/lib64/libfprint-2.so.2"
-                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
-                                `("usr/lib64/libfprint-2.so"
-                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so"))
-                                ))
-               ))
-             '()))
+         (append
+          (list
+           (service
+            arch-account-deploy-service-type
+            (list (arch-account-configuration
+                   (name (getenv "SUDO_USER") )
+                   (shell "zsh")))))
+           (if (not work-machine?)
+               (list otd-files-service)
+               '())
+           (if den-machine?
+               (list
+                (simple-service 'den-arch-file
+                                arch-files-service-type
+                                (list
+                                 `("usr/lib64/libfprint-2.so.2.0.0"
+                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2.0.0"))
+                                 `("usr/lib64/libfprint-2.so.2"
+                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
+                                 `("usr/lib64/libfprint-2.so"
+                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so"))))
+                otd-files-service)
+               '())))
         ((equal? "basefox" (gethostname))
          (list
           (simple-service
