@@ -124,7 +124,10 @@
                                  (documentation "Start otd")
                                  (provision '(otd))
                                  (start #~(make-forkexec-constructor
-                                           (list #$(file-append opentabletdriver-bin "/bin/otd-daemon"))))
+                                           (list #$(file-append opentabletdriver-bin "/bin/otd-daemon"))
+                                           #:environment-variables
+                                           (append (default-environment-variables)
+                                                   '("DISPLAY=:1"))))
                                  (stop #~(make-kill-destructor))
                                  (auto-start? #f))))
              )
