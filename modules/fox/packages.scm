@@ -805,3 +805,44 @@ pid: 0x9338, 0xd979, 0xc652, 0xa959, 0x0579 ")
    (description "x")
    (home-page "x")
    (license expat)))
+
+(define-public opentabletdriver-bin
+  (package
+   (name "opentabletdriver-bin")
+   (version "0.6.6.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/OpenTabletDriver/OpenTabletDriver/releases/download/v"
+                  version "/opentabletdriver-" version "-x64.tar.gz"))
+            (sha256
+             (base32
+              "0kp3yhrr959rkw1l4pi5ysw014kd7dnrs78g189hp47mja6vqi59"))))
+   (build-system copy-build-system)
+   (arguments
+    (list
+     #:install-plan
+     #~'(("opentabletdriver/usr/local/lib/opentabletdriver/OpenTabletDriver.Daemon" "bin/otd-daemon")
+         ("opentabletdriver/usr/local/lib/opentabletdriver/OpenTabletDriver.UX.Gtk" "bin/otd-gui")
+         ("opentabletdriver/usr/local/lib/opentabletdriver/OpenTabletDriver.Console" "bin/otd")
+         ("opentabletdriver/usr/local/share/libinput/30-vendor-opentabletdriver.quirks"
+          "usr/share/libinput/30-vendor-opentabletdriver.quirks")
+         ("opentabletdriver/usr/local/lib/modprobe.d/99-opentabletdriver.conf"
+          "usr/lib/modprobe.d/99-opentabletdriver.conf")
+         ("opentabletdriver/usr/local/lib/modules-load.d/opentabletdriver.conf"
+          "usr/lib/modules-load.d/opentabletdriver.conf")
+         ("opentabletdriver/etc/udev/rules.d/70-opentabletdriver.rules"
+          "usr/lib/udev/rules.d/70-opentabletdriver.rules"))
+     #:phases
+     #~(modify-phases %standard-phases
+                      (delete 'strip)
+                      (delete 'validate-runpath)
+                      (replace 'unpack
+                               (lambda* (#:key source #:allow-other-keys)
+                                 (invoke "tar" "-xvf" source))))))
+   (supported-systems '("x86_64-linux"))
+   (home-page "https://opentabletdriver.net/")
+   (synopsis "Open source, cross-platform, user-mode tablet driver")
+   (description
+    "Open source, cross-platform, user-mode tablet driver")
+   (license lgpl3)))
