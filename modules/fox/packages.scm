@@ -30,6 +30,7 @@
   #:use-module (gnu packages python-build)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages games)
+  #:use-module (gnu packages ncurses)
   #:use-module (gnu home services)
   #:use-module (guix build-system copy)
   #:use-module (guix build-system gnu)
@@ -851,15 +852,27 @@ pid: 0x9338, 0xd979, 0xc652, 0xa959, 0x0579 ")
 (define-public cataclysm-dda-experimental
   (package
    (inherit cataclysm-dda)
-    (name "cataclysm-dda-experimental")
-    (version "experimental-2025-10-25")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/CleverRaven/Cataclysm-DDA")
-             (commit "c30e3e6e1c63cc7132b748ea25a4dcd3f5b99244")))
-       (sha256
-        (base32 "1gmi2psgchzp62kgbvg6bc38qqksvbngn5n64q02bcp3izpni56a"))
-       (file-name (git-file-name name version))))
-    ))
+   (name "cataclysm-dda-experimental")
+   (version "2025-10-25")
+   (source
+    (origin
+     (method git-fetch)
+     (uri (git-reference
+           (url "https://github.com/CleverRaven/Cataclysm-DDA")
+           (commit "c30e3e6e1c63cc7132b748ea25a4dcd3f5b99244")))
+     (sha256
+      (base32 "1gmi2psgchzp62kgbvg6bc38qqksvbngn5n64q02bcp3izpni56a"))
+     (file-name (git-file-name name version))))
+   (arguments
+    (list
+     #:make-flags
+     #~(list (string-append "PREFIX=" #$output)
+             "USE_HOME_DIR=1" "DYNAMIC_LINKING=1" "RELEASE=1" "WARNINGS=-w"
+             "LOCALIZE=1" "LANGUAGES=all")
+     #:phases
+     #~(modify-phases %standard-phases
+                      (delete 'configure))
+     #:tests? #f))
+   (inputs
+    (list ncurses zlib))
+   (outputs '("out"))))
