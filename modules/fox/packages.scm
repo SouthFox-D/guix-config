@@ -29,6 +29,7 @@
   #:use-module (gnu packages check)
   #:use-module (gnu packages python-build)
   #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages games)
   #:use-module (gnu home services)
   #:use-module (guix build-system copy)
   #:use-module (guix build-system gnu)
@@ -846,3 +847,19 @@ pid: 0x9338, 0xd979, 0xc652, 0xa959, 0x0579 ")
    (description
     "Open source, cross-platform, user-mode tablet driver")
    (license lgpl3)))
+
+(define-public cataclysm-dda-experimental
+  (package
+   (inherit cataclysm-dda)
+    (name "cataclysm-dda-experimental")
+    (version "experimental-2025-10-25")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/CleverRaven/Cataclysm-DDA")
+             (commit "c30e3e6e1c63cc7132b748ea25a4dcd3f5b99244")))
+       (sha256
+        (base32 "1gmi2psgchzp62kgbvg6bc38qqksvbngn5n64q02bcp3izpni56a"))
+       (file-name (git-file-name name version))))
+    ))
