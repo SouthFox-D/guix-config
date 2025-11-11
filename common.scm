@@ -1,5 +1,5 @@
 (define touchable-machine?
-  (not (or (member (gethostname) (list "mastfox" "basefox" "alifox" "txfox"))
+  (not (or (member (gethostname) (list "mastfox" "basefox" "alifox" "txfox" "trailfox"))
            (equal? "lighthouse" (getlogin)))))
 
 (define den-machine?
