@@ -229,7 +229,7 @@
         (else '())))
 
 ;; TODO make sure template deploy after pacman sync not rely on append order
-(cond ((equal? "basefox" (gethostname))
+(cond ((equal? "pifox" (gethostname))
        (build-arch-drv
         (list
          (simple-service 'pi-shepherd-type arch-shepherd-service-type
