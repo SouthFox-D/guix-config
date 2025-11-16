@@ -314,26 +314,34 @@ network micro-segmentation and security monitoring.")
 
 (define-public sing-box-bin
   (package
-   (name "sing-box-bin")
-   (version "1.12.12")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/SagerNet/sing-box/releases/download/v"
-                  version "/sing-box-" version "-linux-amd64.tar.gz"))
-            (sha256
-             (base32
-              "17w8bxvrp6lky02n93a7kac2gv8qcxcl684nhb5m9p57z6r3q43w"))))
-   (build-system copy-build-system)
-   (arguments (list #:install-plan #~'(("sing-box" "bin/"))))
-   (supported-systems '("x86_64-linux"))
-   (home-page "https://sing-box.sagernet.org/")
-   (synopsis "Universal proxy platform")
-   (description
-    "Sing-box is a customizable and univsersal proxy platform that can be used to
+    (name "sing-box-bin")
+    (version "1.12.12")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/SagerNet/sing-box/releases/download/v"
+                    version "/sing-box-" version "-linux-"
+                    (cond ((target-aarch64?)
+                           "arm64")
+                          ((target-x86-64?)
+                           "amd64")
+                          (else "")) ".tar.gz"))
+              (sha256
+               (base32 (cond ((target-aarch64?)
+                              "1xy8j9c6j13jrpkrppxb27s9gsxrkn2m1m4hxamrdvqpnivgxnpv")
+                             ((target-x86-64?)
+                              "17w8bxvrp6lky02n93a7kac2gv8qcxcl684nhb5m9p57z6r3q43w")
+                             (else ""))))))
+    (build-system copy-build-system)
+    (arguments (list #:install-plan #~'(("sing-box" "bin/"))))
+    (supported-systems (list "aarch64-linux" "x86_64-linux"))
+    (home-page "https://sing-box.sagernet.org/")
+    (synopsis "Universal proxy platform")
+    (description
+     "Sing-box is a customizable and univsersal proxy platform that can be used to
 create network proxy servers, clients and transparent proxies.")
-   (license gpl3+)
-   (properties '((upstream-name . "sing-box")))))
+    (license gpl3+)
+    (properties '((upstream-name . "sing-box")))))
 
 (define-public rimerc-zrm
   (package
