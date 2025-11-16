@@ -315,7 +315,7 @@ network micro-segmentation and security monitoring.")
 (define-public sing-box-bin
   (package
    (name "sing-box-bin")
-   (version "1.11.14")
+   (version "1.12.12")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -323,7 +323,7 @@ network micro-segmentation and security monitoring.")
                   version "/sing-box-" version "-linux-amd64.tar.gz"))
             (sha256
              (base32
-              "1q6ly8nfnbgf4fyj33j7f5xsv9amsqsw42n7sy0qav5ylzd9firs"))))
+              "17w8bxvrp6lky02n93a7kac2gv8qcxcl684nhb5m9p57z6r3q43w"))))
    (build-system copy-build-system)
    (arguments (list #:install-plan #~'(("sing-box" "bin/"))))
    (supported-systems '("x86_64-linux"))
