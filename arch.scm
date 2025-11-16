@@ -121,7 +121,7 @@
    #~(calendar-event #:days-of-month '(1) #:hours '(1) #:minutes '(0))
    (list "certbot" "renew" "--nginx")))
 
-(define otd-files-service
+(define (otd-files-service)
   (simple-service
    'otd-arch-file
    arch-files-service-type
@@ -135,7 +135,7 @@
     `("usr/share/libinput/30-vendor-opentabletdriver.quirks"
       ,(file-append opentabletdriver-bin "/usr/share/libinput/30-vendor-opentabletdriver.quirks")))))
 
-(define arch-services
+(define (arch-services)
   (cond ((equal? "deck" (getenv "SUDO_USER"))
          (list
           (simple-service 'deck-shepherd-type arch-shepherd-service-type
@@ -171,7 +171,7 @@
                    (name (getenv "SUDO_USER") )
                    (shell "zsh")))))
            (if (not work-machine?)
-               (list otd-files-service)
+               (list (otd-files-service))
                '())
            (if den-machine?
                (list
@@ -249,7 +249,7 @@
                                             "run" "-C" "/etc/sing-box/conf")))
                             (stop #~(make-kill-destructor))
                             (auto-start? #t)))))))
-      (else (build-arch-drv (append arch-services %arch-base-services))))
+      (else (build-arch-drv (append (arch-services) %arch-base-services))))
 
 
 ;; (define %arch-profile
