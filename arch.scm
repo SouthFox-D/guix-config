@@ -229,7 +229,28 @@
         (else '())))
 
 ;; TODO make sure template deploy after pacman sync not rely on append order
-(build-arch-drv (append arch-services %arch-base-services))
+(cond ((equal? "basefox" (gethostname))
+       (build-arch-drv
+        (list
+         (simple-service 'pi-shepherd-type arch-shepherd-service-type
+                         (list
+                          (shepherd-service
+                            (documentation "Start zerotier")
+                            (provision '(zerotier))
+                            (start #~(make-forkexec-constructor
+                                      (list #$(file-append zerotier "/sbin/zerotier-one"))))
+                            (stop #~(make-kill-destructor))
+                            (auto-start? #t))
+                          (shepherd-service
+                            (documentation "Start sing-box daemon")
+                            (provision '(sing-box))
+                            (start #~(make-forkexec-constructor
+                                      (list #$(file-append sing-box-bin "/bin/sing-box")
+                                            "run" "-C" "/etc/sing-box/conf")))
+                            (stop #~(make-kill-destructor))
+                            (auto-start? #t)))))))
+      (else (build-arch-drv (append arch-services %arch-base-services))))
+
 
 ;; (define %arch-profile
 ;;   (string-append %profile-directory "/arch-profile"))
