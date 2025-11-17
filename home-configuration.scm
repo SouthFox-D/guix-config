@@ -144,8 +144,8 @@
                                    (documentation "Start syncthing")
                                    (provision '(syncthing))
                                    (start #~(make-forkexec-constructor
-                                             (list #$(file-append syncthing "/bin/syncthing" "serve"
-                                                                  "--no-browser" "--no-restart"))))
+                                             (list #$(file-append syncthing "/bin/syncthing")
+                                                   "serve" "--no-browser" "--no-restart")))
                                    (stop #~(make-kill-destructor))
                                    (auto-start? #t)))))
                 '())))
