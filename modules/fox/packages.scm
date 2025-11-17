@@ -46,10 +46,10 @@
             (method git-fetch)
             (uri (git-reference
                   (url "https://github.com/ohmyzsh/ohmyzsh.git")
-                  (commit "cef64c465aa81b68fbbec5b008eeae1cb63805d3")))
+                  (commit "8a4d6fc0a2b5586f093fb2b96b51e2141f643284")))
             (sha256
              (base32
-              "1wlrqvnbszvh7f4vh8xh12r86nam5sykf6crlqbl693k85qb2y0p"))))
+              "01sp5pbn7zqi30kpni6npbcp3jfs55gfcqqzlfa6mhd7djh4v3si"))))
    (build-system copy-build-system)
    (synopsis "framework for managing your zsh configuration")
    (description "🙃A delightful community-driven (with 2,400+ contributors)
