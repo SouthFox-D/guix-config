@@ -7,6 +7,7 @@
 (use-modules (gnu home)
              (gnu packages)
              (gnu packages base)
+             (gnu packages syncthing)
              (gnu services)
              (guix gexp)
              (gnu home services)
