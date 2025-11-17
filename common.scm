@@ -11,3 +11,6 @@
 (define deck-machine?
   (or (equal? "deck" (getenv "SUDO_USER"))
       (equal? "deck" (getlogin))))
+
+(define pi-machine?
+  (equal? "pifox" (gethostname)))

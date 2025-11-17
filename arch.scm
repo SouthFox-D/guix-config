@@ -232,23 +232,28 @@
 (cond ((equal? "pifox" (gethostname))
        (build-arch-drv
         (list
+         (service
+          arch-account-deploy-service-type
+          (list (arch-account-configuration
+                 (name (getenv "SUDO_USER") )
+                 (shell "zsh"))))
          (simple-service 'pi-shepherd-type arch-shepherd-service-type
                          (list
                           (shepherd-service
-                            (documentation "Start zerotier")
-                            (provision '(zerotier))
-                            (start #~(make-forkexec-constructor
-                                      (list #$(file-append zerotier "/sbin/zerotier-one"))))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t))
+                           (documentation "Start zerotier")
+                           (provision '(zerotier))
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append zerotier "/sbin/zerotier-one"))))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #t))
                           (shepherd-service
-                            (documentation "Start sing-box daemon")
-                            (provision '(sing-box))
-                            (start #~(make-forkexec-constructor
-                                      (list #$(file-append sing-box-bin "/bin/sing-box")
-                                            "run" "-C" "/etc/sing-box/conf")))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t)))))))
+                           (documentation "Start sing-box daemon")
+                           (provision '(sing-box))
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append sing-box-bin "/bin/sing-box")
+                                           "run" "-C" "/etc/sing-box/conf")))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #t)))))))
       (else (build-arch-drv (append (arch-services) %arch-base-services))))
 
 

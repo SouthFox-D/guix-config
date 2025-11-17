@@ -33,7 +33,8 @@
                       "guile-goblins"
                       )
                      (if (and touchable-machine?
-                              (not deck-machine?))
+                              (not deck-machine?)
+                              (not pi-machine?))
                          '("mu"
                            "anki-bin"
                            "nyxt-bin"
@@ -46,7 +47,8 @@
                    (list
                     zellij-bin)
                    (if (and (not work-machine?)
-                              (not deck-machine?))
+                            (not deck-machine?)
+                            (not pi-machine?))
                          (list opentabletdriver-bin)
                          '())
                    ))
@@ -62,7 +64,8 @@
               `((".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
                 (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t)))
               (if (and touchable-machine?
-                       (not deck-machine?))
+                       (not deck-machine?)
+                       (not pi-machine?))
                   `((".config/hypr/hyprland.conf" ,(eval-file "files/hyprland.conf"))
                     (".config/hypr/hyprlock.conf" ,(eval-file "files/hyprlock.conf"))
                     (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
@@ -95,7 +98,8 @@
                                                      weakauras))))
                       '())))))
    (if (and touchable-machine?
-            (not deck-machine?))
+            (not deck-machine?)
+            (not pi-machine?))
        (append
         (list (simple-service
                'rime-config-deploy
@@ -109,7 +113,8 @@
    (if touchable-machine?
        (append
         (if (and (not work-machine?)
-                 (not deck-machine?))
+                 (not deck-machine?)
+                 (not pi-machine?))
             (list
              (simple-service
               'my-timer
@@ -119,18 +124,29 @@
                      #~(calendar-event #:minutes (iota 3 0 20))
                      #~("offlineimap"))))
              (simple-service 'otd-shepherd home-shepherd-service-type
-                               (list
-                                (shepherd-service
-                                 (documentation "Start otd")
-                                 (provision '(otd))
-                                 (start #~(make-forkexec-constructor
-                                           (list #$(file-append opentabletdriver-bin "/bin/otd-daemon"))
-                                           #:environment-variables
-                                           (append (default-environment-variables)
-                                                   '("DISPLAY=:1"))))
-                                 (stop #~(make-kill-destructor))
-                                 (auto-start? #f))))
-             )
-            '()))
+                             (list
+                              (shepherd-service
+                               (documentation "Start otd")
+                               (provision '(otd))
+                               (start #~(make-forkexec-constructor
+                                         (list #$(file-append opentabletdriver-bin "/bin/otd-daemon"))
+                                         #:environment-variables
+                                         (append (default-environment-variables)
+                                                 '("DISPLAY=:1"))))
+                               (stop #~(make-kill-destructor))
+                               (auto-start? #f)))))
+            (if pi-machine?
+                (list
+                 (simple-service 'pi-home-shepherd home-shepherd-service-type
+                                 (list
+                                  (shepherd-service
+                                   (documentation "Start syncthing")
+                                   (provision '(syncthing))
+                                   (start #~(make-forkexec-constructor
+                                             (list #$(file-append syncthing "/bin/syncthing" "serve"
+                                                                  "--no-browser" "--no-restart"))))
+                                   (stop #~(make-kill-destructor))
+                                   (auto-start? #t)))))
+                '())))
        '())
    )))
