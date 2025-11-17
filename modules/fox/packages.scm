@@ -68,9 +68,18 @@ with the latest updates from the community.")
             (method url-fetch)
             (uri (string-append
                   "https://github.com/zellij-org/zellij/releases/download/v"
-                  version "/zellij-x86_64-unknown-linux-musl.tar.gz"))
+                  version "/zellij-" (cond ((target-aarch64?)
+                                            "aarch64")
+                                           ((target-x86-64?)
+                                            "x86_64")
+                                           (else ""))
+                  "-unknown-linux-musl.tar.gz"))
             (sha256
-             (base32 "0nnp41q21n2mfbkvj4qmi1p0p4jdkv9arnasz0z2jn2mxzprh7al"))))
+             (base32 (cond ((target-aarch64?)
+                            "0rdi60lz1zmhg76xg874hipnc8y8bpwisb8nav8n4b0wyvailcij")
+                           ((target-x86-64?)
+                            "0nnp41q21n2mfbkvj4qmi1p0p4jdkv9arnasz0z2jn2mxzprh7al")
+                           (else ""))))))
    (build-system copy-build-system)
    (arguments
     (list
@@ -81,6 +90,7 @@ with the latest updates from the community.")
                       (replace 'unpack
                                (lambda* (#:key source #:allow-other-keys)
                                  (invoke "tar" "-xvf" source))))))
+   (supported-systems (list "aarch64-linux" "x86_64-linux"))
    (home-page "https://github.com/zellij-org/zellij")
    (synopsis "terminal workspace with batteries included")
    (description "Terminal workspace with batteries included.")
