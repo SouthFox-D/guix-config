@@ -291,7 +291,7 @@ web_client {
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
-theme "{%(if touchable-machine? "nightfox" "iceberg-light")%}"
+theme "{%(if touchable-machine? (if pi-machine? "dayfox" "nightfox") "iceberg-light")%}"
 
 // Choose the base input mode of zellij.
 // Default: normal
