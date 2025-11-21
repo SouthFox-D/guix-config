@@ -139,7 +139,11 @@
               (simple-service 'aria2-config-deploy home-activation-service-type
                               #~(begin
                                   (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.aria2/"))
-                                  (system* "touch" #$(string-append (getenv "HOME") "/.aria2/aria2.session"))
+                                  (map (lambda (path)
+                                         (system* "touch" path))
+                                       (list #$(string-append (getenv "HOME") "/.aria2/aria2.session")
+                                             #$(string-append (getenv "HOME") "/.aria2/dht.session")
+                                             #$(string-append (getenv "HOME") "/.aria2/dht6.session")))
                                   (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.config/aria2/"))
                                   (system* "cp" "-f"
                                            #$(local-file "files/aria2/aria2.conf")
