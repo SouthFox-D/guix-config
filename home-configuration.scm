@@ -136,42 +136,37 @@
                                                                (getenv "HOME") "/.config/aria2/aria2.conf"))))
                                 (stop #~(make-kill-destructor))
                                 (auto-start? #t))))
-              (simple-service
-               'aria2-config-deploy
-               home-activation-service-type
-               #~(begin
-                   (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.aria2/"))
-                   (system* "touch" #$(string-append (getenv "HOME") "/.aria2/aria2.session"))
-                   (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.config/aria2/"))
-                   (system* "cp" "-f"
-                            #$(local-file "files/aria2/aria2.conf")
-                            #$(string-append (getenv "HOME") "/aria2/aria2.conf"))))))
+              (simple-service 'aria2-config-deploy home-activation-service-type
+                              #~(begin
+                                  (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.aria2/"))
+                                  (system* "touch" #$(string-append (getenv "HOME") "/.aria2/aria2.session"))
+                                  (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.config/aria2/"))
+                                  (system* "cp" "-f"
+                                           #$(local-file "files/aria2/aria2.conf")
+                                           #$(string-append (getenv "HOME") "/.config/aria2/aria2.conf"))))))
        '())
-   (if touchable-machine?
+   (if (and touchable-machine?
+            (not work-machine?)
+            (not deck-machine?)
+            (not pi-machine?))
        (append
-        (if (and (not work-machine?)
-                 (not deck-machine?)
-                 (not pi-machine?))
-            (list
-             (simple-service
-              'my-timer
-              home-shepherd-service-type
-              (list (shepherd-timer
-                     '(update-mail)
-                     #~(calendar-event #:minutes (iota 3 0 20))
-                     #~("offlineimap"))))
-             (simple-service 'otd-shepherd home-shepherd-service-type
-                             (list
-                              (shepherd-service
-                               (documentation "Start otd")
-                               (provision '(otd))
-                               (start #~(make-forkexec-constructor
-                                         (list #$(file-append opentabletdriver-bin "/bin/otd-daemon"))
-                                         #:environment-variables
-                                         (append (default-environment-variables)
-                                                 '("DISPLAY=:1"))))
-                               (stop #~(make-kill-destructor))
-                               (auto-start? #f)))))
-            ))
+        (list
+         (simple-service 'my-timer home-shepherd-service-type
+                         (list (shepherd-timer
+                                '(update-mail)
+                                #~(calendar-event #:minutes (iota 3 0 20))
+                                #~("offlineimap"))))
+         (simple-service 'otd-shepherd home-shepherd-service-type
+                         (list
+                          (shepherd-service
+                           (documentation "Start otd")
+                           (provision '(otd))
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append opentabletdriver-bin "/bin/otd-daemon"))
+                                     #:environment-variables
+                                     (append (default-environment-variables)
+                                             '("DISPLAY=:1"))))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #f))))))
        '())
    )))
