@@ -7,6 +7,7 @@
 (use-modules (gnu home)
              (gnu packages)
              (gnu packages base)
+             (gnu packages bittorrent)
              (gnu packages syncthing)
              (gnu services)
              (guix gexp)
@@ -44,6 +45,9 @@
                            "rimerc-zrm"
                            "haunt"
                            )
+                         '())
+                     (if pi-machine?
+                         '("aria2")
                          '())))
                    (list
                     zellij-bin)
@@ -111,6 +115,38 @@
                             #$(string-append (getenv "HOME") "/.guix-home/profile/share/fctix5/rime")
                             #$(string-append (getenv "HOME") "/.local/share/fcitx5/"))))))
        '())
+   (if pi-machine?
+       (append
+        (list (simple-service 'pi-home-shepherd home-shepherd-service-type
+                              (list
+                               (shepherd-service
+                                (documentation "Start syncthing")
+                                (provision '(syncthing))
+                                (start #~(make-forkexec-constructor
+                                          (list #$(file-append syncthing "/bin/syncthing")
+                                                "serve" "--no-browser" "--no-restart")))
+                                (stop #~(make-kill-destructor))
+                                (auto-start? #t))
+                               (shepherd-service
+                                (documentation "Start aria2")
+                                (provision '(aria2))
+                                (start #~(make-forkexec-constructor
+                                          (list #$(file-append aria2 "/bin/aria2c")
+                                                (string-append "--conf-path="
+                                                               (getenv "HOME") "/.config/aria2/aria2.conf"))))
+                                (stop #~(make-kill-destructor))
+                                (auto-start? #t))))
+              (simple-service
+               'aria2-config-deploy
+               home-activation-service-type
+               #~(begin
+                   (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.aria2/"))
+                   (system* "touch" #$(string-append (getenv "HOME") "/.aria2/aria2.session"))
+                   (system* "mkdir" "-p" #$(string-append (getenv "HOME") "/.config/aria2/"))
+                   (system* "cp" "-f"
+                            #$(local-file "files/aria2/aria2.conf")
+                            #$(string-append (getenv "HOME") "/aria2/aria2.conf"))))))
+       '())
    (if touchable-machine?
        (append
         (if (and (not work-machine?)
@@ -136,18 +172,6 @@
                                                  '("DISPLAY=:1"))))
                                (stop #~(make-kill-destructor))
                                (auto-start? #f)))))
-            (if pi-machine?
-                (list
-                 (simple-service 'pi-home-shepherd home-shepherd-service-type
-                                 (list
-                                  (shepherd-service
-                                   (documentation "Start syncthing")
-                                   (provision '(syncthing))
-                                   (start #~(make-forkexec-constructor
-                                             (list #$(file-append syncthing "/bin/syncthing")
-                                                   "serve" "--no-browser" "--no-restart")))
-                                   (stop #~(make-kill-destructor))
-                                   (auto-start? #t)))))
-                '())))
+            ))
        '())
    )))
