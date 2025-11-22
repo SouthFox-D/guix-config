@@ -136,33 +136,7 @@
       ,(file-append opentabletdriver-bin "/usr/share/libinput/30-vendor-opentabletdriver.quirks")))))
 
 (define (arch-services)
-  (cond ((equal? "deck" (getenv "SUDO_USER"))
-         (list
-          (simple-service 'deck-shepherd-type arch-shepherd-service-type
-                          (list
-                           (shepherd-service
-                            (documentation "Start SSH daemon")
-                            (provision '(sshd))
-                            (start #~(make-forkexec-constructor
-                                      (list "/usr/sbin/sshd" "-D")))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t))
-                           (shepherd-service
-                            (documentation "Start zerotier")
-                            (provision '(zerotier))
-                            (start #~(make-forkexec-constructor
-                                      (list #$(file-append zerotier "/sbin/zerotier-one"))))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t))
-                           (shepherd-service
-                            (documentation "Start sing-box daemon")
-                            (provision '(sing-box))
-                            (start #~(make-forkexec-constructor
-                                      (list #$(file-append sing-box-bin "/bin/sing-box")
-                                            "run" "-C" "/home/drift-bottle/sing-box/conf")))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t))))))
-        (touchable-machine?
+  (cond (touchable-machine?
          (append
           (list
            (service
@@ -170,21 +144,21 @@
             (list (arch-account-configuration
                    (name (getenv "SUDO_USER") )
                    (shell "zsh")))))
-           (if (not work-machine?)
-               (list (otd-files-service))
-               '())
-           (if den-machine?
-               (list
-                (simple-service 'den-arch-file
-                                arch-files-service-type
-                                (list
-                                 `("usr/lib64/libfprint-2.so.2.0.0"
-                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2.0.0"))
-                                 `("usr/lib64/libfprint-2.so.2"
-                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
-                                 `("usr/lib64/libfprint-2.so"
-                                   ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so")))))
-               '())))
+          (if (not work-machine?)
+              (list (otd-files-service))
+              '())
+          (if den-machine?
+              (list
+               (simple-service 'den-arch-file
+                               arch-files-service-type
+                               (list
+                                `("usr/lib64/libfprint-2.so.2.0.0"
+                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2.0.0"))
+                                `("usr/lib64/libfprint-2.so.2"
+                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so.2"))
+                                `("usr/lib64/libfprint-2.so"
+                                  ,(file-append libfprint-focaltech "/usr/lib64/libfprint-2.so")))))
+              '())))
         ((equal? "basefox" (gethostname))
          (list
           (simple-service
@@ -254,6 +228,32 @@
                                            "run" "-C" "/etc/sing-box/conf")))
                            (stop #~(make-kill-destructor))
                            (auto-start? #t)))))))
+      ((equal? "deck" (getenv "SUDO_USER"))
+         (list
+          (simple-service 'deck-shepherd-type arch-shepherd-service-type
+                          (list
+                           (shepherd-service
+                            (documentation "Start SSH daemon")
+                            (provision '(sshd))
+                            (start #~(make-forkexec-constructor
+                                      (list "/usr/sbin/sshd" "-D")))
+                            (stop #~(make-kill-destructor))
+                            (auto-start? #t))
+                           (shepherd-service
+                            (documentation "Start zerotier")
+                            (provision '(zerotier))
+                            (start #~(make-forkexec-constructor
+                                      (list #$(file-append zerotier "/sbin/zerotier-one"))))
+                            (stop #~(make-kill-destructor))
+                            (auto-start? #t))
+                           (shepherd-service
+                            (documentation "Start sing-box daemon")
+                            (provision '(sing-box))
+                            (start #~(make-forkexec-constructor
+                                      (list #$(file-append sing-box-bin "/bin/sing-box")
+                                            "run" "-C" "/home/drift-bottle/sing-box/conf")))
+                            (stop #~(make-kill-destructor))
+                            (auto-start? #t))))))
       (else (build-arch-drv (append (arch-services) %arch-base-services))))
 
 
