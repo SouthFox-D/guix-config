@@ -132,7 +132,7 @@ than ever.")
 (define-public deadly-boss-mods
   (package
    (name "DeadlyBossMods")
-   (version "11.2.8")
+   (version "12.0.6")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -140,7 +140,7 @@ than ever.")
                   version "/DBM-Core-" version ".zip"))
             (sha256
              (base32
-              "0ibzzbkz2zzax122lqn5l9r0bm4i5qq1a6b6bz3a04mpvlc5p7wy"))))
+              "00br016i6jrav8lxhgp6dq2d4g0y9wzsymwydpzzfa9v7y91fnga"))))
    (build-system copy-build-system)
    (arguments
     (list
