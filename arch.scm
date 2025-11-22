@@ -229,31 +229,32 @@
                            (stop #~(make-kill-destructor))
                            (auto-start? #t)))))))
       ((equal? "deck" (getenv "SUDO_USER"))
-         (list
-          (simple-service 'deck-shepherd-type arch-shepherd-service-type
-                          (list
-                           (shepherd-service
-                            (documentation "Start SSH daemon")
-                            (provision '(sshd))
-                            (start #~(make-forkexec-constructor
-                                      (list "/usr/sbin/sshd" "-D")))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t))
-                           (shepherd-service
-                            (documentation "Start zerotier")
-                            (provision '(zerotier))
-                            (start #~(make-forkexec-constructor
-                                      (list #$(file-append zerotier "/sbin/zerotier-one"))))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t))
-                           (shepherd-service
-                            (documentation "Start sing-box daemon")
-                            (provision '(sing-box))
-                            (start #~(make-forkexec-constructor
-                                      (list #$(file-append sing-box-bin "/bin/sing-box")
-                                            "run" "-C" "/home/drift-bottle/sing-box/conf")))
-                            (stop #~(make-kill-destructor))
-                            (auto-start? #t))))))
+       (build-arch-drv
+        (list
+         (simple-service 'deck-shepherd-type arch-shepherd-service-type
+                         (list
+                          (shepherd-service
+                           (documentation "Start SSH daemon")
+                           (provision '(sshd))
+                           (start #~(make-forkexec-constructor
+                                     (list "/usr/sbin/sshd" "-D")))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #t))
+                          (shepherd-service
+                           (documentation "Start zerotier")
+                           (provision '(zerotier))
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append zerotier "/sbin/zerotier-one"))))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #t))
+                          (shepherd-service
+                           (documentation "Start sing-box daemon")
+                           (provision '(sing-box))
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append sing-box-bin "/bin/sing-box")
+                                           "run" "-C" "/home/drift-bottle/sing-box/conf")))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #t)))))))
       (else (build-arch-drv (append (arch-services) %arch-base-services))))
 
 
