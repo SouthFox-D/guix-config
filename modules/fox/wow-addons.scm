@@ -22,7 +22,7 @@ at URI, which may be a file:// URI pointing the package's tree."
 (define-public consoleport
   (package
    (name "ConsolePort")
-   (version "3.0.10")
+   (version "3.1.6")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -30,7 +30,7 @@ at URI, which may be a file:// URI pointing the package's tree."
                   version "/ConsolePort-" version ".zip"))
             (sha256
              (base32
-              "0kh8yjsk8kx5k7js93x7a2c4wz0phl9jm9srq15lzc243ncj79s8"))))
+              "12405knm96zmni9fp68b7smw4y0v7hm8dcspyiwhf7gv4xn5fkbl"))))
    (build-system copy-build-system)
    (arguments
     (list
