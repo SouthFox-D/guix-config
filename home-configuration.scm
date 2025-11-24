@@ -149,6 +149,17 @@
                                           #:directory (string-append (getenv "HOME") "/resilio-sync")
                                           #:log-file "/dev/null"))
                                 (stop #~(make-kill-destructor))
+                                (auto-start? #t))
+                               (shepherd-service
+                                (documentation "Start calibre-web")
+                                (provision '(calibre-web))
+                                (start #~(make-forkexec-constructor
+                                          (list #$(string-append (getenv "HOME") "/.config/guix/current/bin/guix")
+                                                "shell" "podman" "podman-compose"
+                                                "--"
+                                                "podman" "compose" "up" "--no-recreate")
+                                          #:directory (string-append (getenv "HOME") "/calibre-web")))
+                                (stop #~(make-kill-destructor))
                                 (auto-start? #t))))
               (simple-service 'aria2-config-deploy home-activation-service-type
                               #~(begin
