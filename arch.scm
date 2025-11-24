@@ -227,6 +227,17 @@
                                      (list #$(file-append sing-box-bin "/bin/sing-box")
                                            "run" "-C" "/etc/sing-box/conf")))
                            (stop #~(make-kill-destructor))
+                           (auto-start? #t))
+                          (shepherd-service
+                           (documentation "Start pihole")
+                           (provision '(pihole))
+                           (start #~(make-forkexec-constructor
+                                     (list "/root/.config/guix/current/bin/guix"
+                                           "shell" "podman" "podman-compose"
+                                           "--"
+                                           "podman" "compose" "up" "--no-recreate")
+                                     #:directory (string-append #$(getenv "SUDO_HOME") "/pihole")))
+                           (stop #~(make-kill-destructor))
                            (auto-start? #t)))))))
       ((equal? "deck" (getenv "SUDO_USER"))
        (build-arch-drv
