@@ -135,6 +135,18 @@
                                                 (string-append "--conf-path="
                                                                (getenv "HOME") "/.config/aria2/aria2.conf"))))
                                 (stop #~(make-kill-destructor))
+                                (auto-start? #t))
+                               (shepherd-service
+                                (documentation "Start resilio sync")
+                                (provision '(rslsync))
+                                (start #~(make-forkexec-constructor
+                                          (list "guix shell --network -C -L"
+                                                #$(string-append (getenv "HOME") "/.config/guix/modules")
+                                                "resilio-sync-bin"
+                                                "--"
+                                                "rslsync --nodaemon --webui.listen 127.0.0.1:8089")
+                                          :directory #$(string-append (getenv "HOME") "/resilio-sync") ))
+                                (stop #~(make-kill-destructor))
                                 (auto-start? #t))))
               (simple-service 'aria2-config-deploy home-activation-service-type
                               #~(begin
