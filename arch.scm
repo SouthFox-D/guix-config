@@ -235,7 +235,7 @@
                                      (list "/root/.config/guix/current/bin/guix"
                                            "shell" "podman" "podman-compose"
                                            "--"
-                                           "podman" "compose" "up" "--no-recreate")
+                                           "podman" "compose" "up" "--force-recreate")
                                      #:directory (string-append #$(getenv "SUDO_HOME") "/pihole")))
                            (stop #~(make-kill-destructor))
                            (auto-start? #t)))))))
