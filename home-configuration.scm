@@ -146,7 +146,8 @@
                                                 "resilio-sync-bin"
                                                 "--"
                                                 "rslsync" "--nodaemon" "--webui.listen" "127.0.0.1:8089")
-                                          #:directory (string-append (getenv "HOME") "/resilio-sync")))
+                                          #:directory (string-append (getenv "HOME") "/resilio-sync")
+                                          #:log-file "/dev/null"))
                                 (stop #~(make-kill-destructor))
                                 (auto-start? #t))))
               (simple-service 'aria2-config-deploy home-activation-service-type
