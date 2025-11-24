@@ -10,6 +10,7 @@
   #:use-module (gnu packages base)
   #:use-module (gnu packages bootstrap)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages crypto)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages bash)
   #:use-module (gnu packages bison)
@@ -894,3 +895,52 @@ pid: 0x9338, 0xd979, 0xc652, 0xa959, 0x0579 ")
    (inputs
     (list ncurses zlib))
    (outputs '("out"))))
+
+(define-public resilio-sync-bin
+  (package
+   (name "resilio-sync-bin")
+   (version "3.1.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://download-cdn.resilio.com/stable/linux/arm64/0/resilio-sync_"
+                  (cond ((target-aarch64?)
+                         "arm64")
+                        ((target-x86-64?)
+                         "x64")
+                        (else "")) ".tar.gz"))
+            (sha256
+             (base32 (cond ((target-aarch64?)
+                            "0dp19xbiydrdh9sgl3qnb0khrxva44j5kll5csqrz451shw0dhyd")
+                           ((target-x86-64?)
+                            "1w7hf32iajiw6ab6g2db9d7fml848w8s5375zbjjl7njnd0xvziw")
+                           (else ""))))))
+   (build-system copy-build-system)
+   (arguments (list #:install-plan #~'(("rslsync" "bin/"))
+                    #:phases
+                    #~(modify-phases %standard-phases
+                                     (delete 'strip)
+                                     (delete 'validate-runpath)
+                                     (add-after 'install 'patch-elf
+                                                (lambda _
+                                                  (let ((rslsync (string-append #$output "/bin/rslsync")))
+                                                    (invoke "patchelf" "--set-rpath"
+                                                            (string-append #$(this-package-input "libxcrypt")
+                                                                           "/lib"
+                                                                           )
+                                                            rslsync)
+                                                    (invoke "patchelf" "--set-interpreter"
+                                                            (string-append #$(this-package-input "glibc")
+                                                                           #$(glibc-dynamic-linker))
+                                                            rslsync)
+                                                    ))))
+                    ))
+   (supported-systems (list "aarch64-linux" "x86_64-linux"))
+   (inputs (list glibc libxcrypt))
+   (native-inputs (list patchelf-0.16))
+   (home-page "https://www.resilio.com/sync/")
+   (synopsis "Personal file sync and share powered by P2P")
+   (description
+    "Save and share life’s most important moments—photos, videos, music, PDFs,
+documents, and more—securely across all your devices.")
+   (license (nonfree "https://www.resilio.com/legal/copyright/"))))
