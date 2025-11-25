@@ -6,6 +6,7 @@
              (fox packages)
              (fox template)
              (gnu services)
+             (gnu packages dns)
              (guix gexp)
              (ice-9 format)
              (ice-9 popen)
@@ -207,6 +208,14 @@
        (build-arch-drv
         (list
          (service
+          fox-template-deploy-service-type
+          (list (fox-template-configuration
+                 (template `(,(local-file "files/smartdns/smartdns.conf")
+                             "/etc/smartdns/smartdns.conf")))))
+         (service arch-files-service-type
+                  (list
+                   `("etc/smartdns/china-list" ,dnsmasq-china-list-smartdns)))
+         (service
           arch-account-deploy-service-type
           (list (arch-account-configuration
                  (name (getenv "SUDO_USER") )
@@ -237,6 +246,13 @@
                                            "--"
                                            "podman" "compose" "up" "--force-recreate")
                                      #:directory (string-append #$(getenv "SUDO_HOME") "/pihole")))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #t))
+                          (shepherd-service
+                           (documentation "Start smartdns")
+                           (provision '(smartdns))
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append smartdns "/sbin/smartdns") "-f")))
                            (stop #~(make-kill-destructor))
                            (auto-start? #t)))))))
       ((equal? "deck" (getenv "SUDO_USER"))
