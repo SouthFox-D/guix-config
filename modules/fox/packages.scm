@@ -944,3 +944,39 @@ pid: 0x9338, 0xd979, 0xc652, 0xa959, 0x0579 ")
     "Save and share life’s most important moments—photos, videos, music, PDFs,
 documents, and more—securely across all your devices.")
    (license (nonfree "https://www.resilio.com/legal/copyright/"))))
+
+(define-public dnsmasq-china-list-smartdns
+  (package
+   (name "dnsmasq-china-list-smartdns")
+   (version "2025-11-25")
+   (source
+    (origin
+     (method git-fetch)
+     (uri (git-reference
+           (url "https://github.com/felixonmars/dnsmasq-china-list.git")
+           (commit "a4036bc84ab76850b8bb8a53742899b24bb6c0de")))
+     (sha256
+      (base32 "09pn5r9mm21a44k0i6yrvyvl9d03hkhjjfyx5flqv9aw7ajam8lg"))
+     (file-name (git-file-name name version))))
+   (build-system gnu-build-system)
+   (arguments
+    (list
+     #:tests? #f
+     #:make-flags #~(list "SERVER=proximal" "smartdns")
+     #:phases
+     #~(modify-phases
+        %standard-phases
+        (delete 'configure)
+        (replace 'install
+                 (lambda* (#:key outputs #:allow-other-keys)
+                   (let* ((out (assoc-ref outputs "out")))
+                     (for-each
+                      (lambda (file)
+                        (install-file file out))
+                      (find-files "./" "\\.smartdns.conf$"))))))))
+   (home-page "https://github.com/felixonmars/dnsmasq-china-list")
+   (synopsis "Chinese-specific DNS configuration")
+   (description
+    "Chinese-specific configuration to improve your favorite DNS server.
+Best partner for chnroutes. ")
+   (license wtfpl2)))
