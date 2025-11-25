@@ -6,6 +6,7 @@
              (fox packages)
              (fox template)
              (gnu services)
+             (gnu packages)
              (gnu packages dns)
              (guix gexp)
              (ice-9 format)
@@ -207,6 +208,8 @@
 (cond ((equal? "pifox" (gethostname))
        (build-arch-drv
         (list
+         (simple-service 'pi-extre-packages arch-profile-service-type
+                         (specifications->packages (list "python" "python-hy" "python-requests")))
          (service
           fox-template-deploy-service-type
           (list (fox-template-configuration
