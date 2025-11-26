@@ -1,23 +1,12 @@
-(define-module (fox wow-addons)
-  #:use-module (guix licenses)
+(define-module (fox packages wow-addons)
+  #:use-module ((guix licenses) #:prefix license:)
+  #:use-module (fox packages licenses)
   #:use-module (guix packages)
   #:use-module (gnu packages compression)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix gexp)
   #:use-module (guix build-system copy))
-
-
-(define license (@@ (guix licenses) license))
-
-(define* (custom uri #:optional (comment ""))
-  "Return a custom license, whose full text can be found
-at URI, which may be a file:// URI pointing the package's tree."
-  (license "Custom"
-           uri
-           (string-append
-            "This a Custom license.  Check the URI for details."
-            comment)))
 
 (define-public consoleport
   (package
@@ -46,7 +35,7 @@ at URI, which may be a file:// URI pointing the package's tree."
 that will give you a handful of nifty features in order to let you play
 the game on a controller - without inconvenience.")
    (home-page "https://github.com/seblindfors/ConsolePort")
-   (license gpl2)))
+   (license license:gpl2)))
 
 (define-public immersion
   (package
@@ -68,7 +57,7 @@ the game on a controller - without inconvenience.")
    (synopsis "Immersive questing addon for World of Warcraft.")
    (description "Immersive questing addon for World of Warcraft.")
    (home-page "https://github.com/seblindfors/Immersion")
-   (license artistic2.0)))
+   (license license:artistic2.0)))
 
 (define-public weakauras
   (package
@@ -97,7 +86,7 @@ graphics on your screen.")
    (description "World of Warcraft addon that provides a powerful
 framework to display customizable graphics on your screen.")
    (home-page "https://weakauras.wtf")
-   (license gpl2)))
+   (license license:gpl2)))
 
 (define-public cell
   (package
