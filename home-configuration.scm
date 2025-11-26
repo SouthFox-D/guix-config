@@ -14,7 +14,7 @@
              (gnu home services)
              (gnu home services shells)
              (gnu home services shepherd)
-             (fox packages)
+             (fox packages misc)
              (fox packages binary)
              (fox packages wow-addons)
              (fox services))

@@ -1,5 +1,5 @@
 (define-module (fox services)
-  #:use-module (fox packages)
+  #:use-module (fox packages misc)
   #:use-module (guix licenses)
   #:use-module (guix packages)
   #:use-module (guix gexp)

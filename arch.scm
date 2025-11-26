@@ -3,7 +3,7 @@
              (arch services)
              (arch shepherd)
              (fox services)
-             (fox packages)
+             (fox packages misc)
              (fox packages binary)
              (fox packages networking)
              (fox template)
