@@ -134,28 +134,6 @@ internet.")
 and others.")
    (license license:gpl3)))
 
-(define-public anki-bin
-  (package
-   (name "anki-bin")
-   (version "25.02.5")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/ankitects/anki" "/releases/download/"
-                  version "/anki-" version "-linux-qt6.tar.zst"))
-            (sha256
-             (base32
-              "0l0jilmm12bsf1jcvn2kjzjdk4i0csz0bzhy74mdmbiyb17nm0f1"))))
-   (build-system copy-build-system)
-   (arguments
-    (list #:install-plan #~'(("./" "opt/anki-bin"))))
-   (supported-systems '("x86_64-linux"))
-   (home-page "https://apps.ankiweb.net")
-   (synopsis "Spaced repetition program")
-   (description
-    "Anki's shared backend and web components, and the Qt frontend.")
-   (license license:agpl3+)))
-
 (define-public nyxt-bin
   (package
    (name "nyxt-bin")
