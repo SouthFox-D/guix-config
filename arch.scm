@@ -4,6 +4,7 @@
              (arch shepherd)
              (fox services)
              (fox packages)
+             (fox packages binary)
              (fox template)
              (gnu services)
              (gnu packages)

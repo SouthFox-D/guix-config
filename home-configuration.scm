@@ -15,7 +15,8 @@
              (gnu home services shells)
              (gnu home services shepherd)
              (fox packages)
-             (fox wow-addons)
+             (fox packages binary)
+             (fox packages wow-addons)
              (fox services))
 
 (load "common.scm")
