@@ -9,7 +9,7 @@
 (define-public zerotier
   (package
    (name "zerotier")
-   (version "1.14.2")
+   (version "1.16.0")
    (source (origin
             (method git-fetch)
             (uri (git-reference
@@ -18,7 +18,7 @@
             (file-name (git-file-name name version))
             (sha256
              (base32
-              "0dxm67c06hg538z8adxgj5zqxmgrwhnlwznpi3sk2qvfms6zzvhg"))))
+              "12v7c1v7vh5g3qma4jc7ll95pjcgggqj2hyy4mcvgcbrmz7x2mvc"))))
    (build-system gnu-build-system)
    (arguments
     `(#:make-flags (list "ZT_SSO_SUPPORTED=0") ; We don't need SSO/OIDC
