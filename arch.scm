@@ -5,6 +5,7 @@
              (fox services)
              (fox packages)
              (fox packages binary)
+             (fox packages networking)
              (fox template)
              (gnu services)
              (gnu packages)
