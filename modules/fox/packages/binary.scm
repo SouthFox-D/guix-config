@@ -88,7 +88,7 @@ designed for flexibility.")
 (define-public frp-bin
   (package
    (name "frp-bin")
-   (version "0.63.0")
+   (version "0.65.0")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -96,7 +96,7 @@ designed for flexibility.")
                   version "/frp_" version "_linux_amd64.tar.gz"))
             (sha256
              (base32
-              "138pfqlkhrq041qh1lksczxvbl9imvhaz6hwgxw7f764cl8xglnh"))))
+              "1mg6nwaazvl6gapwjsllc4c0d32nqw84rnh9k65g8wppzp2xikjj"))))
    (build-system copy-build-system)
    (arguments
     (list #:install-plan #~'(("frps" "bin/")
@@ -107,8 +107,8 @@ designed for flexibility.")
    (description
     "A fast reverse proxy to help you expose a local server behind a NAT or firewall to the
 internet.")
-   (license license:asl2.0)
-   (properties '((upstream-name . "frp")))))
+   (properties '((upstream-name . "frp")))
+   (license license:asl2.0)))
 
 (define-public v2rayn-bin
   (package
