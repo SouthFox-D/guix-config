@@ -48,7 +48,9 @@
                            )
                          '())
                      (if pi-machine?
-                         '("aria2")
+                         '("aria2"
+                           "podman"
+                           "podman-compose")
                          '())))
                    (list
                     zellij-bin)
@@ -155,10 +157,8 @@
                                 (documentation "Start calibre-web")
                                 (provision '(calibre-web))
                                 (start #~(make-forkexec-constructor
-                                          (list #$(string-append (getenv "HOME") "/.config/guix/current/bin/guix")
-                                                "shell" "podman" "podman-compose"
-                                                "--"
-                                                "podman" "compose" "up" "--force-recreate")
+                                          (list #$(string-append (getenv "HOME") "/.guix-home/profile/bin/podman")
+                                                "compose" "up" "--force-recreate")
                                           #:directory (string-append (getenv "HOME") "/calibre-web")))
                                 (stop #~(make-kill-destructor))
                                 (auto-start? #t))))

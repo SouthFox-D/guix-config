@@ -211,7 +211,8 @@
        (build-arch-drv
         (list
          (simple-service 'pi-extre-packages arch-profile-service-type
-                         (specifications->packages (list "python" "python-hy" "python-requests")))
+                         (specifications->packages (list "python" "python-hy" "python-requests"
+                                                         "podman" "podman-compose")))
          (service
           fox-template-deploy-service-type
           (list (fox-template-configuration
@@ -246,9 +247,7 @@
                            (documentation "Start pihole")
                            (provision '(pihole))
                            (start #~(make-forkexec-constructor
-                                     (list "/root/.config/guix/current/bin/guix"
-                                           "shell" "podman" "podman-compose"
-                                           "--"
+                                     (list "/root/.config/guix/current/bin/guix/podman"
                                            "podman" "compose" "up" "--force-recreate")
                                      #:directory (string-append #$(getenv "SUDO_HOME") "/pihole")))
                            (stop #~(make-kill-destructor))
