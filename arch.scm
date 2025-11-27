@@ -247,8 +247,8 @@
                            (documentation "Start pihole")
                            (provision '(pihole))
                            (start #~(make-forkexec-constructor
-                                     (list "/root/.config/guix/current/bin/guix/podman"
-                                           "podman" "compose" "up" "--force-recreate")
+                                     (list "/root/.guix-arch/profile/bin/podman"
+                                           "compose" "up" "--force-recreate")
                                      #:directory (string-append #$(getenv "SUDO_HOME") "/pihole")))
                            (stop #~(make-kill-destructor))
                            (auto-start? #t))
