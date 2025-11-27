@@ -70,8 +70,13 @@ ZSH_THEME={%(if touchable-machine? (if pi-machine? "arrow" "fox") "lambda")%}
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export EDITOR="emacsclient -nw -c"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:/var/guix/profiles/per-user/root/arch-profile/profile/bin"
+
+if [[ -z "$GUIX_PROFILE" ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
+    export PATH="$PATH:/var/guix/profiles/per-user/root/arch-profile/profile/bin"
+fi
+
+[ -n "$SSH_CLIENT" ] && [ -n "$GUIX_ENVIRONMENT" ] && source "$GUIX_ENVIRONMENT/etc/profile"
 
 . $HOME/.guix-home/setup-environment
 
