@@ -305,10 +305,10 @@ interfaces).")
      (method git-fetch)
      (uri (git-reference
            (url "https://github.com/casualsnek/waydroid_script")
-           (commit "3e344b360f64f4a417c4f5e9a3b1aae3da9fdfb9")))
+           (commit "ddaa6b190f98b250e433c14946de7b69713a4b94")))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "0djfybvzj5gz8xrhqfx1187c1qs4k57q67m7k2jqvpbki7agb0lp"))))
+      (base32 "0ka4rnc4s8zl40hcwlzrz98qfc8sz3i1r9y7gpq7g4ja56gy6dwd"))))
    (build-system copy-build-system)
    (arguments
     (list
