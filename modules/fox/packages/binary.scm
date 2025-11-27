@@ -285,7 +285,7 @@ documents, and more—securely across all your devices.")
 (define-public yay-bin
   (package
    (name "yay-bin")
-   (version "12.5.0")
+   (version "12.5.2")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -293,7 +293,7 @@ documents, and more—securely across all your devices.")
                   version "/yay_" version "_x86_64.tar.gz"))
             (sha256
              (base32
-              "1pysficjq375iad2b89ck94b1pnl2d2fdazdxy4xcm4h2qyfkf6h"))))
+              "0h7lqnaq8sfk8lik0q1s9dw485znf0cvf81xabdn3g5lnxr5awik"))))
    (build-system copy-build-system)
    (arguments
     (list #:install-plan #~'(("yay" "bin/"))
@@ -308,5 +308,5 @@ documents, and more—securely across all your devices.")
    (description
     "Yet another yogurt. Pacman wrapper and AUR helper written in go.
 Pre-compiled.")
-   (license license:gpl3+)
-   (properties '((upstream-name . "yay")))))
+   (properties '((upstream-name . "yay")))
+   (license license:gpl3+)))
