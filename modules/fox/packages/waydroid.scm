@@ -80,7 +80,7 @@
 (define-public libgbinder
   (package
    (name "libgbinder")
-   (version "1.1.42")
+   (version "1.1.43")
    (source (origin
             (method git-fetch)
             (uri (git-reference
@@ -89,7 +89,7 @@
             (file-name (git-file-name name version))
             (sha256
              (base32
-              "1in95drgr647q785ljiyi2wqp5fws1iqi0bjs49qx359c019z73z"))))
+              "1wv9vk58daq2ibg8mizcylp5f99fhkbbqww2gb85axlmcg6m12bb"))))
    (build-system gnu-build-system)
    (arguments
     (list #:make-flags #~(list (string-append "CC="
@@ -136,23 +136,23 @@
 (define-public python-gbinder
   (package
    (name "python-gbinder")
-   (version "1.1.1")
+   (version "1.3.0")
    (source (origin
             (method git-fetch)
             (uri (git-reference
-                  (url "https://github.com/erfanoabdi/gbinder-python")
+                  (url "https://github.com/waydroid/gbinder-python")
                   (commit version)))
             (file-name (git-file-name name version))
             (sha256
              (base32
-              "0wdpf6b6b3cmd42j1qkfp19y9bdymy5dv12r261gkhvxxh160zym"))))
+              "1wl42xxqx6nkjb53b22j2676x3fyh9zqmzn37mnypyh1zh14qj6g"))))
    (build-system python-build-system)
    (arguments
     (list #:phases #~(modify-phases %standard-phases
                                     (replace 'build
                                              (lambda* _
                                                (invoke "python" "setup.py" "build_ext"
-                                                       "--inplace" "--cython"))))))
+                                                       "--inplace"))))))
    (native-inputs (list python-cython-0 pkg-config))
    (inputs (list glib libgbinder libglibutil))
    (home-page "https://github.com/erfanoabdi/gbinder-python")
@@ -163,7 +163,7 @@
 (define-public waydroid
   (package
    (name "waydroid")
-   (version "1.5.4")
+   (version "1.6.0")
    (source
     (origin
      (method git-fetch)
@@ -172,7 +172,7 @@
            (commit version)))
      (file-name (git-file-name name version))
      (sha256
-      (base32 "050cn84ambjd02cnszp9qqgzm62x14jxg9jp7fxrzbv6qps8k2rb"))))
+      (base32 "05a7zr5xjc11hl5pg6yq1rrmqkpnc0jnz9111h810dsg78ajfiy3"))))
    (build-system gnu-build-system)
    (arguments
     (list #:make-flags
