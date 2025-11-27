@@ -1,10 +1,13 @@
 (define-module (fox packages networking)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (fox packages licenses)
-  #:use-module (guix packages)
   #:use-module (guix gexp)
+  #:use-module (guix packages)
+  #:use-module (gnu packages golang)
+  #:use-module (gnu packages golang-build)
   #:use-module (guix git-download)
-  #:use-module (guix build-system gnu))
+  #:use-module (guix build-system gnu)
+  #:use-module (guix build-system go))
 
 (define-public zerotier
   (package
@@ -70,3 +73,54 @@ similar to VXLAN (termed VL2).  Our VL2 Ethernet virtualization layer includes
 advanced enterprise SDN features like fine grained access control rules for
 network micro-segmentation and security monitoring.")
    (license (nonfree "https://mariadb.com/bsl11/"))))
+
+(define-public cloudflared
+  (package
+    (name "cloudflared")
+    (version "2025.10.0")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/cloudflare/cloudflared")
+                    (commit version)))
+              (file-name (git-file-name name version))
+              ;; TODO: Unbundle vendored dependencies.
+              ;; (modules '((guix build utils)))
+              ;; (snippet '(delete-file-recursively "vendor"))
+              (sha256
+               (base32
+                "17an3nky4ibfi486wy2gsbv39qcmbsc3yvs3h2w6yxa4cb9knk6v"))))
+    (build-system go-build-system)
+    (arguments
+     (list #:go go-1.24
+           #:install-source? #f
+           #:import-path "github.com/cloudflare/cloudflared/cmd/cloudflared"
+           #:unpack-path "github.com/cloudflare/cloudflared"
+           #:build-flags
+           #~(list (string-append
+                    "-ldflags="
+                    " -X main.Version=" #$(package-version this-package)
+                    " -X github.com/cloudflare/cloudflared/cmd/cloudflared/updater.BuiltForPackageManager=Guix"))
+           #:phases
+           #~(modify-phases %standard-phases
+               (add-before 'build 'disable-cgo
+                 (lambda _
+                   (setenv "CGO_ENABLED" "0")))
+               (add-after 'install 'install-documentation
+                 (lambda _
+                   (let ((src "src/github.com/cloudflare/cloudflared/cloudflared_man_template")
+                         (dst (string-append #$output "/share/man/man1/cloudflared.1")))
+                     (substitute* src
+                       (("\\$\\{VERSION\\}") #$(package-version this-package)))
+                     (mkdir-p (dirname dst))
+                     (copy-file src dst)))))))
+    (home-page "https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/")
+    (synopsis "Cloudflare Tunnel client")
+    (description
+     "This package provides the command-line client for Cloudflare Tunnel, a
+tunneling daemon that proxies traffic from the Cloudflare network to your
+origins.  This daemon sits between Cloudflare network and your origin (e.g. a
+webserver).  Cloudflare attracts client requests and sends them to you via
+this daemon, without requiring you to poke holes on your firewall --- your
+origin can remain as closed as possible.")
+    (license license:asl2.0)))
