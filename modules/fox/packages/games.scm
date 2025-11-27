@@ -12,15 +12,15 @@
   (package
    (inherit cataclysm-dda)
    (name "cataclysm-dda-experimental")
-   (version "2025-10-25")
+   (version "2025-11-27")
    (source
     (origin
      (method git-fetch)
      (uri (git-reference
            (url "https://github.com/CleverRaven/Cataclysm-DDA")
-           (commit "c30e3e6e1c63cc7132b748ea25a4dcd3f5b99244")))
+           (commit "4352393527eabc7744bc82239aa8a62e80ad2bc8")))
      (sha256
-      (base32 "1gmi2psgchzp62kgbvg6bc38qqksvbngn5n64q02bcp3izpni56a"))
+      (base32 "1xbjfrkf5sl4gj2f8yzv23dxl35igz6q7ywn1pdcscm69w4xvl8h"))
      (file-name (git-file-name name version))))
    (arguments
     (list
