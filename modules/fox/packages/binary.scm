@@ -113,7 +113,7 @@ internet.")
 (define-public v2rayn-bin
   (package
    (name "v2rayn-bin")
-   (version "7.12.3")
+   (version "7.16.4")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -121,7 +121,7 @@ internet.")
                   version "/v2rayN-linux-64.zip"))
             (sha256
              (base32
-              "03nh7xyqdyfmkgvkw276q6w9ykm161qyr01w16vva4hdkphd7x67"))))
+              "1y3p6mr3apv1bzr10xp6sd7plff5l6l6d3zrm6j9lp2wkj4c63l7"))))
    (build-system copy-build-system)
    (arguments
     (list #:install-plan #~'(("./" "opt/v2rayn-bin"))))
@@ -132,6 +132,7 @@ internet.")
    (description
     "A GUI client for Windows, Linux and macOS, support Xray and sing-box
 and others.")
+   (properties '((upstream-name . "v2rayN")))
    (license license:gpl3)))
 
 (define-public nyxt-bin
