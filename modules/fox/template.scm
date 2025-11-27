@@ -32,19 +32,6 @@
                     (ice-9 textual-ports)
                     (fox services))
 
-       (define (get-env env-key)
-         (let* ((hy (if (file-exists? "/usr/bin/hy")
-                        "/usr/bin/hy"
-                        (string-append "source " (getenv "GUIX_NEW_ARCH") "/profile/etc/profile" " && " "hy")))
-                (port (open-input-pipe
-                       (string-append hy " " (getenv "GUIX_NEW_ARCH") "/files/usr/bin/cf-ky"
-                                      " get " env-key)))
-                (str (read-line port)))
-           (when (not (eqv? 0 (status:exit-val (close-pipe port))))
-             (error (string-append "error get env " env-key)))
-           (format #t "Get ~a done\n" env-key)
-           str))
-
        (define (secret-put env-key-list)
          (let ((secret-path "/root/.config/secret.ini"))
            (when (file-exists? secret-path)

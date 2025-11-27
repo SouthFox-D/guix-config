@@ -11,12 +11,15 @@
   #:use-module (gnu services)
   #:use-module (ice-9 textual-ports)
   #:use-module (ice-9 regex)
+  #:use-module (ice-9 popen)
+  #:use-module (ice-9 rdelim)
   #:use-module (ice-9 eval-string)
   #:export (oh-my-zsh-service-type
             home-emacs-service-type
 
             eval-template-file
             eval-file
+            get-env
             ))
 
 (define oh-my-zsh-service-type
@@ -51,6 +54,21 @@
                         home-emacs-shepherd-service)))
                 (default-value '())
                 (description "Configures Emacs and installs packages to home-profile.")))
+
+(define (get-env env-key)
+  (let* ((hy (if (file-exists? "/usr/bin/hy")
+                 "/usr/bin/hy"
+                 (string-append "source " (or (getenv "GUIX_NEW_ARCH") "/root/.guix-arch")
+                                "/profile/etc/profile" " && " "hy")))
+         (port (open-input-pipe
+                (string-append hy " " (or (getenv "GUIX_NEW_ARCH") "/root/.guix-arch")
+                               "/files/usr/bin/cf-ky"
+                               " get " env-key)))
+         (str (read-line port)))
+    (when (not (eqv? 0 (status:exit-val (close-pipe port))))
+      (error (string-append "error get env " env-key)))
+    (format #t "Get ~a done\n" env-key)
+    str))
 
 (define (eval-template template-string)
   ;; (display template-string)

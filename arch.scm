@@ -254,6 +254,15 @@
                            (stop #~(make-kill-destructor))
                            (auto-start? #t))
                           (shepherd-service
+                           (documentation "Start cloudflared")
+                           (provision '(cloudflared))
+                           (start #~(make-forkexec-constructor
+                                     (list #$(file-append cloudflared "/bin/cloudflared")
+                                           "tunnel" "run" "--token"
+                                           #$(get-env "CLOUDFLARED_TUNNEL_TOKEN"))))
+                           (stop #~(make-kill-destructor))
+                           (auto-start? #t))
+                          (shepherd-service
                            (documentation "Start smartdns")
                            (provision '(smartdns))
                            (start #~(make-forkexec-constructor
