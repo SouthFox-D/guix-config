@@ -56,6 +56,7 @@
                          '())
                      (if pi-machine?
                          '("aria2"
+                           "webhook"
                            "podman"
                            "podman-compose")
                          '())))
@@ -166,6 +167,17 @@
                                 (start #~(make-forkexec-constructor
                                           #$(profile-podman-up)
                                           #:directory (string-append (getenv "HOME") "/calibre-web")))
+                                (stop #~(make-kill-destructor))
+                                (auto-start? #t))
+                               (shepherd-service
+                                (documentation "Start webhook")
+                                (provision '(webhook))
+                                (start #~(make-forkexec-constructor
+                                          (list (string-append (getenv "HOME") "/.guix-home/profile/bin/webhook")
+                                                "-hooks" #$(local-file "files/infra/pi-webhooks.yml")
+                                                "-template"
+                                                "-port" "8082"
+                                                "-ip" "127.0.0.1")))
                                 (stop #~(make-kill-destructor))
                                 (auto-start? #t))))
               (simple-service 'aria2-config-deploy home-activation-service-type

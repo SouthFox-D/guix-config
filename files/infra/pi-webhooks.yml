@@ -1,0 +1,9 @@
+---
+- id: redeploy-blog
+  execute-command: "/bin/sh"
+  pass-arguments-to-command:
+    - source: string
+      name: -c
+    - source: string
+      name: "git fetch && git reset --hard origin/haunt && guix shell -m manifest.scm -- hy utils.hy -p"
+  command-working-directory: '{{ getenv "HOME" }}/Documents/blog'
