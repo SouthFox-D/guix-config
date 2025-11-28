@@ -261,6 +261,8 @@
                           (shepherd-service
                            (documentation "Start cloudflared")
                            (provision '(cloudflared))
+                           (respawn-limit ''(5 . 60))
+                           (respawn-delay 10)
                            (start #~(make-forkexec-constructor
                                      (list #$(file-append cloudflared "/bin/cloudflared")
                                            "tunnel" "run" "--token"
