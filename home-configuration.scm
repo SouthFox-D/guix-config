@@ -21,6 +21,13 @@
 
 (load "common.scm")
 
+(define (profile-podman-up)
+  `(list "guix"
+    "shell" "-p"
+    ,(string-append (getenv "HOME") "/.guix-home/profile")
+    "--"
+    "podman" "compose" "up" "--force-recreate"))
+
 (home-environment
  (packages (append (specifications->packages
                     (append
@@ -157,8 +164,7 @@
                                 (documentation "Start calibre-web")
                                 (provision '(calibre-web))
                                 (start #~(make-forkexec-constructor
-                                          (list #$(string-append (getenv "HOME") "/.guix-home/profile/bin/podman")
-                                                "compose" "up" "--force-recreate")
+                                          #$(profile-podman-up)
                                           #:directory (string-append (getenv "HOME") "/calibre-web")))
                                 (stop #~(make-kill-destructor))
                                 (auto-start? #t))))

@@ -206,6 +206,12 @@
                   #~(#$(string-append %arch-profile "/files/usr/bin/cron-task") "sync-anki"))))))
         (else '())))
 
+(define (profile-podman-up)
+  '(list "guix"
+    "shell" "-p" "/root/.guix-arch/profile"
+    "--"
+    "podman" "compose" "up" "--force-recreate"))
+
 ;; TODO make sure template deploy after pacman sync not rely on append order
 (cond ((equal? "pifox" (gethostname))
        (build-arch-drv
@@ -247,17 +253,9 @@
                            (documentation "Start pihole")
                            (provision '(pihole))
                            (start #~(make-forkexec-constructor
-                                     (list "/root/.guix-arch/profile/bin/podman"
-                                           "compose" "up" "--force-recreate")
+                                     #$(profile-podman-up)
                                      #:directory
-                                     (string-append #$(getenv "SUDO_HOME") "/pihole")
-                                     #:environment-variables
-                                     (cons* (string-append "PATH=" (getenv "PATH") ":"
-                                                           "/root/.guix-arch/profile/bin")
-                                            ((@ (srfi srfi-1) remove)
-                                             (lambda (x)
-                                               (string-prefix? "PATH=" x))
-                                             (default-environment-variables)))))
+                                     (string-append #$(getenv "SUDO_HOME") "/pihole")))
                            (stop #~(make-kill-destructor))
                            (auto-start? #t))
                           (shepherd-service
