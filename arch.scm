@@ -249,7 +249,15 @@
                            (start #~(make-forkexec-constructor
                                      (list "/root/.guix-arch/profile/bin/podman"
                                            "compose" "up" "--force-recreate")
-                                     #:directory (string-append #$(getenv "SUDO_HOME") "/pihole")))
+                                     #:directory
+                                     (string-append #$(getenv "SUDO_HOME") "/pihole")
+                                     #:environment-variables
+                                     (cons* (string-append "PATH=" (getenv "PATH") ":"
+                                                           "/root/.guix-arch/profile/bin")
+                                            ((@ (srfi srfi-1) remove)
+                                             (lambda (x)
+                                               (string-prefix? "PATH=" x))
+                                             (default-environment-variables)))))
                            (stop #~(make-kill-destructor))
                            (auto-start? #t))
                           (shepherd-service
