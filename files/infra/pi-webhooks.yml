@@ -5,5 +5,5 @@
     - source: string
       name: -c
     - source: string
-      name: "git fetch && git reset --hard origin/haunt && guix shell -m manifest.scm -- hy utils.hy -p"
+      name: "git fetch && git reset --hard origin/haunt && guix shell -m manifest.scm -- hy utils.hy -d pi"
   command-working-directory: '{{ getenv "HOME" }}/Documents/blog'
