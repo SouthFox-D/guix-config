@@ -285,7 +285,7 @@ documents, and more—securely across all your devices.")
 (define-public yay-bin
   (package
    (name "yay-bin")
-   (version "12.5.2")
+   (version "12.5.3")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -293,7 +293,7 @@ documents, and more—securely across all your devices.")
                   version "/yay_" version "_x86_64.tar.gz"))
             (sha256
              (base32
-              "0h7lqnaq8sfk8lik0q1s9dw485znf0cvf81xabdn3g5lnxr5awik"))))
+              "0r5675c7hq2kfy82yj2zrn6dp46mrf1161jgs893b6v15sr71nl9"))))
    (build-system copy-build-system)
    (arguments
     (list #:install-plan #~'(("yay" "bin/"))
