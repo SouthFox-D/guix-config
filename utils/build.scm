@@ -4,16 +4,18 @@
              (ice-9 popen))
 
 (define fox-packages
-   (string-join (map (lambda (p) (package-name p))
-                     (fold-packages
-                      (lambda (a b)
-                        (cons a b))
-                      '() (scheme-modules "modules")))
-                " "))
+  (pk
+   (map (lambda (p) (package-name p))
+        (fold-packages
+         (lambda (a b)
+           (cons a b))
+         '() (scheme-modules "modules")))))
 
-(define build-command
-  (string-join `("guix" "build" "-L" "modules" ,fox-packages) " "))
+(define (build-command package)
+  (pk (string-join `("guix" "build" "-L" "modules" ,package) " ")))
 
-(let ((port (open-output-pipe build-command)))
-  (if (not (eqv? 0 (status:exit-val (close-pipe port))))
-      (error "Something wrong")))
+(map (lambda (package)
+       (let ((port (open-output-pipe (build-command package))))
+         (if (not (eqv? 0 (status:exit-val (close-pipe port))))
+             (error "Something wrong"))))
+     fox-packages)
