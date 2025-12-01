@@ -28,46 +28,44 @@
     "--"
     "podman" "compose" "up" "--force-recreate"))
 
+(define pc-group?
+  (and touchable-machine?
+       (not deck-machine?)
+       (not pi-machine?)))
+
 (home-environment
- (packages (append (specifications->packages
-                    (append
-                     (list
-                      "glibc-locales"
-                      "zsh"
-                      "zsh-completions"
-                      "zsh-autosuggestions"
-                      "zsh-syntax-highlighting"
-                      "fzf"
-                      "guile-next"
-                      "guile-hoot"
-                      "guile-goblins"
-                      )
-                     (if (and touchable-machine?
-                              (not deck-machine?)
-                              (not pi-machine?))
-                         '("mu"
-                           "anki-bin"
-                           "nyxt-bin"
-                           "v2rayn-bin"
-                           "yay-bin"
-                           "rimerc-zrm"
-                           "haunt"
-                           )
-                         '())
-                     (if pi-machine?
-                         '("aria2"
-                           "webhook"
-                           "podman"
-                           "podman-compose")
-                         '())))
-                   (list
-                    zellij-bin)
-                   (if (and (not work-machine?)
-                            (not deck-machine?)
-                            (not pi-machine?))
-                         (list opentabletdriver-bin)
-                         '())
-                   ))
+ (packages (specifications->packages
+            (append
+             (list
+              "fzf"
+              "glibc-locales"
+              "zellij-bin"
+              "guile-next"
+              "guile-hoot"
+              "guile-goblins"
+              "zsh"
+              "zsh-completions"
+              "zsh-autosuggestions"
+              "zsh-syntax-highlighting")
+             (if pc-group?
+                 '("anki-bin"
+                   "nyxt-bin"
+                   "v2rayn-bin"
+                   "yay-bin"
+                   "rimerc-zrm"
+                   "haunt")
+                 '())
+             (if (and (not work-machine?)
+                      pc-group?)
+                 '("opentabletdriver-bin"
+                   "mu")
+                 '())
+             (if pi-machine?
+                 '("aria2"
+                   "webhook"
+                   "podman"
+                   "podman-compose")
+                 '()))))
  (services
   (append
    (list
@@ -79,9 +77,7 @@
              (append
               `((".config/zellij/config.kdl" ,(eval-file "files/zellij.kdl"))
                 (".local/bin/flk" ,(local-file "files/bin/flk.sh" #:recursive? #t)))
-              (if (and touchable-machine?
-                       (not deck-machine?)
-                       (not pi-machine?))
+              (if pc-group?
                   `((".config/hypr/hyprland.conf" ,(eval-file "files/hyprland.conf"))
                     (".config/hypr/hyprlock.conf" ,(eval-file "files/hyprlock.conf"))
                     (".config/hypr/hyprpaper.conf" ,(local-file "files/hyprpaper.conf"))
@@ -113,9 +109,7 @@
                                                      immersion
                                                      weakauras))))
                       '())))))
-   (if (and touchable-machine?
-            (not deck-machine?)
-            (not pi-machine?))
+   (if pc-group?
        (append
         (list (simple-service
                'rime-config-deploy
@@ -193,10 +187,8 @@
                                            #$(local-file "files/aria2/aria2.conf")
                                            #$(string-append (getenv "HOME") "/.config/aria2/aria2.conf"))))))
        '())
-   (if (and touchable-machine?
-            (not work-machine?)
-            (not deck-machine?)
-            (not pi-machine?))
+   (if (and (not work-machine?)
+            pc-group?)
        (append
         (list
          (simple-service 'my-timer home-shepherd-service-type
