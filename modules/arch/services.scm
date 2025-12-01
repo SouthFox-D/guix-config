@@ -108,8 +108,8 @@ files, and further processed during activation.")))
          #$@gexps
          #$init-gexp
 
-         (setenv "GUIX_NEW_HOME" #f)
-         (setenv "GUIX_OLD_HOME" #f))))
+         (setenv "GUIX_NEW_ARCH" #f)
+         (setenv "GUIX_OLD_ARCH" #f))))
 
 (define (sync-script-entry m-activation)
   "Return, as a monadic value, an entry for the sync script
