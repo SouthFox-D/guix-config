@@ -62,7 +62,7 @@ the game on a controller - without inconvenience.")
 (define-public weakauras
   (package
    (name "WeakAuras")
-   (version "5.20.6")
+   (version "5.20.7")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -70,7 +70,7 @@ the game on a controller - without inconvenience.")
                   version "/WeakAuras-" version ".zip"))
             (sha256
              (base32
-              "14vycvy8jf61pp8b925xrfkbqfipzfkjpjjlrws57wicbbmkj170"))))
+              "0sv1sw6wfimpl8q6g5f501aa8vqq3rd32x1dnz0pclb0gxyr53k5"))))
    (build-system copy-build-system)
    (arguments
     (list
