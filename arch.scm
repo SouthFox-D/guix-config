@@ -7,6 +7,7 @@
              (fox packages misc)
              (fox packages binary)
              (fox packages networking)
+             (fox packages web)
              (fox template)
              (gnu services)
              (gnu services web)
@@ -234,6 +235,10 @@
           (list (arch-account-configuration
                  (name (getenv "SUDO_USER") )
                  (shell "zsh"))))
+         (service foreign-nginx-service-type
+                   (nginx-configuration
+                     (inherit (nginx-configuration))
+                     (nginx nginx-fox)))
          (simple-service 'pi-nginx foreign-nginx-service-type
                          (list
                           (default-proxy-service '("hole.pi.foxnet.internal" "hole.pi.foxnet.znet") "8081")
