@@ -252,7 +252,7 @@
                            (server-name '("aria2.pi.foxnet.internal" "aria2.pi.foxnet.znet"))
                            (root "/var/www/aria2"))
                           (default-proxy-service '("aria2-rpc.pi.foxnet.internal" "aria2-rpc.pi.foxnet.znet") "6800")
-                          (let (pi-webhook-path (get-env "PI_WEBHOOK_PATH"))
+                          (let ((pi-webhook-path (get-env "PI_WEBHOOK_PATH")))
                             (nginx-server-configuration
                              (listen '("80"))
                              (server-name '("pi-webhook.southfox.me"))
