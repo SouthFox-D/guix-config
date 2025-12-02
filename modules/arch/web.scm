@@ -161,19 +161,19 @@ of index files."
                         nginx-activation)
      (service-extension arch-shepherd-service-type
                         (lambda (config)
-                          (let ((file (nginx-configuration-file config))
+                          (let* ((file (nginx-configuration-file config))
                                 (nginx (nginx-configuration-nginx config))
-                                (run-directory (nginx-configuration-run-directory config)))
+                                (run-directory (nginx-configuration-run-directory config))
+                                (pid-file (in-vicinity run-directory "pid")))
                             (list (shepherd-service
                                    (documentation "Start nginx")
                                    (provision '(nginx))
-                                   (start #~(make-forkexec-constructor
-                                             (list #$(file-append nginx "/sbin/nginx")
-                                                   "-c" #$(or file (default-nginx-config config)))
-                                             #:directory #$run-directory))
+                                   (start #~(lambda _
+                                             (invoke #$(file-append nginx "/sbin/nginx")
+                                                     "-c" #$(or file (default-nginx-config config)))
+                                             (read-pid-file #$pid-file)))
                                    (stop #~(make-kill-destructor))
                                    (auto-start? #t))))))))))
-
 
 (define (default-proxy-service server-name-list server-port)
   (nginx-server-configuration
