@@ -81,12 +81,19 @@ of index files."
   (define (nginx-error-log-file config)
     (string-append (nginx-configuration-log-directory config)
                    "/error.log"))
+  (define emit-global-directive
+    (match-lambda
+      ((key . (? list? alist))
+       (format #f "~a { ~{~a~}}~%" key (map emit-global-directive alist)))
+      ((key . value)
+       (format #f "~a ~a;~%" key value))))
   (define emit-nginx-log-format-config
     (match-lambda
       (($ <nginx-log-format-configuration> name escape format)
        (list "    log_format " (symbol->string name) " escape="
              (symbol->string escape) " " format ";\n"))))
   (let ((nginx (nginx-configuration-nginx config))
+        (global-directives (nginx-configuration-global-directives config))
         (log-directory (nginx-configuration-log-directory config))
         (run-directory (nginx-configuration-run-directory config))
         (log-level (nginx-configuration-log-level config))
@@ -97,8 +104,10 @@ of index files."
         (server-names-hash-bucket-max-size (nginx-configuration-server-names-hash-bucket-max-size config))) 
     (apply mixed-text-file "nginx.conf"
            (flatten
+            "user www-data;"
             "pid " run-directory "/pid;\n"
             "error_log " (nginx-error-log-file config) " " (symbol->string log-level) ";\n"
+            (map emit-global-directive global-directives)
             "http {\n"
             "    client_body_temp_path " run-directory "/client_body_temp;\n"
             "    proxy_temp_path " run-directory "/proxy_temp;\n"
