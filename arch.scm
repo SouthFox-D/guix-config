@@ -9,6 +9,7 @@
              (fox packages networking)
              (fox template)
              (gnu services)
+             (gnu services web)
              (gnu packages)
              (gnu packages dns)
              (guix gexp)
