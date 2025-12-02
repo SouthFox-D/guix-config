@@ -2,6 +2,7 @@
              (arch accounts)
              (arch services)
              (arch shepherd)
+             (arch web)
              (fox services)
              (fox packages misc)
              (fox packages binary)
@@ -232,6 +233,12 @@
           (list (arch-account-configuration
                  (name (getenv "SUDO_USER") )
                  (shell "zsh"))))
+         (simple-service 'pi-nginx foreign-nginx-service-type
+                         (list
+                          (default-proxy-service '("hole.pi.foxnet.internal" "hole.pi.foxnet.znet") "8081")
+                          (default-proxy-service '("library.pi.foxnet.internal" "library.pi.foxnet.znet") "8083")
+                          (default-proxy-service '("rslsync.pi.foxnet.internal" "rslsync.pi.foxnet.znet") "8089")
+                          (default-proxy-service '("aria2-rpc.pi.foxnet.internal" "aria2-rpc.pi.foxnet.znet") "6800")))
          (simple-service 'pi-shepherd-type arch-shepherd-service-type
                          (list
                           (shepherd-service
