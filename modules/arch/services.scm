@@ -5,6 +5,7 @@
   #:use-module (guix profiles)
   #:use-module (guix monads)
   #:use-module (guix modules)
+  #:use-module (guix memoization)
   #:use-module (guix sets)
   #:use-module (guix build utils)
   #:use-module (guix scripts package)
@@ -19,6 +20,8 @@
             arch-sync-service-type
             arch-pacman-sync-service-type
             arch-activation-service-type
+
+            system->foreign-service-type
             )
   #:re-export (service
                service-type
@@ -248,3 +251,59 @@ with one gexp, but many times, and all gexps must be idempotent.")))
                 (extend append)
                 (description
                  "It contains packages and configuration files.")))
+
+(define (service-type-mapping proc)
+  "Return a procedure that applies PROC to map a service type graph to another
+one."
+  (define (rewrite extension)
+    (match (proc (service-extension-target extension))
+      (#f #f)
+      (target
+       (service-extension target
+                          (service-extension-compute extension)))))
+
+  (define replace
+    (mlambdaq (type)
+      (service-type
+       (inherit type)
+       (name (symbol-append 'arch- (service-type-name type)))
+       (location (service-type-location type))
+       (extensions (filter-map rewrite (service-type-extensions type))))))
+
+  replace)
+
+(define %system/foreign-service-type-mapping
+  ;; Mapping of System to Foreign services.
+  (make-hash-table))
+
+(define system->foreign-service-type
+  ;; Map the given System service type to the corresponding Foreign service type.
+  (let ()
+    (define (replace type)
+      (define replacement
+        (hashq-ref %system/foreign-service-type-mapping type
+                   *unspecified*))
+
+      (if (eq? replacement *unspecified*)
+          type
+          replacement))
+
+    (service-type-mapping replace)))
+
+(define-syntax define-service-type-mapping
+  (syntax-rules (=>)
+    ((_ system-type => foreign-type)
+     (hashq-set! %system/foreign-service-type-mapping
+                 system-type foreign-type))))
+
+(define-syntax define-service-type-mappings
+  (syntax-rules (=>)
+    ((_ (system-type => foreign-type) ...)
+     (begin
+       (define-service-type-mapping system-type => foreign-type)
+       ...))))
+
+(define-service-type-mappings
+  (system-service-type => arch-service-type)
+  (activation-service-type => arch-activation-service-type)
+  (profile-service-type => arch-profile-service-type))
