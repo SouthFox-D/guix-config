@@ -238,7 +238,36 @@
                           (default-proxy-service '("hole.pi.foxnet.internal" "hole.pi.foxnet.znet") "8081")
                           (default-proxy-service '("library.pi.foxnet.internal" "library.pi.foxnet.znet") "8083")
                           (default-proxy-service '("rslsync.pi.foxnet.internal" "rslsync.pi.foxnet.znet") "8089")
-                          (default-proxy-service '("aria2-rpc.pi.foxnet.internal" "aria2-rpc.pi.foxnet.znet") "6800")))
+                          (nginx-server-configuration
+                           (listen '("80"))
+                           (server-name '("blog.southfox.me"))
+                           (root "")
+                           (nginx-location-configuration
+                                (uri (string-append "/"))
+                                (body `("set_real_ip_from 0.0.0.0/0;"
+                                        "real_ip_header X-Forwarded-For;"
+                                        "root /var/www/blog;"))))
+                          (nginx-server-configuration
+                           (listen '("80"))
+                           (server-name '("aria2.pi.foxnet.internal" "aria2.pi.foxnet.znet"))
+                           (root "/var/www/aria2"))
+                          (default-proxy-service '("aria2-rpc.pi.foxnet.internal" "aria2-rpc.pi.foxnet.znet") "6800")
+                          (let (pi-webhook-path (get-env "PI_WEBHOOK_PATH"))
+                            (nginx-server-configuration
+                             (listen '("80"))
+                             (server-name '("pi-webhook.southfox.me"))
+                             (root "")
+                             (index '())
+                             (locations
+                              (list
+                               (nginx-location-configuration
+                                (uri (string-append "~ ^/" pi-webhook-path "/(.*)$"))
+                                (body `(,(string-append "rewrite ^/" pi-wenhook-path "/(.*)$ /hooks/$1 break;")
+                                        "proxy_pass http://127.0.0.1:8082"
+                                        "proxy_set_header Host $host;"
+                                        "proxy_set_header X-Real-IP $remote_addr;"
+                                        "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                                        "proxy_set_header X-Forwarded-Proto $scheme;")))))))))
          (simple-service 'pi-shepherd-type arch-shepherd-service-type
                          (list
                           (shepherd-service
