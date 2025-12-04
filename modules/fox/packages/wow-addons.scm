@@ -11,7 +11,7 @@
 (define-public consoleport
   (package
    (name "ConsolePort")
-   (version "3.1.6")
+   (version "3.1.8")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -19,7 +19,7 @@
                   version "/ConsolePort-" version ".zip"))
             (sha256
              (base32
-              "12405knm96zmni9fp68b7smw4y0v7hm8dcspyiwhf7gv4xn5fkbl"))))
+              "06n3firk2z2g9ihwybimmfxnpb84gbj6nzx42f4v1gm8r7wqxhnx"))))
    (build-system copy-build-system)
    (arguments
     (list
