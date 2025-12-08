@@ -104,7 +104,7 @@ of index files."
         (server-names-hash-bucket-max-size (nginx-configuration-server-names-hash-bucket-max-size config))) 
     (apply mixed-text-file "nginx.conf"
            (flatten
-            "user www-data;"
+            "user www-data;\n"
             "pid " run-directory "/pid;\n"
             "error_log " (nginx-error-log-file config) " " (symbol->string log-level) ";\n"
             (map emit-global-directive global-directives)
