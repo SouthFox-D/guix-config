@@ -5,14 +5,18 @@
 Register a dummy TTS player to prevent a pop-up being shown when none is available.
 """
 
+import os
+from concurrent.futures import Future
 from dataclasses import dataclass
-from typing import List
+from typing import List, cast
+
+import requests
+from aqt import mw
+from aqt.sound import OnDoneCallback, av_player
+from aqt.tts import TTSProcessPlayer, TTSVoice
 
 from anki.lang import compatMap
-from anki.sound import AVTag
-from aqt import mw
-from aqt.sound import av_player
-from aqt.tts import TTSProcessPlayer, TTSVoice
+from anki.sound import AVTag, TTSTag
 
 # this is the language map that gtts.lang.tts_langs() outputs
 orig_langs = {
@@ -98,6 +102,7 @@ orig_langs = {
 class DummyVoice(TTSVoice):
     pass
 
+
 class DummyPlayer(TTSProcessPlayer):
     # this is called the first time Anki tries to play a TTS file
     def get_available_voices(self) -> List[TTSVoice]:
@@ -117,8 +122,41 @@ class DummyPlayer(TTSProcessPlayer):
             voices.append(DummyVoice(name="dummy", lang=std_code))
         return voices  # type: ignore
 
+    # this is called on a background thread, and will not block the UI
     def _play(self, tag: AVTag) -> None:
-        return
+        # get the avtag
+        assert isinstance(tag, TTSTag)
+        match = self.voice_for_tag(tag)
+        assert match
+        voice = cast(DummyPlayer, match.voice)
+
+        # is the field blank?
+        if not tag.field_text.strip():
+            return
+
+        # get filename, and skip if already generated
+        self._tmpfile = self.temp_file_for_tag_and_voice(tag, match.voice) + ".mp3"
+        if os.path.exists(self._tmpfile):
+            return
+
+        r = requests.get(f'https://dict.youdao.com/dictvoice?type=2&audio={tag.field_text}')
+        with open(self._tmpfile, 'wb') as f:
+            f.write(r.content)
+
+    # this is called on the main thread, after _play finishes
+    def _on_done(self, ret: Future, cb: OnDoneCallback) -> None:
+        ret.result()
+
+        # inject file into the top of the audio queue
+        av_player.insert_file(self._tmpfile)
+
+        # then tell player to advance, which will cause the file to be played
+        cb()
+
+    # we don't support stopping while the file is being downloaded
+    # (but the user can interrupt playing after it has been downloaded)
+    def stop(self):
+        pass
 
 # register our handler
 av_player.players.append(DummyPlayer(mw.taskman))
