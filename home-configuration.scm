@@ -176,7 +176,7 @@
                                 (auto-start? #t))
                                (shepherd-service
                                 (documentation "Start anki-sync")
-                                (provision '(anku-sync))
+                                (provision '(anki-sync))
                                 (start #~(make-forkexec-constructor
                                           #$(profile-podman-up)
                                           #:directory (string-append (getenv "HOME") "/anki-sync")))
