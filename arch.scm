@@ -253,29 +253,47 @@
                              (nginx-location-configuration
                               (uri (string-append "/"))
                               (body '("set_real_ip_from 0.0.0.0/0;"
-                                     "real_ip_header X-Forwarded-For;"
-                                     "root /var/www/blog;"))))))
+                                      "real_ip_header X-Forwarded-For;"
+                                      "root /var/www/blog;"))))))
                           (nginx-server-configuration
                            (listen '("80"))
                            (server-name '("aria2.pi.foxnet.internal" "aria2.pi.foxnet.znet"))
                            (root "/var/www/aria2"))
                           (default-proxy-service '("aria2-rpc.pi.foxnet.internal" "aria2-rpc.pi.foxnet.znet") "6800")
+                          (nginx-server-configuration
+                           (listen '("80"))
+                           (server-name '("anki.southfox.gay"))
+                           (root "")
+                           (index '())
+                           (locations
+                            (list
+                             (nginx-location-configuration
+                              (uri "/")
+                              (body `("proxy_pass http://127.0.0.1:10880;"
+                                      "proxy_set_header Host $host;"
+                                      "set_real_ip_from 0.0.0.0/0;"
+                                      "proxy_set_header X-Real-IP $remote_addr;"
+                                      "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                                      "proxy_redirect off;"
+                                      "proxy_http_version 1.1;"
+                                      "proxy_set_header   Upgrade         $http_upgrade;"
+                                      "proxy_set_header   Connection      \"upgrade\";"))))))
                           (let ((pi-webhook-path (get-env "PI_WEBHOOK_PATH")))
-                             (nginx-server-configuration
-                              (listen '("80"))
-                              (server-name '("pi-webhook.southfox.me"))
-                              (root "")
-                              (index '())
-                              (locations
-                               (list
-                                (nginx-location-configuration
-                                 (uri (string-append "~ ^/" pi-webhook-path "/(.*)$"))
-                                 (body `(,(string-append "rewrite ^/" pi-webhook-path "/(.*)$ /hooks/$1 break;")
-                                          "proxy_pass http://127.0.0.1:8082;"
-                                          "proxy_set_header Host $host;"
-                                          "proxy_set_header X-Real-IP $remote_addr;"
-                                          "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-                                          "proxy_set_header X-Forwarded-Proto $scheme;")))))))))
+                            (nginx-server-configuration
+                             (listen '("80"))
+                             (server-name '("pi-webhook.southfox.me"))
+                             (root "")
+                             (index '())
+                             (locations
+                              (list
+                               (nginx-location-configuration
+                                (uri (string-append "~ ^/" pi-webhook-path "/(.*)$"))
+                                (body `(,(string-append "rewrite ^/" pi-webhook-path "/(.*)$ /hooks/$1 break;")
+                                        "proxy_pass http://127.0.0.1:8082;"
+                                        "proxy_set_header Host $host;"
+                                        "proxy_set_header X-Real-IP $remote_addr;"
+                                        "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+                                        "proxy_set_header X-Forwarded-Proto $scheme;")))))))))
          (simple-service 'pi-shepherd-type arch-shepherd-service-type
                          (list
                           (shepherd-service
