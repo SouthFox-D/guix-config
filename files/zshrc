@@ -74,11 +74,13 @@ export EDITOR="emacsclient -nw -c"
 
 if [[ -z "$GUIX_PROFILE" ]]; then
     export PATH="$HOME/.local/bin:$PATH"
+    export GUIX_PROFILE="$HOME/.guix-home/profile"
+    . $GUIX_PROFILE/etc/profile
+    export PATH="$HOME/.local/bin:$PATH"
 fi
 
 [ -n "$SSH_CLIENT" ] && [ -n "$GUIX_ENVIRONMENT" ] && source "$GUIX_ENVIRONMENT/etc/profile"
 
-export GUIX_PROFILE="$HOME/.guix-home/profile"
 export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 export ZSH_CUSTOM="$GUIX_PROFILE/share/zsh"
 export PATH="/usr/bin:$PATH"
