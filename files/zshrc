@@ -75,20 +75,21 @@ export EDITOR="emacsclient -nw -c"
 if [[ -z "$GUIX_PROFILE" ]]; then
     export PATH="$HOME/.local/bin:$PATH"
     export GUIX_PROFILE="$HOME/.guix-home/profile"
-    . $GUIX_PROFILE/etc/profile
-    export PATH="$HOME/.local/bin:$PATH"
+   {%(if pi-machine? "export PATH=\"$GUIX_PROFILE/bin:$PATH\"" "")%}
+   unset GUIX_PROFILE
 fi
 
 [ -n "$SSH_CLIENT" ] && [ -n "$GUIX_ENVIRONMENT" ] && source "$GUIX_ENVIRONMENT/etc/profile"
 
+export GUIX_HOME="$HOME/.guix-home/profile"
 export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
-export ZSH_CUSTOM="$GUIX_PROFILE/share/zsh"
+export ZSH_CUSTOM="$GUIX_HOME/share/zsh"
 export PATH="/usr/bin:$PATH"
 
 .reload() {
     autoload compinit && compinit
-    source $GUIX_PROFILE/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-    source $GUIX_PROFILE/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source $GUIX_HOME/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+    source $GUIX_HOME/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#696e8a"
 }
 .reload
