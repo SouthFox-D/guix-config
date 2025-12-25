@@ -61,9 +61,8 @@ with the latest updates from the community.")
    (source (origin
             (method url-fetch)
             (uri (string-append
-                  "https://raw.githubusercontent.com/ftfpteams/focaltech-linux-fingerprint-driver"
-                  "/3d47a5aef6535736495fcc0f98645a98f14b9af9/Fedora_Redhat/"
-                  "libfprint-2-2_1.94.4+tod1_suse_all_x64_20250219.install"))
+                  "https://files.southfox.gay/public.php/dav/files/ciyRQ2STx79ewCa"
+                  "/libfprint-2-2_1.94.4%2Btod1_suse_all_x64_20250219.install"))
             (file-name (string-append name ".tar.gz"))
             (sha256
              (base32
