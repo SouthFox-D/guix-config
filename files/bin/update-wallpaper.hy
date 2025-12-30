@@ -24,5 +24,5 @@
         (f.write r.content))
       (current-wallpaper-symlink-path.unlink :missing_ok True)
       (current-wallpaper-symlink-path.symlink_to bing-wallpaper-path)))
-  (subprocess.run f"hyprctl -i 0 hyprpaper reload ,\"{bing-wallpaper-path}\""
+  (subprocess.run f"hyprctl -i 0 hyprpaper wallpaper \",{bing-wallpaper-path}\""
                   :shell True))
