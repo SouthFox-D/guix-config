@@ -328,8 +328,9 @@
                            (respawn-delay 10)
                            (start #~(make-forkexec-constructor
                                      (list #$(file-append cloudflared "/bin/cloudflared")
-                                           "tunnel" "run" "--token"
-                                           #$(get-env "CLOUDFLARED_TUNNEL_TOKEN"))))
+                                           "tunnel" "run"
+                                           "--protocol" "http2"
+                                           "--token" #$(get-env "CLOUDFLARED_TUNNEL_TOKEN"))))
                            (stop #~(make-kill-destructor))
                            (auto-start? #t))
                           (shepherd-service
